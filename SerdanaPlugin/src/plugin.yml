@@ -1,0 +1,15 @@
+main: main.java.com.mrunknown404.serdana.Main
+name: Serdana
+version: 0.0.1
+author: -Unknown-
+api-version: 1.13
+
+commands:
+  setTier:
+    description: Sets an item's tier
+    usage: "Usage: '/setTier' [tier]"
+    permission: serdana.setTier
+
+permissions:
+  serdana.setTier:
+    default: op
