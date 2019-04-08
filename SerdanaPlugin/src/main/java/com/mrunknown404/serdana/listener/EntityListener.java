@@ -46,7 +46,7 @@ public class EntityListener implements Listener {
 				
 				double multi = MathHelper.clamp(tier / 10f, 1, Integer.MAX_VALUE);
 				
-				double newMaxHP = ent.getHealth() * multi;
+				double newMaxHP = MathHelper.clamp((float) (ent.getHealth() * multi), 1, 2000);
 				ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHP);;
 				ent.setHealth(newMaxHP);
 			}
@@ -101,7 +101,7 @@ public class EntityListener implements Listener {
 			
 			multi++;
 			
-			double newMaxHP = ent.getHealth() * multi;
+			double newMaxHP = MathHelper.clamp((float) (ent.getHealth() * multi), 1, 2000);
 			ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHP);;
 			ent.setHealth(newMaxHP);
 		}

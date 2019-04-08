@@ -2,6 +2,7 @@ package main.java.com.mrunknown404.serdana.listener;
 
 
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -22,7 +23,9 @@ public class HealthListener implements Listener {
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageByEntityEvent event) {
 		Entity damaged = event.getEntity();
-		if (damaged.getType().name().equals("ARMOR_STAND")) return;
+		if (damaged.getType() == EntityType.ARMOR_STAND || damaged.hasMetadata("shopkeeper")) {
+			return;
+		}
 		
 		if (event.getDamager() instanceof Projectile) {
 			Projectile projectile = (Projectile) event.getDamager();
