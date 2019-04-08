@@ -33,6 +33,16 @@ public class CommandSetTier implements CommandExecutor {
 			return false;
 		}
 		
+		if (tier < 0) {
+			sender.sendMessage(ColorHelper.setColors("&cTier \"" + tier + "\" is too low!"));
+			return false;
+		}
+		
+		if (tier > 32) {
+			sender.sendMessage(ColorHelper.setColors("&cTier \"" + tier + "\" is too high!"));
+			return false;
+		}
+		
 		if (item.getType() == Material.AIR) {
 			return false;
 		}

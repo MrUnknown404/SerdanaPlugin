@@ -9,7 +9,14 @@ commands:
     description: Sets an item's tier
     usage: "Usage: '/setTier' [tier]"
     permission: serdana.setTier
+  serdana:
+    aliases: sd
+    description: Edits Serdana related values
+    usage: "Usage: '/serdana' [argument]"
+    permission: serdana.serdanaReload
 
 permissions:
   serdana.setTier:
+    default: op
+  serdana.serdana:
     default: op

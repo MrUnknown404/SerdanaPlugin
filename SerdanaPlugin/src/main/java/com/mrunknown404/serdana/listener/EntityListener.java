@@ -7,18 +7,51 @@ import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
+import org.bukkit.inventory.meta.SpawnEggMeta;
 
 import de.tr7zw.itemnbtapi.NBTEntity;
 import de.tr7zw.itemnbtapi.NBTItem;
+import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class EntityListener implements Listener {
 	
 	@EventHandler
-	public void entitySpawn(EntitySpawnEvent e) {
+	public void entitySpawn(CreatureSpawnEvent e) {
+		if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
+			NBTEntity nEnt = new NBTEntity(e.getEntity());
+			LivingEntity ent = (LivingEntity) e.getEntity();
+			
+			int tier = -1;
+			
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				if (p.getInventory().getItemInMainHand().getItemMeta() instanceof SpawnEggMeta) {
+					NBTItem nItem = new NBTItem(p.getInventory().getItemInMainHand());
+					if (nItem.hasKey("tier")) {
+						tier = nItem.getInteger("tier");
+					}
+				} else if (p.getInventory().getItemInOffHand().getItemMeta() instanceof SpawnEggMeta) {
+					NBTItem nItem = new NBTItem(p.getInventory().getItemInOffHand());
+					if (nItem.hasKey("tier")) {
+						tier = nItem.getInteger("tier");
+					}
+				}
+			}
+			
+			if (tier >= 0) {
+				nEnt.setInteger("tier", tier);
+				
+				double multi = MathHelper.clamp(tier / 10f, 1, Integer.MAX_VALUE);
+				
+				double newMaxHP = ent.getHealth() * multi;
+				ent.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(newMaxHP);;
+				ent.setHealth(newMaxHP);
+			}
+		}
+		
 		if (e.getEntity() instanceof Monster) {
 			NBTEntity nEnt = new NBTEntity(e.getEntity());
 			LivingEntity ent = (LivingEntity) e.getEntity();

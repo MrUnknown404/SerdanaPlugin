@@ -17,6 +17,17 @@ public class CraftingListener implements Listener {
 		ItemStack item = e.getRecipe().getResult();
 		
 		if (item != null) {
+			for (int i = 0; i < e.getInventory().getMatrix().length; i++) {
+				if (e.getInventory().getMatrix()[i] != null) {
+					if (e.getInventory().getMatrix()[i].hasItemMeta() && e.getInventory().getMatrix()[i].getItemMeta().hasDisplayName()) {
+						e.setCancelled(true);
+						e.setResult(Result.DENY);
+						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou use named items for crafting!"));
+						return;
+					}
+				}
+			}
+			
 			if (item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS ||
 					item.getType() == Material.IRON_HELMET || item.getType() == Material.IRON_CHESTPLATE || item.getType() == Material.IRON_LEGGINGS || item.getType() == Material.IRON_BOOTS ||
 					item.getType() == Material.GOLDEN_HELMET || item.getType() == Material.GOLDEN_CHESTPLATE || item.getType() == Material.GOLDEN_LEGGINGS || item.getType() == Material.GOLDEN_BOOTS ||
@@ -25,7 +36,8 @@ public class CraftingListener implements Listener {
 					item.getType() == Material.IRON_AXE || item.getType() == Material.GOLDEN_AXE || item.getType() == Material.DIAMOND_AXE || item.getType() == Material.BOW || item.getType() == Material.SHIELD) {
 				e.setCancelled(true);
 				e.setResult(Result.DENY);
-				e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot craft " + WordUtils.capitalize(item.getType().toString()) + "!"));
+				e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot craft " + WordUtils.capitalize(item.getType().toString().toLowerCase()) + "!"));
+				return;
 			}
 		}
 	}
