@@ -23,12 +23,11 @@ import com.google.gson.reflect.TypeToken;
 import com.nisovin.shopkeepers.api.events.ShopkeeperOpenUIEvent;
 import com.nisovin.shopkeepers.api.events.ShopkeeperTradeEvent;
 
-import main.java.com.mrunknown404.serdana.util.BannedItemHandler;
+import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.JsonShopInfo;
+import main.java.com.mrunknown404.serdana.util.handlers.BannedItemHandler;
 
 public class ShopkeeperListener implements Listener {
-
-	private static final String TYPE = ".json";
 	private final File path;
 	
 	private List<JsonShopInfo> shopInfos = new ArrayList<JsonShopInfo>();
@@ -140,15 +139,16 @@ public class ShopkeeperListener implements Listener {
 		FileReader fr = null;
 		
 		for (JsonShopInfo info : shopInfos) {
-			if (!new File(path + "/" + info.fileName + TYPE).exists()) {
-				System.out.println("Could not find file: " + info.fileName + TYPE + "! (Will be created)");
+			if (!new File(path + "/" + info.fileName + Main.TYPE).exists()) {
+				System.out.println("Could not find file: " + info.fileName + Main.TYPE + "! (Will be created)");
 				
 				try {
-					fw = new FileWriter(path + "/" + info.fileName + TYPE);
+					fw = new FileWriter(path + "/" + info.fileName + Main.TYPE);
 					
 					g.toJson(info, fw);
 					
 					fw.flush();
+					fw.close();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -159,7 +159,7 @@ public class ShopkeeperListener implements Listener {
 			JsonShopInfo info = shopInfos.get(i);
 			
 			try {
-				fr = new FileReader(path + "/" + info.fileName + TYPE);
+				fr = new FileReader(path + "/" + info.fileName + Main.TYPE);
 				
 				shopInfos.set(i, g.fromJson(fr, JsonShopInfo.class));
 			} catch (FileNotFoundException e) {
@@ -171,22 +171,23 @@ public class ShopkeeperListener implements Listener {
 		bannedVanillaItems.add(Material.DIRT);
 		bannedVanillaItems.add(Material.STONE);
 		
-		if (!new File(path + "/" + file_bannedVanillaItems + TYPE).exists()) {
-			System.out.println("Could not find file: " + file_bannedVanillaItems + TYPE + "! (Will be created)");
+		if (!new File(path + "/" + file_bannedVanillaItems + Main.TYPE).exists()) {
+			System.out.println("Could not find file: " + file_bannedVanillaItems + Main.TYPE + "! (Will be created)");
 			
 			try {
-				fw = new FileWriter(path + "/" + file_bannedVanillaItems + TYPE);
+				fw = new FileWriter(path + "/" + file_bannedVanillaItems + Main.TYPE);
 				
 				g.toJson(bannedVanillaItems, fw);
 				
 				fw.flush();
+				fw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		
-		if (!new File(path + "/" + file_exampleBannedVanillaItems + TYPE).exists()) {
-			System.out.println("Could not find file: " + file_exampleBannedVanillaItems + TYPE + "! (Will be created)");
+		if (!new File(path + "/" + file_exampleBannedVanillaItems + Main.TYPE).exists()) {
+			System.out.println("Could not find file: " + file_exampleBannedVanillaItems + Main.TYPE + "! (Will be created)");
 			
 			bannedVanillaItems = new ArrayList<Material>();
 			for (Material m : Material.values()) {
@@ -194,18 +195,19 @@ public class ShopkeeperListener implements Listener {
 			}
 			
 			try {
-				fw = new FileWriter(path + "/" + file_exampleBannedVanillaItems + TYPE);
+				fw = new FileWriter(path + "/" + file_exampleBannedVanillaItems + Main.TYPE);
 				
 				g.toJson(bannedVanillaItems, fw);
 				
 				fw.flush();
+				fw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
 		
 		try {
-			fr = new FileReader(path + "/" + file_bannedVanillaItems + TYPE);
+			fr = new FileReader(path + "/" + file_bannedVanillaItems + Main.TYPE);
 			
 			bannedVanillaItems = g.fromJson(fr, new TypeToken<List<Material>>(){}.getType());
 		} catch (FileNotFoundException e) {

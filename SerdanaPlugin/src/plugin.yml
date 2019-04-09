@@ -18,6 +18,10 @@ commands:
     description: Bans an item
     usage: "Usage: '/setBan'"
     permission: serdana.setBan
+  bounty:
+    description: Creates/cancels a bounty
+    usage: "Usage: '/bounty' [argument] [player]"
+    permission: serdana.bounty
 
 permissions:
   serdana.setTier:
@@ -26,3 +30,5 @@ permissions:
     default: op
   serdana.setBan:
     default: op
+  serdana.bounty:
+    default: true

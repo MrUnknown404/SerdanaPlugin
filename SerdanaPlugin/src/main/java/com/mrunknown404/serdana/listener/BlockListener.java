@@ -4,7 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
 
 public class BlockListener implements Listener {
 

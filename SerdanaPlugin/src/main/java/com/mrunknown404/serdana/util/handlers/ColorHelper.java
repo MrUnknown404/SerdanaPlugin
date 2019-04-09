@@ -1,4 +1,4 @@
-package main.java.com.mrunknown404.serdana.util;
+package main.java.com.mrunknown404.serdana.util.handlers;
 
 public class ColorHelper {
 	public static String setColors(String str) {

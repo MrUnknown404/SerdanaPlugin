@@ -12,27 +12,32 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import main.java.com.mrunknown404.serdana.commands.CommandBounty;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.CraftingListener;
 import main.java.com.mrunknown404.serdana.listener.EntityListener;
 import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
-import main.java.com.mrunknown404.serdana.util.ColorHelper;
-import main.java.com.mrunknown404.serdana.util.HealthBarHandler;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
+import main.java.com.mrunknown404.serdana.util.handlers.BountyHandler;
+import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.handlers.HealthBarHandler;
 
 public final class Main extends JavaPlugin {
+	
+	public static final String TYPE = ".json";
 	
 	private ShopkeeperListener shopListen;
 	private HealthBarHandler healthBarHandler;
 	
 	private static RandomConfig randomConfig;
+	private static BountyHandler bountyHandler;
 	
-	private static final String TYPE = ".json";
 	private final File file_randomConfig = new File("RandomConfig");
 	
 	@Override
@@ -43,6 +48,7 @@ public final class Main extends JavaPlugin {
 		}
 		
 		healthBarHandler = new HealthBarHandler(this);
+		bountyHandler = new BountyHandler(this);
 		
 		shopListen = new ShopkeeperListener(getDataFolder());
 		getServer().getPluginManager().registerEvents(new EntityListener(), this);
@@ -55,6 +61,8 @@ public final class Main extends JavaPlugin {
 		getCommand("serdana").setExecutor(new CommandSerdana(this));
 		getCommand("setBan").setExecutor(new CommandSetBan());
 		getCommand("serdana").setTabCompleter(new TabSerdana());
+		getCommand("bounty").setExecutor(new CommandBounty());
+		getCommand("bounty").setTabCompleter(new TabBounty());
 		
 		reload(null);
 	}
@@ -66,6 +74,7 @@ public final class Main extends JavaPlugin {
 		System.out.println("Reloading Serdana's Configs!");
 		
 		shopListen.reload(sender);
+		bountyHandler.reload();
 		
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
@@ -82,6 +91,7 @@ public final class Main extends JavaPlugin {
 				g.toJson(randomConfig, fw);
 				
 				fw.flush();
+				fw.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -107,5 +117,9 @@ public final class Main extends JavaPlugin {
 	
 	public static RandomConfig getRandomConfig() {
 		return randomConfig;
+	}
+	
+	public static BountyHandler getBountyHandler() {
+		return bountyHandler;
 	}
 }
