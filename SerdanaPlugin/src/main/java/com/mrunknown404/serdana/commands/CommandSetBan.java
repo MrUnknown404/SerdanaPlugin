@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.itemnbtapi.NBTItem;
-import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class CommandSetBan implements CommandExecutor {
 

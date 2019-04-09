@@ -12,7 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.itemnbtapi.NBTItem;
-import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class CommandSetTier implements CommandExecutor {
 

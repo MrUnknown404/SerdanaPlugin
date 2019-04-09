@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.BountyInfo;
-import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class CommandBounty implements CommandExecutor {
 	
@@ -43,7 +43,11 @@ public class CommandBounty implements CommandExecutor {
 				return false;
 			}
 			
-			Main.getBountyHandler().addBounty(new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount()));
+			BountyInfo b = new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount());
+			if (!Main.getBountyHandler().getBounties().contains(b)) {
+				Main.getBountyHandler().addBounty(b);
+				((Player) sender).getInventory().remove(((Player) sender).getInventory().getItemInMainHand());
+			}
 			return true;
 		} else if (args[0].equalsIgnoreCase("cancel")) {
 			Player p = null;
@@ -54,7 +58,7 @@ public class CommandBounty implements CommandExecutor {
 				return false;
 			}
 			
-			Main.getBountyHandler().removeBounty(new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount()));
+			Main.getBountyHandler().removeBounty(new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount()), false);
 			return true;
 		}
 		

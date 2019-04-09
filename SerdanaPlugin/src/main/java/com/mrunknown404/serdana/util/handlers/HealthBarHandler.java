@@ -10,6 +10,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -51,23 +52,20 @@ public class HealthBarHandler {
 	}
 	
 	private String getOutput(double health, Player receiver, LivingEntity entity) {
-		String name;
 		double maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		
-		if (health < 0.0 || entity.isDead()) health = 0.0;
-		
-		if (entity.getCustomName() == null) {
-			name = entity.getName();
-		} else {
-			name = entity.getCustomName();
+		if (health < 0 || entity.isDead()) {
+			health = 0;
 		}
 		
-		name = ChatColor.stripColor(name);
+		String name = ChatColor.stripColor(entity.getName());
+		if (entity.getCustomName() != null) {
+			name = ChatColor.stripColor(entity.getCustomName());
+		}
 		
-		StringBuilder style = new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		int left = (int) MathHelper.clamp((float) maxHealth / 2, 1, 40);
-		double heart = maxHealth / (int) MathHelper.clamp((float) maxHealth / 2, 1, 40);;
-		double halfHeart = heart / 2;
+		double heart = maxHealth / (int) MathHelper.clamp((float) maxHealth / 2, 1, 40);
 		double tempHealth = health;
 		
 		if (maxHealth != health && health >= 0 && !entity.isDead()) {
@@ -75,36 +73,36 @@ public class HealthBarHandler {
 				if (tempHealth - heart > 0) {
 					tempHealth = tempHealth - heart;
 					
-					style.append("&4\u2764");
+					sb.append("&4\u2764");
 					left--;
 				} else {
 					break;
 				}
 			}
 			
-			if (tempHealth > halfHeart) {
-				style.append("&4\u2764");
+			if (tempHealth > heart / 2) {
+				sb.append("&4\u2764");
 				left--;
-			} else if (tempHealth > 0 && tempHealth <= halfHeart) {
-				style.append("&c\u2764");
+			} else if (tempHealth > 0 && tempHealth <= heart / 2) {
+				sb.append("&c\u2764");
 				left--;
 			}
 		}
 
 		if (maxHealth != health) {
 			for (int i = 0; i < left; i++) {
-				style.append("&7\u2764");
+				sb.append("&7\u2764");
 			}
 		} else {
 			for (int i = 0; i < left; i++) {
-				style.append("&4\u2764");
+				sb.append("&4\u2764");
 			}
 		}
 		
-		return "&7&l" + name + ": " + style.toString();
+		return "&7&l" + name + ": " + sb.toString();
 	}
 	
-	BukkitTask b = null;
+	private BukkitTask b = null;
 	
 	public void sendActionBar(Player player, String message) {
 		if (b != null) {

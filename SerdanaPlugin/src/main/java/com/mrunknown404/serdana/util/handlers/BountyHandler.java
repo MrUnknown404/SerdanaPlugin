@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,6 +17,7 @@ import com.google.gson.reflect.TypeToken;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.BountyInfo;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class BountyHandler {
 	
@@ -29,20 +31,18 @@ public class BountyHandler {
 	}
 	
 	public void addBounty(BountyInfo b) {
-		if (!bounties.contains(b)) {
-			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty created!"));
-			
-			bounties.add(b);
-			writeBounties();
-			readBounties();
-		} else {
-			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cThat player already has a bounty!"));
-		}
+		Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty created!"));
+		
+		bounties.add(b);
+		writeBounties();
+		readBounties();
 	}
 	
-	public void removeBounty(BountyInfo b) {
+	public void removeBounty(BountyInfo b, boolean wasDeath) {
 		if (bounties.contains(b)) {
-			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty canceled!"));
+			if (!wasDeath) {
+				Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty canceled!"));
+			}
 			
 			bounties.remove(b);
 			writeBounties();
@@ -50,6 +50,14 @@ public class BountyHandler {
 		} else {
 			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cThat player does not have a bounty created by you!"));
 		}
+	}
+	
+	public void rewardPlayer(BountyInfo info) {
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			p.sendMessage(ColorHelper.setColors("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
+		}
+		
+		//give reward
 	}
 	
 	public void reload() {

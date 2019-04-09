@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.inventory.ItemStack;
 
-import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class CraftingListener implements Listener {
 

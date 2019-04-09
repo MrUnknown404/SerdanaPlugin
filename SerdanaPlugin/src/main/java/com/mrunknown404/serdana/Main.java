@@ -23,9 +23,9 @@ import main.java.com.mrunknown404.serdana.listener.CraftingListener;
 import main.java.com.mrunknown404.serdana.listener.EntityListener;
 import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
 import main.java.com.mrunknown404.serdana.util.handlers.BountyHandler;
-import main.java.com.mrunknown404.serdana.util.handlers.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.handlers.HealthBarHandler;
 
 public final class Main extends JavaPlugin {

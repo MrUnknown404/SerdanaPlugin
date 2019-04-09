@@ -21,40 +21,29 @@ public class HealthListener implements Listener {
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
-	public void onEntityDamage(EntityDamageByEntityEvent event) {
-		Entity damaged = event.getEntity();
+	public void onEntityDamage(EntityDamageByEntityEvent e) {
+		Entity damaged = e.getEntity();
 		if (damaged.getType() == EntityType.ARMOR_STAND || damaged.hasMetadata("shopkeeper")) {
 			return;
 		}
 		
-		if (event.getDamager() instanceof Projectile) {
-			Projectile projectile = (Projectile) event.getDamager();
+		Player player = null;
+		if (e.getDamager() instanceof Projectile) {
+			Projectile projectile = (Projectile) e.getDamager();
 			
 			if (projectile.getShooter() instanceof Player) {
-				Player player = (Player) projectile.getShooter();
-				
-				if (player.getUniqueId() == damaged.getUniqueId()) {
-					return;
-				}
-				
-				if (damaged instanceof LivingEntity) {
-					LivingEntity livingEntity = (LivingEntity) damaged;
-					plugin.getHealthBarHandler().sendHealth(player, livingEntity, livingEntity.getHealth() - event.getFinalDamage());
-				}
+				player = (Player) projectile.getShooter();
 			}
+		} else if (e.getDamager() instanceof Player) {
+			player = (Player) e.getDamager();
 		}
 		
-		if (event.getDamager() instanceof Player) {
-			Player player = (Player) event.getDamager();
-			
-			if (player.getUniqueId() == damaged.getUniqueId()) {
-				return;
-			}
-			
-			if (damaged instanceof LivingEntity) {
-				LivingEntity livingEntity = (LivingEntity) damaged;
-				plugin.getHealthBarHandler().sendHealth(player, livingEntity, livingEntity.getHealth() - event.getFinalDamage());
-			}
+		if (player == null || player.getUniqueId() == damaged.getUniqueId()) {
+			return;
+		}
+		
+		if (damaged instanceof LivingEntity) {
+			plugin.getHealthBarHandler().sendHealth(player, (LivingEntity) damaged, ((LivingEntity) damaged).getHealth() - e.getFinalDamage());
 		}
 	}
 }
