@@ -22,7 +22,7 @@ public class CraftingListener implements Listener {
 					if (e.getInventory().getMatrix()[i].hasItemMeta() && e.getInventory().getMatrix()[i].getItemMeta().hasDisplayName()) {
 						e.setCancelled(true);
 						e.setResult(Result.DENY);
-						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou use named items for crafting!"));
+						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot use named items for crafting!"));
 						return;
 					}
 				}

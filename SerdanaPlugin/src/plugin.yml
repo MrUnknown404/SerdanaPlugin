@@ -14,9 +14,15 @@ commands:
     description: Edits Serdana related values
     usage: "Usage: '/serdana' [argument]"
     permission: serdana.serdanaReload
+  setBan:
+    description: Bans an item
+    usage: "Usage: '/setBan'"
+    permission: serdana.setBan
 
 permissions:
   serdana.setTier:
     default: op
   serdana.serdana:
+    default: op
+  serdana.setBan:
     default: op
