@@ -1,6 +1,6 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
-version: 0.5.0
+version: 0.6.0
 author: -Unknown-
 api-version: 1.13
 
@@ -22,7 +22,31 @@ commands:
     description: Creates/cancels a bounty
     usage: "Usage: '/bounty' [argument] [player]"
     permission: serdana.bounty
-
+  join:
+    description: Creates a fake login message
+    usage: "Usage: '/join' [name (optional)]"
+    permission: serdana.join
+  leave:
+    description: Creates a fake logout message
+    usage: "Usage: '/leave' [name (optional)]"
+    permission: serdana.leave
+  showitem:
+    description: Shows your held item
+    usage: "Usage: '/showitem' must hold an item"
+    permission: serdana.showitem
+  dots:
+    description: ...
+    usage: "Usage: '/dots'"
+    permission: serdana.dots
+  sayas:
+    description: Talk as another person
+    usage: "Usage: '/sayas [name] [message]'"
+    permission: serdana.sayas
+  coo:
+    description: Coo
+    usage: "Usage: '/coo'"
+    permission: serdana.coo
+    
 permissions:
   serdana.setTier:
     default: op
@@ -32,3 +56,15 @@ permissions:
     default: op
   serdana.bounty:
     default: true
+  serdana.join:
+    default: op
+  serdana.leave:
+    default: op
+  serdana.showitem:
+    default: true
+  serdana.dots:
+    default: op
+  serdana.sayas:
+    default: op
+  serdana.coo:
+    default: op

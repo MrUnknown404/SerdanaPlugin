@@ -13,9 +13,15 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import main.java.com.mrunknown404.serdana.commands.CommandBounty;
+import main.java.com.mrunknown404.serdana.commands.CommandCoo;
+import main.java.com.mrunknown404.serdana.commands.CommandDots;
+import main.java.com.mrunknown404.serdana.commands.CommandJoin;
+import main.java.com.mrunknown404.serdana.commands.CommandLeave;
+import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
+import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
@@ -63,6 +69,12 @@ public final class Main extends JavaPlugin {
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setExecutor(new CommandBounty());
 		getCommand("bounty").setTabCompleter(new TabBounty());
+		getCommand("join").setExecutor(new CommandJoin());
+		getCommand("leave").setExecutor(new CommandLeave());
+		getCommand("showitem").setExecutor(new CommandShowItem());
+		getCommand("dots").setExecutor(new CommandDots());
+		getCommand("sayas").setExecutor(new CommandSayAs());
+		getCommand("coo").setExecutor(new CommandCoo());
 		
 		reload(null);
 	}
