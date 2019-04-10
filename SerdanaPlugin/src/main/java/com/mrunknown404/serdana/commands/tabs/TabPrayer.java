@@ -16,10 +16,10 @@ public class TabPrayer implements TabCompleter {
 		if (args.length == 1) {
 			results.add("send");
 			results.add("book");
-			results.add("showUnsorted");
+			results.add("showUnset");
 			results.add("showGood");
 			results.add("showBad");
-			results.add("setUnsorted");
+			results.add("setUnset");
 			results.add("setGood");
 			results.add("setBad");
 			

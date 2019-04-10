@@ -1,6 +1,6 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
-version: 0.7.0
+version: 0.8.0
 author: -Unknown-
 api-version: 1.13
 
@@ -78,13 +78,13 @@ permissions:
     default: true
   serdana.prayer.book:
     default: true
-  serdana.prayer.showUnsorted:
+  serdana.prayer.showUnset:
     default: op
   serdana.prayer.showGood:
     default: op
   serdana.prayer.showBad:
     default: op
-  serdana.prayer.setUnsorted:
+  serdana.prayer.setUnset:
     default: op
   serdana.prayer.setGood:
     default: op

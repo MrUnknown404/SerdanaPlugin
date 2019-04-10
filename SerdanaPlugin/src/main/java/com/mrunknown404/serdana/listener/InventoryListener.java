@@ -5,8 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryEvent;
-import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.inventory.Inventory;
 
 import main.java.com.mrunknown404.serdana.Main;
@@ -32,15 +30,5 @@ public class InventoryListener implements Listener {
 				}
 			}
 		}
-	}
-	
-	@EventHandler
-	public void inventory(InventoryEvent e) {
-		System.out.println("open");
-	}
-	
-	@EventHandler
-	public void inventory(InventoryOpenEvent e) {
-		System.out.println("open22");
 	}
 }

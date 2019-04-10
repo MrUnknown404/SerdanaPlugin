@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.EnumPrayerType;
 import main.java.com.mrunknown404.serdana.util.PrayInfo;
 
 public class PrayerHandler {
@@ -90,18 +91,43 @@ public class PrayerHandler {
 		addPrayerstoInventories();
 	}
 	
-	public void addPrayer(PrayInfo b, String type) {
-		Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cPrayer sent!"));
-		
-		if (type.equalsIgnoreCase("unsorted")) {
-			unsortedPrayers.add(b);
-			writeUnsortedprayers();
-		} else if (type.equalsIgnoreCase("good")) {
-			goodPrayers.add(b);
+	public void addPrayer(PrayInfo info, EnumPrayerType type) {
+		if (type == EnumPrayerType.unset) {
+			unsortedPrayers.add(info);
+			writeUnsortedPrayers();
+		} else if (type == EnumPrayerType.good) {
+			goodPrayers.add(info);
 			writeGoodPrayers();
-		} else if (type.equalsIgnoreCase("bad")) {
-			badPrayers.add(b);
+		} else if (type == EnumPrayerType.bad) {
+			badPrayers.add(info);
 			writeBadPrayers();
+		}
+		
+		reload();
+	}
+	
+	public void removePrayer(PrayInfo info, EnumPrayerType type) {
+		if (type == EnumPrayerType.unset) {
+			for (int k = 0; k < unsortedPrayers.size(); k++) {
+				if (unsortedPrayers.get(k).equals(info)) {
+					unsortedPrayers.remove(info);
+					writeUnsortedPrayers();
+				}
+			}
+		} else if (type == EnumPrayerType.good) {
+			for (int k = 0; k < goodPrayers.size(); k++) {
+				if (goodPrayers.get(k).equals(info)) {
+					goodPrayers.remove(info);
+					writeGoodPrayers();
+				}
+			}
+		} else if (type == EnumPrayerType.bad) {
+			for (int k = 0; k < badPrayers.size(); k++) {
+				if (badPrayers.get(k).equals(info)) {
+					badPrayers.remove(info);
+					writeBadPrayers();
+				}
+			}
 		}
 		
 		reload();
@@ -109,7 +135,7 @@ public class PrayerHandler {
 	
 	private void writeAllPrayers() {
 		if (!new File(path + "/" + file_unsortedPrayers + ".yml").exists()) {
-			writeUnsortedprayers();
+			writeUnsortedPrayers();
 		}
 		
 		if (!new File(path + "/" + file_goodPrayers + ".yml").exists()) {
@@ -121,11 +147,11 @@ public class PrayerHandler {
 		}
 	}
 	
-	private void writeUnsortedprayers() {
+	private void writeUnsortedPrayers() {
 		File f = new File(path + "/" + file_unsortedPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("Prayers", unsortedPrayers);
+		write.set("Prays", unsortedPrayers);
 		
 		try {
 			write.save(f);
@@ -138,7 +164,7 @@ public class PrayerHandler {
 		File f = new File(path + "/" + file_goodPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("Prayers", goodPrayers);
+		write.set("Prays", goodPrayers);
 		
 		try {
 			write.save(f);
@@ -151,7 +177,7 @@ public class PrayerHandler {
 		File f = new File(path + "/" + file_badPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("Prayers", badPrayers);
+		write.set("Prays", badPrayers);
 		
 		try {
 			write.save(f);
@@ -205,5 +231,17 @@ public class PrayerHandler {
 	
 	public List<Inventory> getBadInventories() {
 		return badPrayersInventory;
+	}
+	
+	public List<PrayInfo> getUnsortedPrayers() {
+		return unsortedPrayers;
+	}
+	
+	public List<PrayInfo> getGoodPrayers() {
+		return goodPrayers;
+	}
+	
+	public List<PrayInfo> getBadPrayers() {
+		return badPrayers;
 	}
 }
