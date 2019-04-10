@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -52,12 +55,21 @@ public class BountyHandler {
 		}
 	}
 	
-	public void rewardPlayer(BountyInfo info) {
+	public void rewardPlayer(BountyInfo info, Player killer) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			p.sendMessage(ColorHelper.setColors("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
 		}
 		
-		//give reward
+		ItemStack reward = new ItemStack(Material.FLINT, 1);
+		ItemMeta meta = reward.getItemMeta();
+		meta.setDisplayName(ColorHelper.setColors("&cBounty Reward Token"));
+		reward.setItemMeta(meta);
+		
+		if (killer.getInventory().firstEmpty() == -1) {
+			killer.sendMessage(ColorHelper.setColors("&cInventory is full!"));
+		} else {
+			killer.getInventory().addItem(reward);
+		}
 	}
 	
 	public void reload() {

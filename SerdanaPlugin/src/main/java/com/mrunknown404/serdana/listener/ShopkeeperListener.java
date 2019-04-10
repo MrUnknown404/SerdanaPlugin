@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.bukkit.Material;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -19,24 +18,21 @@ import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.nisovin.shopkeepers.api.events.ShopkeeperOpenUIEvent;
 import com.nisovin.shopkeepers.api.events.ShopkeeperTradeEvent;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.JsonShopInfo;
-import main.java.com.mrunknown404.serdana.util.handlers.BannedItemHandler;
 
 public class ShopkeeperListener implements Listener {
+	private final Main main;
 	private final File path;
 	
 	private List<JsonShopInfo> shopInfos = new ArrayList<JsonShopInfo>();
-	private List<Material> bannedVanillaItems = new ArrayList<Material>();
-	private final File file_bannedVanillaItems = new File("BannedVanillaItems");
-	private final File file_exampleBannedVanillaItems = new File("ExampleBannedVanillaItems");
 	
-	public ShopkeeperListener(File path) {
-		this.path = path;
+	public ShopkeeperListener(Main main) {
+		this.main = main;
+		this.path = main.getDataFolder();
 	}
 
 	@EventHandler
@@ -90,7 +86,7 @@ public class ShopkeeperListener implements Listener {
 			r2 = new Random().nextInt(banInfo.info.get(-1).size());
 		}
 		
-		List<ItemStack> bannedItems = BannedItemHandler.getPlayersBannedItems(e.getPlayer(), bannedVanillaItems);
+		List<ItemStack> bannedItems = main.getBannedItemHandler().getPlayersBannedItems(e.getPlayer());
 		
 		if (!bannedItems.isEmpty()) {
 			if (banInfo.info.containsKey(e.getShopkeeper().getId())) {
@@ -165,53 +161,6 @@ public class ShopkeeperListener implements Listener {
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
-		}
-		
-		bannedVanillaItems = new ArrayList<Material>();
-		bannedVanillaItems.add(Material.DIRT);
-		bannedVanillaItems.add(Material.STONE);
-		
-		if (!new File(path + "/" + file_bannedVanillaItems + Main.TYPE).exists()) {
-			System.out.println("Could not find file: " + file_bannedVanillaItems + Main.TYPE + "! (Will be created)");
-			
-			try {
-				fw = new FileWriter(path + "/" + file_bannedVanillaItems + Main.TYPE);
-				
-				g.toJson(bannedVanillaItems, fw);
-				
-				fw.flush();
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		if (!new File(path + "/" + file_exampleBannedVanillaItems + Main.TYPE).exists()) {
-			System.out.println("Could not find file: " + file_exampleBannedVanillaItems + Main.TYPE + "! (Will be created)");
-			
-			bannedVanillaItems = new ArrayList<Material>();
-			for (Material m : Material.values()) {
-				bannedVanillaItems.add(m);
-			}
-			
-			try {
-				fw = new FileWriter(path + "/" + file_exampleBannedVanillaItems + Main.TYPE);
-				
-				g.toJson(bannedVanillaItems, fw);
-				
-				fw.flush();
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			fr = new FileReader(path + "/" + file_bannedVanillaItems + Main.TYPE);
-			
-			bannedVanillaItems = g.fromJson(fr, new TypeToken<List<Material>>(){}.getType());
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		}
 	}
 }

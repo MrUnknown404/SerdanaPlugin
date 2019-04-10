@@ -1,6 +1,6 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
-version: 0.6.0
+version: 0.7.0
 author: -Unknown-
 api-version: 1.13
 
@@ -46,7 +46,11 @@ commands:
     description: Coo
     usage: "Usage: '/coo'"
     permission: serdana.coo
-    
+  prayer:
+    description: Write/get prayers
+    usage: "Usage: '/prayer' [argument] [argument]"
+    permission: serdana.prayer
+
 permissions:
   serdana.setTier:
     default: op
@@ -67,4 +71,22 @@ permissions:
   serdana.sayas:
     default: op
   serdana.coo:
+    default: op
+  serdana.prayer:
+    default: true
+  serdana.prayer.send:
+    default: true
+  serdana.prayer.book:
+    default: true
+  serdana.prayer.showUnsorted:
+    default: op
+  serdana.prayer.showGood:
+    default: op
+  serdana.prayer.showBad:
+    default: op
+  serdana.prayer.setUnsorted:
+    default: op
+  serdana.prayer.setGood:
+    default: op
+  serdana.prayer.setBad:
     default: op

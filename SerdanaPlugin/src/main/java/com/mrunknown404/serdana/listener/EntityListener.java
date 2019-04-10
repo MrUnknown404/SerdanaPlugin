@@ -23,17 +23,22 @@ import main.java.com.mrunknown404.serdana.util.BountyInfo;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class EntityListener implements Listener {
+	private final Main main;
+	
+	public EntityListener(Main main) {
+		this.main = main;
+	}
 	
 	@EventHandler
 	public void entityDeath(PlayerDeathEvent e) {
 		if (e.getEntity().getKiller() instanceof Player) {
-			List<BountyInfo> bounties = Main.getBountyHandler().getBounties();
+			List<BountyInfo> bounties = main.getBountyHandler().getBounties();
 			
 			for (int i = 0; i < bounties.size(); i++) {
 				BountyInfo b = bounties.get(i);
 				if (e.getEntity().getUniqueId().equals(b.getToKillUUID())) {
-					Main.getBountyHandler().rewardPlayer(b);
-					Main.getBountyHandler().removeBounty(b, true);
+					main.getBountyHandler().rewardPlayer(b, e.getEntity().getKiller());
+					main.getBountyHandler().removeBounty(b, true);
 					return;
 				}
 			}

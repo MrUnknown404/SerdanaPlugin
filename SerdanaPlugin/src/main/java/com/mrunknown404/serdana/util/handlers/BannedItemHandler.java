@@ -1,24 +1,46 @@
 package main.java.com.mrunknown404.serdana.util.handlers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
+
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 
 public class BannedItemHandler {
 	
-	public static List<ItemStack> getPlayersBannedItems(Player p, List<Material> vanillaBanned) {
+	private final Main main;
+	private final File path;
+	
+	private List<Material> bannedVanillaItems = new ArrayList<Material>();
+	private final File file_bannedVanillaItems = new File("BannedVanillaItems");
+	private final File file_exampleBannedVanillaItems = new File("ExampleBannedVanillaItems");
+	
+	public BannedItemHandler(Main main) {
+		this.main = main;
+		this.path = main.getDataFolder();
+	}
+	
+	public List<ItemStack> getPlayersBannedItems(Player p) {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		
 		for (int i = 0; i < p.getInventory().getSize(); i++) {
 			if (p.getInventory().getItem(i) != null) {
-				if (isBannedItem(p.getInventory().getItem(i)) || isBannedMaterial(p.getInventory().getItem(i).getType(), vanillaBanned)) {
+				if (isBannedItem(p.getInventory().getItem(i))) {
 					items.add(p.getInventory().getItem(i));
 				}
 			}
@@ -28,26 +50,72 @@ public class BannedItemHandler {
 		return items;
 	}
 	
-	public static boolean isBannedItem(ItemStack item) {
+	public boolean isBannedItem(ItemStack item) {
 		NBTItem n = new NBTItem(item);
-		if (n.hasKey("banned")) {
+		if (n.hasKey("banned") || bannedVanillaItems.contains(item.getType())) {
 			return true;
 		}
 		
 		return false;
 	}
 	
-	public static boolean isBannedMaterial(Material m, List<Material> vanillaBanned) {
-		if (vanillaBanned.contains(m)) {
-			return true;
-		}
+	private void performBannedAction(Player p, int amount) {
+		int totalTime = amount * main.getRandomConfig().getJailTimeMinutes();
+		String jailName = main.getRandomConfig().getJailNames().get(new Random().nextInt(main.getRandomConfig().getJailNames().size()));
 		
-		return false;
+		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "jail " + p.getName() + " " + jailName + " " + totalTime + "m");
 	}
 	
-	private static void performBannedAction(Player p, int amount) {
-		int totalTime = amount * Main.getRandomConfig().getJailTimeMinutes();
+	public void reload() {
+		Gson g = new GsonBuilder().setPrettyPrinting().create();
+		FileWriter fw = null;
+		FileReader fr = null;
 		
-		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "jail " + p.getName() + " " + Main.getRandomConfig().getJailName() + " " + totalTime + "m");
+		bannedVanillaItems = new ArrayList<Material>();
+		bannedVanillaItems.add(Material.DIRT);
+		bannedVanillaItems.add(Material.STONE);
+		
+		if (!new File(path + "/" + file_bannedVanillaItems + Main.TYPE).exists()) {
+			System.out.println("Could not find file: " + file_bannedVanillaItems + Main.TYPE + "! (Will be created)");
+			
+			try {
+				fw = new FileWriter(path + "/" + file_bannedVanillaItems + Main.TYPE);
+				
+				g.toJson(bannedVanillaItems, fw);
+				
+				fw.flush();
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		if (!new File(path + "/" + file_exampleBannedVanillaItems + Main.TYPE).exists()) {
+			System.out.println("Could not find file: " + file_exampleBannedVanillaItems + Main.TYPE + "! (Will be created)");
+			
+			bannedVanillaItems = new ArrayList<Material>();
+			for (Material m : Material.values()) {
+				bannedVanillaItems.add(m);
+			}
+			
+			try {
+				fw = new FileWriter(path + "/" + file_exampleBannedVanillaItems + Main.TYPE);
+				
+				g.toJson(bannedVanillaItems, fw);
+				
+				fw.flush();
+				fw.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		try {
+			fr = new FileReader(path + "/" + file_bannedVanillaItems + Main.TYPE);
+			
+			bannedVanillaItems = g.fromJson(fr, new TypeToken<List<Material>>(){}.getType());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 	}
 }
