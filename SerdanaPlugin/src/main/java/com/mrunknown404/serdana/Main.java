@@ -7,8 +7,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.google.gson.Gson;
@@ -19,14 +21,14 @@ import main.java.com.mrunknown404.serdana.commands.CommandCoo;
 import main.java.com.mrunknown404.serdana.commands.CommandDots;
 import main.java.com.mrunknown404.serdana.commands.CommandJoin;
 import main.java.com.mrunknown404.serdana.commands.CommandLeave;
-import main.java.com.mrunknown404.serdana.commands.CommandPrayer;
+import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
-import main.java.com.mrunknown404.serdana.commands.tabs.TabPrayer;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.BookListener;
@@ -91,22 +93,22 @@ public final class Main extends JavaPlugin {
 		getCommand("dots").setExecutor(new CommandDots());
 		getCommand("sayas").setExecutor(new CommandSayAs());
 		getCommand("coo").setExecutor(new CommandCoo());
-		getCommand("prayer").setExecutor(new CommandPrayer(this));
+		getCommand("pray").setExecutor(new CommandPray(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
-		getCommand("prayer").setTabCompleter(new TabPrayer());
+		getCommand("pray").setTabCompleter(new TabPray());
 		
-		reload(null);
+		reload(Bukkit.getConsoleSender());
 	}
 	
 	public void reload(CommandSender sender) {
-		if (sender != null) {
+		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cReloading Serdana's Configs!"));
+		if (sender instanceof Player) {
 			sender.sendMessage(ColorHelper.setColors("&cReloading Serdana's Configs!"));
 		}
-		System.out.println("Reloading Serdana's Configs!");
 		
-		shopListen.reload(sender);
+		shopListen.reload();
 		bountyHandler.reload();
 		bannedItemHandler.reload();
 		prayerHandler.reload();
@@ -144,10 +146,10 @@ public final class Main extends JavaPlugin {
 			e.printStackTrace();
 		}
 		
-		if (sender != null) {
+		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
+		if (sender instanceof Player) {
 			sender.sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
 		}
-		System.out.println("Finished Serdana's Configs!");
 	}
 	
 	public HealthBarHandler getHealthBarHandler() {

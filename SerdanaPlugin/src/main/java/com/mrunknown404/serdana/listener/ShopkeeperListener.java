@@ -11,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-import org.bukkit.command.CommandSender;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -109,7 +108,7 @@ public class ShopkeeperListener implements Listener {
 		}
 	}
 	
-	public void reload(CommandSender sender) {
+	public void reload() {
 		Map<Integer, List<String>> exampleMapDefault = new HashMap<Integer, List<String>>();
 		List<String> exampleListDefault = new ArrayList<>();
 		

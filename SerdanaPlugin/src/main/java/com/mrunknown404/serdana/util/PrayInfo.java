@@ -5,20 +5,20 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
-import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.ItemStack;
 
 public class PrayInfo implements ConfigurationSerializable {
 	private UUID ownerUUID;
-	private BookMeta book;
+	private ItemStack book;
 	
-	public PrayInfo(UUID ownerUUID, BookMeta book) {
+	public PrayInfo(UUID ownerUUID, ItemStack book) {
 		this.ownerUUID = ownerUUID;
 		this.book = book;
 	}
 	
 	public PrayInfo(Map<String, Object> map) {
 		ownerUUID = UUID.fromString((String) map.get("ownerUUID"));
-		book = (BookMeta) map.get("book");
+		book = (ItemStack) map.get("book");
 	}
 	
 	@Override
@@ -33,7 +33,7 @@ public class PrayInfo implements ConfigurationSerializable {
 		return ownerUUID;
 	}
 	
-	public BookMeta getBook() {
+	public ItemStack getBook() {
 		return book;
 	}
 	

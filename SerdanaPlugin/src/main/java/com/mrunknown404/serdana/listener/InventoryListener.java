@@ -21,10 +21,9 @@ public class InventoryListener implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent event) {
 		for (Inventory inv : main.getPrayerHandler().getUnsortedInventories()) {
-			if (event.getInventory().getName().equalsIgnoreCase(inv.getName())) {
-				if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR || event.getAction() == InventoryAction.PICKUP_ALL ||
-						event.getAction() == InventoryAction.PICKUP_HALF || event.getAction() == InventoryAction.PICKUP_ONE ||
-						event.getAction() == InventoryAction.PICKUP_SOME) {
+			if (event.getInventory().getName().equalsIgnoreCase(inv.getName())) { //switch to !=
+				if (event.getAction() != InventoryAction.CLONE_STACK && event.getAction() != InventoryAction.PLACE_ALL &&
+						event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME) {
 					event.setCancelled(true);
 					event.setResult(Event.Result.DENY);
 				}

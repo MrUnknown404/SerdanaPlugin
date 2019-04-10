@@ -6,10 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemStack;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
@@ -19,7 +17,7 @@ import main.java.com.mrunknown404.serdana.util.PrayInfo;
 public class PrayerHandler {
 	
 	private final File path;
-	private final File file_unsortedPrayers = new File("UnsortedPrayers");
+	private final File file_unsortedPrayers = new File("UnsetPrayers");
 	private final File file_goodPrayers = new File("GoodPrayers");
 	private final File file_badPrayers = new File("BadPrayers");
 	
@@ -60,27 +58,22 @@ public class PrayerHandler {
 	}
 	
 	private void addPrayerstoInventories() {
-		ItemStack item = new ItemStack(Material.WRITTEN_BOOK, 1);
-		
 		for (int i = 0; i < unsortedPrayers.size(); i++) {
 			PrayInfo pi = unsortedPrayers.get(i);
-			item.setItemMeta(pi.getBook());
 			
-			unsortedPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, item);
+			unsortedPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, pi.getBook());
 		}
 		
 		for (int i = 0; i < goodPrayers.size(); i++) {
 			PrayInfo pi = goodPrayers.get(i);
-			item.setItemMeta(pi.getBook());
 			
-			goodPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, item);
+			goodPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, pi.getBook());
 		}
 		
 		for (int i = 0; i < badPrayers.size(); i++) {
 			PrayInfo pi = badPrayers.get(i);
-			item.setItemMeta(pi.getBook());
 			
-			badPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, item);
+			badPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, pi.getBook());
 		}
 	}
 	
