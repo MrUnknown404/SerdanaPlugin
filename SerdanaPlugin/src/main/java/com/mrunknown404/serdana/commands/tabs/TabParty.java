@@ -7,8 +7,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-public class TabBounty implements TabCompleter {
-	
+public class TabParty implements TabCompleter {
+
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 1) {
@@ -16,7 +16,10 @@ public class TabBounty implements TabCompleter {
 			List<String> finalResults = new ArrayList<String>();
 			
 			r.add("create");
-			r.add("cancel");
+			r.add("invite");
+			r.add("join");
+			r.add("leave");
+			r.add("kick");
 			
 			for (int i = 0; i < r.size(); i++) {
 				if (r.get(i).toLowerCase().contains(args[0].toLowerCase())) {

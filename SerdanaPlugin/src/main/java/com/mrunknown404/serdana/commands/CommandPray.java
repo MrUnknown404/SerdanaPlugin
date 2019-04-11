@@ -14,7 +14,7 @@ import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumPrayerType;
-import main.java.com.mrunknown404.serdana.util.PrayInfo;
+import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
 public class CommandPray implements CommandExecutor {
 	
@@ -71,7 +71,7 @@ public class CommandPray implements CommandExecutor {
 			p.getInventory().addItem(n.getItem());
 			p.sendMessage(ColorHelper.setColors("&cPrayer book added!"));
 			return true;
-		} else if (args[0].equalsIgnoreCase("showUnset") && sender.hasPermission("serdana.pray.showUnset") && args.length == 2) {
+		} else if (args[0].equalsIgnoreCase("showUnset") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
 			List<Inventory> inv = main.getPrayerHandler().getUnsortedInventories();
 			if (inv.isEmpty()) {
 				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
@@ -83,7 +83,7 @@ public class CommandPray implements CommandExecutor {
 			
 			p.openInventory(inv.get(Integer.parseInt(args[1])));
 			return true;
-		} else if (args[0].equalsIgnoreCase("showGood") && sender.hasPermission("serdana.pray.showGood") && args.length == 2) {
+		} else if (args[0].equalsIgnoreCase("showGood") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
 			List<Inventory> inv = main.getPrayerHandler().getGoodInventories();
 			if (inv.isEmpty()) {
 				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
@@ -95,7 +95,7 @@ public class CommandPray implements CommandExecutor {
 			
 			p.openInventory(inv.get(Integer.parseInt(args[1])));
 			return true;
-		} else if (args[0].equalsIgnoreCase("showBad") && sender.hasPermission("serdana.pray.showBad") && args.length == 2) {
+		} else if (args[0].equalsIgnoreCase("showBad") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
 			List<Inventory> inv = main.getPrayerHandler().getBadInventories();
 			if (inv.isEmpty()) {
 				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
@@ -113,76 +113,78 @@ public class CommandPray implements CommandExecutor {
 				return false;
 			}
 			
-			if (args[0].equalsIgnoreCase("setUnset") && sender.hasPermission("serdana.pray.setUnset")) {
-				PrayInfo info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-					return false;
+			if (sender.hasPermission("serdana.pray.set")) {
+				if (args[0].equalsIgnoreCase("setUnset")) {
+					PrayInfo info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
+						return false;
+					}
+					
+					info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
+					
+					info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
+				} else if (args[0].equalsIgnoreCase("setGood")) {
+					PrayInfo info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
+						return false;
+					}
+					
+					info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
+					
+					info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
+				} else if (args[0].equalsIgnoreCase("setBad")) {
+					PrayInfo info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
+						return false;
+					}
+					
+					info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
+					
+					info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
+					if (info != null) {
+						main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
+						main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
+						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						return true;
+					}
 				}
 				
-				info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
-				
-				info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
-			} else if (args[0].equalsIgnoreCase("setGood") && sender.hasPermission("serdana.pray.setGood")) {
-				PrayInfo info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-					return false;
-				}
-				
-				info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
-				
-				info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
-			} else if (args[0].equalsIgnoreCase("setBad") && sender.hasPermission("serdana.pray.setBad")) {
-				PrayInfo info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-					return false;
-				}
-				
-				info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
-				
-				info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
-				if (info != null) {
-					main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
-					main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
-					p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-					return true;
-				}
+				p.sendMessage(ColorHelper.setColors("&cCould not find that prayer!"));
+				return false;
 			}
-			
-			p.sendMessage(ColorHelper.setColors("&cCould not find that prayer!"));
-			return false;
 		}
 		
 		return false;

@@ -1,4 +1,4 @@
-package main.java.com.mrunknown404.serdana.util.handlers;
+package main.java.com.mrunknown404.serdana.handlers;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -19,8 +19,8 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.util.BountyInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 
 public class BountyHandler {
 	

@@ -10,8 +10,8 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.util.BountyInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 
 public class CommandBounty implements CommandExecutor {
 	private final Main main;

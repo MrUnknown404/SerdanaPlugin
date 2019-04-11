@@ -21,6 +21,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandCoo;
 import main.java.com.mrunknown404.serdana.commands.CommandDots;
 import main.java.com.mrunknown404.serdana.commands.CommandJoin;
 import main.java.com.mrunknown404.serdana.commands.CommandLeave;
+import main.java.com.mrunknown404.serdana.commands.CommandParty;
 import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
@@ -28,8 +29,14 @@ import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
+import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
+import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
+import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
+import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
+import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.BookListener;
 import main.java.com.mrunknown404.serdana.listener.CraftingListener;
@@ -38,12 +45,8 @@ import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.InventoryListener;
 import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
-import main.java.com.mrunknown404.serdana.util.PrayInfo;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
-import main.java.com.mrunknown404.serdana.util.handlers.BannedItemHandler;
-import main.java.com.mrunknown404.serdana.util.handlers.BountyHandler;
-import main.java.com.mrunknown404.serdana.util.handlers.HealthBarHandler;
-import main.java.com.mrunknown404.serdana.util.handlers.PrayerHandler;
+import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
 public final class Main extends JavaPlugin {
 	
@@ -55,6 +58,7 @@ public final class Main extends JavaPlugin {
 	private RandomConfig randomConfig;
 	private BountyHandler bountyHandler;
 	private PrayerHandler prayerHandler;
+	private PartyHandler partyHandler;
 	
 	private final File file_randomConfig = new File("RandomConfig");
 	
@@ -71,6 +75,7 @@ public final class Main extends JavaPlugin {
 		bountyHandler = new BountyHandler(this);
 		bannedItemHandler = new BannedItemHandler(this);
 		prayerHandler = new PrayerHandler(this);
+		partyHandler = new PartyHandler();
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -94,10 +99,12 @@ public final class Main extends JavaPlugin {
 		getCommand("sayas").setExecutor(new CommandSayAs());
 		getCommand("coo").setExecutor(new CommandCoo());
 		getCommand("pray").setExecutor(new CommandPray(this));
+		getCommand("party").setExecutor(new CommandParty(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
 		getCommand("pray").setTabCompleter(new TabPray());
+		getCommand("party").setTabCompleter(new TabParty());
 		
 		reload(Bukkit.getConsoleSender());
 	}
@@ -170,5 +177,9 @@ public final class Main extends JavaPlugin {
 	
 	public PrayerHandler getPrayerHandler() {
 		return prayerHandler;
+	}
+	
+	public PartyHandler getPartyHandler() {
+		return partyHandler;
 	}
 }

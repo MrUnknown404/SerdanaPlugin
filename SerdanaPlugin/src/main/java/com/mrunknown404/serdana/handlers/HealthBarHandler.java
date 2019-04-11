@@ -1,4 +1,4 @@
-package main.java.com.mrunknown404.serdana.util.handlers;
+package main.java.com.mrunknown404.serdana.handlers;
 
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;

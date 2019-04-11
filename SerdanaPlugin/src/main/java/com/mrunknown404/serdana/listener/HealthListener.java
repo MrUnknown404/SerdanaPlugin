@@ -14,10 +14,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import main.java.com.mrunknown404.serdana.Main;
 
 public class HealthListener implements Listener {
-	private Main plugin;
+	private Main main;
 	
-	public HealthListener(Main plugin) {
-		this.plugin = plugin;
+	public HealthListener(Main main) {
+		this.main = main;
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -43,7 +43,7 @@ public class HealthListener implements Listener {
 		}
 		
 		if (damaged instanceof LivingEntity) {
-			plugin.getHealthBarHandler().sendHealth(player, (LivingEntity) damaged, ((LivingEntity) damaged).getHealth() - e.getFinalDamage());
+			main.getHealthBarHandler().sendHealth(player, (LivingEntity) damaged, ((LivingEntity) damaged).getHealth() - e.getFinalDamage());
 		}
 	}
 }

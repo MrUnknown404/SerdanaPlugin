@@ -1,4 +1,4 @@
-package main.java.com.mrunknown404.serdana.util.handlers;
+package main.java.com.mrunknown404.serdana.handlers;
 
 import java.io.File;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import org.bukkit.inventory.Inventory;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumPrayerType;
-import main.java.com.mrunknown404.serdana.util.PrayInfo;
+import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
 public class PrayerHandler {
 	

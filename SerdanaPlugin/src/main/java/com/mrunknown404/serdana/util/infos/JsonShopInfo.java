@@ -1,4 +1,4 @@
-package main.java.com.mrunknown404.serdana.util;
+package main.java.com.mrunknown404.serdana.util.infos;
 
 import java.util.HashMap;
 import java.util.List;

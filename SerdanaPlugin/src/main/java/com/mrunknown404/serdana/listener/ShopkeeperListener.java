@@ -21,7 +21,7 @@ import com.nisovin.shopkeepers.api.events.ShopkeeperOpenUIEvent;
 import com.nisovin.shopkeepers.api.events.ShopkeeperTradeEvent;
 
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.util.JsonShopInfo;
+import main.java.com.mrunknown404.serdana.util.infos.JsonShopInfo;
 
 public class ShopkeeperListener implements Listener {
 	private final Main main;

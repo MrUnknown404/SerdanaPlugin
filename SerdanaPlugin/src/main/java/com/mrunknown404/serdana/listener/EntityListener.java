@@ -12,6 +12,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 import org.bukkit.inventory.meta.SpawnEggMeta;
@@ -19,7 +20,7 @@ import org.bukkit.inventory.meta.SpawnEggMeta;
 import de.tr7zw.itemnbtapi.NBTEntity;
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.util.BountyInfo;
+import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class EntityListener implements Listener {
@@ -30,7 +31,18 @@ public class EntityListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onLeave(PlayerQuitEvent e) {
+		if (main.getPartyHandler().isPlayerInAnyParty(e.getPlayer().getUniqueId()) ) {
+			main.getPartyHandler().leaveParty(e.getPlayer().getUniqueId());
+		}
+	}
+	
+	@EventHandler
 	public void entityDeath(PlayerDeathEvent e) {
+		if (main.getPartyHandler().isPlayerInAnyParty(e.getEntity().getUniqueId()) ) {
+			main.getPartyHandler().notifyDeath(e.getEntity().getUniqueId());
+		}
+		
 		if (e.getEntity().getKiller() instanceof Player) {
 			List<BountyInfo> bounties = main.getBountyHandler().getBounties();
 			
