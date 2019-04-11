@@ -51,6 +51,7 @@ import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 public final class Main extends JavaPlugin {
 	
 	public static final String TYPE = ".json";
+	private final File file_randomConfig = new File("RandomConfig");
 	
 	private ShopkeeperListener shopListen;
 	private HealthBarHandler healthBarHandler;
@@ -59,8 +60,6 @@ public final class Main extends JavaPlugin {
 	private BountyHandler bountyHandler;
 	private PrayerHandler prayerHandler;
 	private PartyHandler partyHandler;
-	
-	private final File file_randomConfig = new File("RandomConfig");
 	
 	@Override
 	public void onEnable() {

@@ -64,12 +64,12 @@ public class CommandParty implements CommandExecutor {
 				pl.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
 				return false;
 			} else if (!main.getPartyHandler().doesPlayerHaveInvite(Bukkit.getPlayer(args[1]).getUniqueId(), pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou do not have an invite"));
+				pl.sendMessage(ColorHelper.setColors("&cYou do not have an invite from that player!"));
 				return false;
 			}
 			
 			pl.sendMessage(ColorHelper.setColors("&cYou joined the party!"));
-			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.setColors("&c" + pl + " has joined the party!"));
+			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.setColors("&c" + pl.getDisplayName() + " has joined the party!"));
 			main.getPartyHandler().joinParty(Bukkit.getPlayer(args[1]).getUniqueId(), pl.getUniqueId());
 			return true;
 		} else if (args[0].equalsIgnoreCase("leave") && args.length == 1) {

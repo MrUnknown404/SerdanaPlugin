@@ -5,19 +5,24 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.Playerboard;
 import main.java.com.mrunknown404.serdana.util.infos.PartyInfo;
 
 public class PartyHandler {
-
 	private List<PartyInfo> parties = new ArrayList<PartyInfo>();
 	
 	public void joinParty(UUID partyLeader, UUID playerJoining) {
-		for (PartyInfo p : parties) {
+		for (int i = 0; i < parties.size(); i++) {
+			PartyInfo p = parties.get(i);
+			
 			if (p.getLeader().equals(partyLeader)) {
 				p.getMembers().add(playerJoining);
 				p.getInvites().remove(playerJoining);
+				
+				p.getBoard().addPlayer(Bukkit.getPlayer(playerJoining));
 				return;
 			}
 		}
@@ -28,17 +33,27 @@ public class PartyHandler {
 			PartyInfo p = parties.get(i);
 			
 			if (p.getLeader().equals(playerLeaving)) {
+				p.getBoard().removePlayer(Bukkit.getPlayer(p.getLeader()));
+				for (UUID id : p.getMembers()) {
+					p.getBoard().removePlayer(Bukkit.getPlayer(id));
+				}
+				
 				parties.remove(p);
 				return;
 			} else if (p.getMembers().contains(playerLeaving)) {
 				p.getMembers().remove(playerLeaving);
+				p.getBoard().removePlayer(Bukkit.getPlayer(playerLeaving));
 				return;
 			}
 		}
 	}
 	
 	public void createParty(UUID creator) {
-		parties.add(new PartyInfo(creator));
+		Player p = Bukkit.getPlayer(creator);
+		Playerboard board = new Playerboard(p, ColorHelper.setColors("&6Party's Health"));
+		board.set(p.getDisplayName() + " :", (int) p.getHealth(), false);
+		
+		parties.add(new PartyInfo(creator, board));
 	}
 	
 	public void notifyDeath(UUID death) {
