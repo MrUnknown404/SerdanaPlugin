@@ -5,11 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.bukkit.Bukkit;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.RenderType;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
 
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.infos.PartyInfo;
@@ -43,16 +38,6 @@ public class PartyHandler {
 	}
 	
 	public void createParty(UUID creator) {
-		Scoreboard board = Bukkit.getScoreboardManager().getNewScoreboard();
-		Objective objective = board.registerNewObjective("Health", "health", ColorHelper.setColors("&6Party's Health"), RenderType.HEARTS);
-		Team team = board.registerNewTeam("team_" + parties.size());
-		
-		objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-		
-		team.setOption(Team.Option.NAME_TAG_VISIBILITY, Team.OptionStatus.NEVER);
-		team.setAllowFriendlyFire(true);
-		team.setCanSeeFriendlyInvisibles(true);
-		
 		parties.add(new PartyInfo(creator));
 	}
 	

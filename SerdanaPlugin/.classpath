@@ -6,5 +6,6 @@
 	<classpathentry kind="lib" path="C:/Github/SerdanaPlugin/SerdanaPlugin/lib/spigot-api-1.13.2-R0.1-SNAPSHOT-shaded.jar"/>
 	<classpathentry kind="lib" path="C:/Github/SerdanaPlugin/SerdanaPlugin/lib/EssentialsX-2.16.1.0.jar"/>
 	<classpathentry kind="lib" path="C:/Github/SerdanaPlugin/SerdanaPlugin/lib/Shopkeepers-2.6.0.jar"/>
+	<classpathentry kind="lib" path="C:/Github/SerdanaPlugin/SerdanaPlugin/lib/Netherboard-Bukkit-1.1.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
