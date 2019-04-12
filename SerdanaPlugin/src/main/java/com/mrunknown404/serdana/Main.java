@@ -43,6 +43,7 @@ import main.java.com.mrunknown404.serdana.listener.CraftingListener;
 import main.java.com.mrunknown404.serdana.listener.EntityListener;
 import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.InventoryListener;
+import main.java.com.mrunknown404.serdana.listener.PlayerListener;
 import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
@@ -78,7 +79,8 @@ public final class Main extends JavaPlugin {
 		
 		shopListen = new ShopkeeperListener(this);
 		
-		getServer().getPluginManager().registerEvents(new EntityListener(this), this);
+		getServer().getPluginManager().registerEvents(new EntityListener(), this);
+		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new CraftingListener(), this);
 		getServer().getPluginManager().registerEvents(new HealthListener(this), this);
 		getServer().getPluginManager().registerEvents(new BlockListener(), this);

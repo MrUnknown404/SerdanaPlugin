@@ -29,7 +29,7 @@ public class HealthListener implements Listener {
 			Player p = (Player) e.getEntity();
 			if (main.getPartyHandler().isPlayerInAnyParty(p.getUniqueId())) {
 				PartyInfo info = main.getPartyHandler().getPlayersParty(p.getUniqueId());
-				info.getBoard().set(p.getDisplayName() + " :", (int) Math.floor(p.getHealth() - e.getFinalDamage()), false);
+				info.getBoard().set(p.getUniqueId(), (int) Math.floor(p.getHealth() - e.getFinalDamage()), false);
 			}
 		}
 	}
@@ -40,7 +40,7 @@ public class HealthListener implements Listener {
 			Player p = (Player) e.getEntity();
 			if (main.getPartyHandler().isPlayerInAnyParty(p.getUniqueId())) {
 				PartyInfo info = main.getPartyHandler().getPlayersParty(p.getUniqueId());
-				info.getBoard().set(p.getDisplayName() + " :", (int) Math.floor(p.getHealth() + e.getAmount()), false);
+				info.getBoard().set(p.getUniqueId(), (int) Math.floor(p.getHealth() + e.getAmount()), false);
 			}
 		}
 	}

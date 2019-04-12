@@ -36,5 +36,4 @@ public class CommandSetBan implements CommandExecutor {
 		
 		return true;
 	}
-
 }

@@ -3,15 +3,16 @@ package main.java.com.mrunknown404.serdana.util;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
+import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+
+import main.java.com.mrunknown404.serdana.util.infos.PlayerboardInfo;
 
 public class Playerboard {
 	
@@ -21,7 +22,7 @@ public class Playerboard {
 	private Objective objective;
 	private Objective buffer;
 	
-	private Map<String, Integer> lines = new HashMap<>();
+	private List<PlayerboardInfo> lines = new ArrayList<PlayerboardInfo>();
 
 	public Playerboard(Player player, String name) {
 		scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
@@ -43,7 +44,7 @@ public class Playerboard {
 		p.setScoreboard(scoreboard);
 		
 		for (Player pl : players) {
-			set(pl.getDisplayName() + " :", (int) Math.floor(pl.getHealth()), false);
+			set(pl.getUniqueId(), (int) Math.floor(pl.getHealth()), false);
 		}
 	}
 	
@@ -51,7 +52,7 @@ public class Playerboard {
 		sendObjective(objective, ObjectiveMode.REMOVE);
 		sendObjective(buffer, ObjectiveMode.REMOVE);
 		
-		set(p.getDisplayName() + " :", (int) Math.floor(p.getHealth()), true);
+		set(p.getUniqueId(), (int) Math.floor(p.getHealth()), true);
 		players.remove(p);
 		
 		sendObjective(objective, ObjectiveMode.CREATE);
@@ -59,43 +60,54 @@ public class Playerboard {
 		sendObjective(buffer, ObjectiveMode.CREATE);
 		
 		for (Player pl : players) {
-			set(pl.getDisplayName() + " :", (int) Math.floor(pl.getHealth()), false);
+			set(pl.getUniqueId(), (int) Math.floor(pl.getHealth()), false);
 		}
 	}
 	
-	public void set(String name, int score, boolean remove) {
+	public void set(UUID id, int score, boolean remove) {
 		String oldName = null;
 		
-		Iterator<Entry<String, Integer>> it = lines.entrySet().iterator();
-		while (it.hasNext()) {
-			Entry<String, Integer> pair = it.next();
-			
-			if (pair.getKey().equals(name)) {
-				oldName = name;
+		for (PlayerboardInfo info : lines) {
+			if (info.getUUID().equals(id)) {
+				if (Bukkit.getPlayer(id).getDisplayName() != info.getOldName()) {
+					oldName = info.getOldName();
+				}
 			}
 		}
 		
 		if (!remove) {
 			if (oldName != null) {
 				sendScore(buffer, oldName, score, true);
-				sendScore(buffer, name, score, false);
+				sendScore(buffer, Bukkit.getPlayer(id).getDisplayName(), score, false);
 				
 				swapBuffers();
 				
 				sendScore(buffer, oldName, score, true);
-				sendScore(buffer, name, score, false);
-			} else {
-				sendScore(objective, name, score, false);
-				sendScore(buffer, name, score, false);
+				sendScore(buffer, Bukkit.getPlayer(id).getDisplayName(), score, false);
 				
-				lines.put(name, score);
+				for (PlayerboardInfo info : lines) {
+					if (info.getUUID().equals(id)) {
+						info.setOldName(Bukkit.getPlayer(id).getDisplayName());
+					}
+				}
+			} else {
+				sendScore(objective, Bukkit.getPlayer(id).getDisplayName(), score, false);
+				sendScore(buffer, Bukkit.getPlayer(id).getDisplayName(), score, false);
+				
+				lines.add(new PlayerboardInfo(id, Bukkit.getPlayer(id).getDisplayName(), score));
 			}
 		} else {
 			sendScore(buffer, oldName, score, true);
 			swapBuffers();
 			sendScore(buffer, oldName, score, true);
 			
-			lines.remove(name);
+			for (int i = 0; i < lines.size(); i++) {
+				PlayerboardInfo info = lines.get(i);
+				
+				if (info.getUUID().equals(id)) {
+					lines.remove(info);
+				}
+			}
 		}
 	}
 	
