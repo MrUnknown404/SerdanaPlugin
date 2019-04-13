@@ -55,7 +55,17 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	}
 	
 	public void addQuest(Quest quest) {
-		quests.add(new Quest(quest.getName(), quest.getDescription(), quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards()));
+		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards()));
+	}
+	
+	public void removeQuest(Quest quest) {
+		for (int i = 0; i < quests.size(); i++) {
+			Quest q = quests.get(i);
+			
+			if (q.equals(quest)) {
+				quests.remove(q);
+			}
+		}
 	}
 	
 	public boolean hasQuest(Quest q) {

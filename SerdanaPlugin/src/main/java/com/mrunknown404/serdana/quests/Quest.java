@@ -14,6 +14,7 @@ import main.java.com.mrunknown404.serdana.util.QuestState;
 
 public class Quest implements ConfigurationSerializable {
 
+	private int questID;
 	private String name;
 	private String[] description;
 	private int startID, finishID, currentTaskID = 0;
@@ -23,7 +24,8 @@ public class Quest implements ConfigurationSerializable {
 	
 	private List<QuestTask> tasks = new ArrayList<>();
 	
-	Quest(String name, String[] description, List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards) {
+	Quest(int questID, String name, String[] description, List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards) {
+		this.questID = questID;
 		this.name = name;
 		this.tasks = tasks;
 		this.startID = startID;
@@ -34,6 +36,7 @@ public class Quest implements ConfigurationSerializable {
 	
 	@SuppressWarnings("unchecked")
 	public Quest(Map<String, Object> map) {
+		questID = (int) map.get("questID");
 		name = (String) map.get("name");
 		
 		List<String> list1 = (List<String>) map.get("description");
@@ -57,6 +60,7 @@ public class Quest implements ConfigurationSerializable {
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>();
+		result.put("questID", questID);
 		result.put("name", name);
 		
 		List<String> list1 = new ArrayList<String>();
@@ -103,6 +107,10 @@ public class Quest implements ConfigurationSerializable {
 		return tasks.get(currentTaskID);
 	}
 	
+	public int getQuestID() {
+		return questID;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -144,8 +152,10 @@ public class Quest implements ConfigurationSerializable {
 		if (!(obj instanceof Quest)) {
 			return false;
 		}
-		Quest q = (Quest) obj;
+		if (((Quest) obj).questID == questID) {
+			return true;
+		}
 		
-		return name.equals(q.getName()) && startID == q.getStartID() && finishID == q.getFinishID();
+		return false;
 	}
 }

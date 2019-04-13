@@ -44,6 +44,111 @@ public class QuestHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	public void reloadPlayer(Player p) {
+		if (playersQuests.isEmpty()) {
+			return;
+		}
+		
+		setupPlayer(p);
+	}
+	
+	public void reloadAll() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			setupPlayer(p);
+		}
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
+	}
+	
+	public void checkAllTask(EnumTaskCheckType type) { int runthis;
+		for (Player p : Bukkit.getOnlinePlayers()) {
+			QuestPlayerData info = getQuestPlayersData(p);
+			
+			for (Quest q : info.getQuests()) {
+				if (q.getCurrentTask().getTaskCheckType() == type) {
+					q.check(Bukkit.getPlayer(info.getPlayerUUID()));
+				}
+			}
+		}
+	}
+	
+	public void checkTask(Player p, EnumTaskCheckType type) {
+		QuestPlayerData info = getQuestPlayersData(p);
+		
+		for (Quest q : info.getQuests()) {
+			if (q.getCurrentTask().getTaskCheckType() == type) {
+				q.check(Bukkit.getPlayer(info.getPlayerUUID()));
+			}
+		}
+	}
+	
+	public void setupPlayer(Player p) {
+		if (playersQuests.contains(getQuestPlayersData(p))) {
+			playersQuests.remove(getQuestPlayersData(p));
+		}
+		
+		if (readQuestPlayerData(p) == null) {
+			playersQuests.add(new QuestPlayerData(p.getUniqueId(), new ArrayList<Quest>()));
+			writeQuestPlayerData(p);
+		} else {
+			playersQuests.add(readQuestPlayerData(p));
+		}
+		
+		Iterator<Entry<Boolean, List<Quest>>> it = InitQuests.getAllQuests().entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<Boolean, List<Quest>> pair = it.next();
+			
+			if (pair.getKey()) {
+				for (Quest q : pair.getValue()) {
+					if (!getQuestPlayersData(p).hasQuest(q)) {
+						System.out.println(p.getDisplayName() + " does not have the quest " + q.getName() + "! (adding now)");
+						addQuestToPlayer(p, q);
+					}
+				}
+			} else {
+				for (Quest q : pair.getValue()) {
+					if (getQuestPlayersData(p).hasQuest(q)) {
+						System.out.println(p.getDisplayName() + " has a removed (inactive) quest " + q.getName() + "! (removing now)");
+						removeQuestFromPlayer(p, q);
+					}
+				}
+			}
+		}
+		
+		setupQuestChestGUI(p);
+	}
+	
+	public void unsetupPlayer(Player p) {
+		playersQuests.remove(getQuestPlayersData(p));
+		questInventoriesAccepted.remove(p.getUniqueId());
+		questInventoriesUnknown.remove(p.getUniqueId());
+		questInventoriesFinished.remove(p.getUniqueId());
+	}
+	
+	private void addQuestToPlayer(Player p, Quest quest) {
+		QuestPlayerData info = getQuestPlayersData(p);
+		
+		if (info != null) {
+			info.addQuest(quest);
+			writeQuestPlayerData(p);
+		} else {
+			System.err.println("Player " + p.getDisplayName() + " does not have a quest playerdata");
+		}
+	}
+	
+	private void removeQuestFromPlayer(Player p, Quest quest) {
+		QuestPlayerData info = getQuestPlayersData(p);
+		
+		if (info != null) {
+			info.removeQuest(quest);
+			writeQuestPlayerData(p);
+		} else {
+			System.err.println("Player " + p.getDisplayName() + " does not have a quest playerdata");
+		}
+	}
+	
 	public void setupQuestChestGUI(Player p) {
 		List<Inventory> invUnknown = new ArrayList<Inventory>(); //paper
 		List<Inventory> invAccepted = new ArrayList<Inventory>(); //writable book
@@ -139,96 +244,6 @@ public class QuestHandler {
 		questInventoriesUnknown.put(p.getUniqueId(), invUnknown);
 	}
 	
-	public void reloadPlayer(Player p) {
-		if (playersQuests.isEmpty()) {
-			return;
-		}
-		
-		QuestPlayerData info = getQuestPlayersData(p);
-		if (info.getPlayerUUID().equals(p.getUniqueId())) {
-			if (!new File(path + "/Quests/PlayerData/" + info.getPlayerUUID() + Main.TYPE).exists()) {
-				writeQuestPlayerData(p);
-			}
-			
-			readQuestPlayerData(p);
-		}
-	}
-	
-	public void reloadAll() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			QuestPlayerData info = getQuestPlayersData(p);
-			
-			if (info.getPlayerUUID().equals(p.getUniqueId())) {
-				if (!new File(path + "/Quests/PlayerData/" + info.getPlayerUUID() + Main.TYPE).exists()) {
-					writeQuestPlayerData(p);
-				}
-				
-				readQuestPlayerData(p);
-			}
-		}
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
-	}
-	
-	public void checkAllTask(EnumTaskCheckType type) { int runthis;
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			QuestPlayerData info = getQuestPlayersData(p);
-			
-			for (Quest q : info.getQuests()) {
-				if (q.getCurrentTask().getTaskCheckType() == type) {
-					q.check(Bukkit.getPlayer(info.getPlayerUUID()));
-				}
-			}
-		}
-	}
-	
-	public void checkTask(Player p, EnumTaskCheckType type) {
-		QuestPlayerData info = getQuestPlayersData(p);
-		
-		for (Quest q : info.getQuests()) {
-			if (q.getCurrentTask().getTaskCheckType() == type) {
-				q.check(Bukkit.getPlayer(info.getPlayerUUID()));
-			}
-		}
-	}
-	
-	public void setupPlayer(Player p) {
-		if (readQuestPlayerData(p) == null) {
-			playersQuests.add(new QuestPlayerData(p.getUniqueId(), new ArrayList<Quest>()));
-		} else {
-			playersQuests.add(readQuestPlayerData(p));
-		}
-		
-		for (Quest q : InitQuests.getAllQuests()) {
-			if (!getQuestPlayersData(p).hasQuest(q)) {
-				System.out.println(p.getDisplayName() + " does not have the quest " + q.getName() + "! (adding now)");
-				addQuestToPlayer(p, q);
-			}
-		}
-		
-		setupQuestChestGUI(p);
-	}
-	
-	public void unsetupPlayer(Player p) {
-		playersQuests.remove(getQuestPlayersData(p));
-		questInventoriesAccepted.remove(p.getUniqueId());
-		questInventoriesUnknown.remove(p.getUniqueId());
-		questInventoriesFinished.remove(p.getUniqueId());
-	}
-	
-	public void addQuestToPlayer(Player p, Quest quest) {
-		QuestPlayerData info = getQuestPlayersData(p);
-		
-		if (info != null) {
-			info.addQuest(quest);
-			writeQuestPlayerData(p);
-		} else {
-			System.err.println("Player " + p.getDisplayName() + " does not have a quest playerdata");
-		}
-	}
-	
 	private void writeQuestPlayerData(Player p) {
 		File f = new File(path + "/Quests/PlayerData/" + p.getUniqueId().toString() + ".yml");
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -264,7 +279,7 @@ public class QuestHandler {
 					"String 2"
 			}));
 			
-			q = new Quest("Debug Fetch!", new String[] {
+			q = new Quest(0, "Debug Fetch!", new String[] {
 					"Description Fetch"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.DIAMOND, 2)
@@ -282,7 +297,7 @@ public class QuestHandler {
 					"String 2"
 			}));
 			
-			q = new Quest("Debug Kill!", new String[] {
+			q = new Quest(1, "Debug Kill!", new String[] {
 					"Description Kill"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.BONE, 5)
@@ -300,14 +315,14 @@ public class QuestHandler {
 					"String 2"
 			}));
 			
-			q = new Quest("Debug Walk!", new String[] {
+			q = new Quest(2, "Debug Walk!", new String[] {
 					"Description Walk"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.FEATHER, 2)
 			});
 			write.set("Quest", q);
 		} else {
-			q = new Quest("Unfinished Quest!", new String[] {
+			q = new Quest(3, "Unfinished Quest!", new String[] {
 					"Unfinished description"
 			}, new ArrayList<QuestTask>(), 0, 0, new ItemStack[] {});
 			write.set("Quest", q);
