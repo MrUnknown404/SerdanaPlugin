@@ -73,6 +73,8 @@ public class BountyHandler {
 	}
 	
 	public void reload() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
 		if (!new File(path + "/" + file_bounties + Main.TYPE).exists()) {
 			System.out.println("Could not find file: " + file_bounties + Main.TYPE + "! (Will be created)");
 			bounties = new ArrayList<BountyInfo>();
@@ -81,6 +83,8 @@ public class BountyHandler {
 		}
 		
 		readBounties();
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	public void writeBounties() {

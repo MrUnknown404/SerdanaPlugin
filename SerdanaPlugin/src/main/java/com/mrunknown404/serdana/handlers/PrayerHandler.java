@@ -78,10 +78,14 @@ public class PrayerHandler {
 	}
 	
 	public void reload() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
 		writeAllPrayers();
 		readAllPrayers();
 		createInventories();
 		addPrayerstoInventories();
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	public void addPrayer(PrayInfo info, EnumPrayerType type) {
@@ -127,21 +131,24 @@ public class PrayerHandler {
 	}
 	
 	private void writeAllPrayers() {
-		if (!new File(path + "/" + file_unsortedPrayers + ".yml").exists()) {
+		if (!new File(path + "/Prayers/" + file_unsortedPrayers + ".yml").exists()) {
+			System.out.println("Could not find file: " + file_unsortedPrayers + ".yml! (Will be created)");
 			writeUnsortedPrayers();
 		}
 		
-		if (!new File(path + "/" + file_goodPrayers + ".yml").exists()) {
+		if (!new File(path + "/Prayers/" + file_goodPrayers + ".yml").exists()) {
+			System.out.println("Could not find file: " + file_goodPrayers + ".yml! (Will be created)");
 			writeGoodPrayers();
 		}
 		
-		if (!new File(path + "/" + file_badPrayers + ".yml").exists()) {
+		if (!new File(path + "/Prayers/" + file_badPrayers + ".yml").exists()) {
+			System.out.println("Could not find file: " + file_badPrayers + ".yml! (Will be created)");
 			writeBadPrayers();
 		}
 	}
 	
 	private void writeUnsortedPrayers() {
-		File f = new File(path + "/" + file_unsortedPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_unsortedPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
 		write.set("Prays", unsortedPrayers);
@@ -154,7 +161,7 @@ public class PrayerHandler {
 	}
 	
 	private void writeGoodPrayers() {
-		File f = new File(path + "/" + file_goodPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_goodPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
 		write.set("Prays", goodPrayers);
@@ -167,7 +174,7 @@ public class PrayerHandler {
 	}
 	
 	private void writeBadPrayers() {
-		File f = new File(path + "/" + file_badPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_badPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
 		write.set("Prays", badPrayers);
@@ -180,7 +187,7 @@ public class PrayerHandler {
 	}
 	
 	private void readAllPrayers() {
-		File f = new File(path + "/" + file_unsortedPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_unsortedPrayers + ".yml");
 		
 		unsortedPrayers.clear();
 		List<?> list = YamlConfiguration.loadConfiguration(f).getList("Prays");
@@ -191,7 +198,7 @@ public class PrayerHandler {
 			}
 		}
 		
-		f = new File(path + "/" + file_goodPrayers + ".yml");
+		f = new File(path + "/Prayers/" + file_goodPrayers + ".yml");
 		
 		goodPrayers.clear();
 		list = YamlConfiguration.loadConfiguration(f).getList("Prays");
@@ -202,7 +209,7 @@ public class PrayerHandler {
 			}
 		}
 		
-		f = new File(path + "/" + file_badPrayers + ".yml");
+		f = new File(path + "/Prayers/" + file_badPrayers + ".yml");
 		
 		badPrayers.clear();
 		list = YamlConfiguration.loadConfiguration(f).getList("Prays");

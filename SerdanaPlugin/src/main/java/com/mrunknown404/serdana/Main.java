@@ -83,6 +83,14 @@ public final class Main extends JavaPlugin {
 		if(!f.exists()) {
 			f.mkdirs();
 		}
+		f = new File(getDataFolder() + "/NPCMessages/");
+		if(!f.exists()) {
+			f.mkdirs();
+		}
+		f = new File(getDataFolder() + "/Prayers/");
+		if(!f.exists()) {
+			f.mkdirs();
+		}
 		
 		ConfigurationSerialization.registerClass(PrayInfo.class, "PrayerInfo");
 		ConfigurationSerialization.registerClass(QuestPlayerData.class, "QuestInfo");

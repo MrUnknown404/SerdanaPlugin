@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.inventory.ItemStack;
@@ -109,6 +110,8 @@ public class ShopkeeperListener implements Listener {
 	}
 	
 	public void reload() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
 		Map<Integer, List<String>> exampleMapDefault = new HashMap<Integer, List<String>>();
 		List<String> exampleListDefault = new ArrayList<>();
 		
@@ -134,11 +137,11 @@ public class ShopkeeperListener implements Listener {
 		FileReader fr = null;
 		
 		for (JsonShopInfo info : shopInfos) {
-			if (!new File(path + "/" + info.fileName + Main.TYPE).exists()) {
+			if (!new File(path + "/NPCMessages/" + info.fileName + Main.TYPE).exists()) {
 				System.out.println("Could not find file: " + info.fileName + Main.TYPE + "! (Will be created)");
 				
 				try {
-					fw = new FileWriter(path + "/" + info.fileName + Main.TYPE);
+					fw = new FileWriter(path + "/NPCMessages/" + info.fileName + Main.TYPE);
 					
 					g.toJson(info, fw);
 					
@@ -154,12 +157,14 @@ public class ShopkeeperListener implements Listener {
 			JsonShopInfo info = shopInfos.get(i);
 			
 			try {
-				fr = new FileReader(path + "/" + info.fileName + Main.TYPE);
+				fr = new FileReader(path + "/NPCMessages/" + info.fileName + Main.TYPE);
 				
 				shopInfos.set(i, g.fromJson(fr, JsonShopInfo.class));
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			}
 		}
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 }

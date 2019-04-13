@@ -155,6 +155,8 @@ public class QuestHandler {
 	}
 	
 	public void reloadAll() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			QuestPlayerData info = getQuestPlayersData(p);
 			
@@ -166,6 +168,8 @@ public class QuestHandler {
 				readQuestPlayerData(p);
 			}
 		}
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	public void checkAllTask(EnumTaskCheckType type) { int runthis;

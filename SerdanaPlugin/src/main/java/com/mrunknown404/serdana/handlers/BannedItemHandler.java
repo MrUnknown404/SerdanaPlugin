@@ -67,6 +67,8 @@ public class BannedItemHandler {
 	}
 	
 	public void reload() {
+		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
+		
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
 		FileReader fr = null;
@@ -117,5 +119,7 @@ public class BannedItemHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 }
