@@ -23,6 +23,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandJoin;
 import main.java.com.mrunknown404.serdana.commands.CommandLeave;
 import main.java.com.mrunknown404.serdana.commands.CommandParty;
 import main.java.com.mrunknown404.serdana.commands.CommandPray;
+import main.java.com.mrunknown404.serdana.commands.CommandQuest;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
@@ -31,6 +32,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
@@ -45,6 +47,14 @@ import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.InventoryListener;
 import main.java.com.mrunknown404.serdana.listener.PlayerListener;
 import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
+import main.java.com.mrunknown404.serdana.quests.InitQuests;
+import main.java.com.mrunknown404.serdana.quests.Quest;
+import main.java.com.mrunknown404.serdana.quests.QuestHandler;
+import main.java.com.mrunknown404.serdana.quests.QuestPlayerData;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
 import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
@@ -61,25 +71,37 @@ public final class Main extends JavaPlugin {
 	private BountyHandler bountyHandler;
 	private PrayerHandler prayerHandler;
 	private PartyHandler partyHandler;
+	private QuestHandler questHandler;
 	
 	@Override
 	public void onEnable() {
-		File f = new File(getDataFolder() + "/");
+		File f = new File(getDataFolder() + "/Quests/");
 		if(!f.exists()) {
-			f.mkdir();
+			f.mkdirs();
+		}
+		f = new File(getDataFolder() + "/Quests/PlayerData/");
+		if(!f.exists()) {
+			f.mkdirs();
 		}
 		
 		ConfigurationSerialization.registerClass(PrayInfo.class, "PrayerInfo");
+		ConfigurationSerialization.registerClass(QuestPlayerData.class, "QuestInfo");
+		ConfigurationSerialization.registerClass(Quest.class, "Quest");
+		ConfigurationSerialization.registerClass(QuestTask.class, "QuestTask");
+		ConfigurationSerialization.registerClass(QuestTaskFetch.class, "QuestTaskFetch");
+		ConfigurationSerialization.registerClass(QuestTaskKill.class, "QuestTaskKill");
+		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
 		
 		healthBarHandler = new HealthBarHandler(this);
 		bountyHandler = new BountyHandler(this);
 		bannedItemHandler = new BannedItemHandler(this);
 		prayerHandler = new PrayerHandler(this);
 		partyHandler = new PartyHandler();
+		questHandler = new QuestHandler(this);
 		
 		shopListen = new ShopkeeperListener(this);
 		
-		getServer().getPluginManager().registerEvents(new EntityListener(), this);
+		getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new CraftingListener(), this);
 		getServer().getPluginManager().registerEvents(new HealthListener(this), this);
@@ -101,13 +123,16 @@ public final class Main extends JavaPlugin {
 		getCommand("coo").setExecutor(new CommandCoo());
 		getCommand("pray").setExecutor(new CommandPray(this));
 		getCommand("party").setExecutor(new CommandParty(this));
+		getCommand("quest").setExecutor(new CommandQuest(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
 		getCommand("pray").setTabCompleter(new TabPray());
 		getCommand("party").setTabCompleter(new TabParty());
+		getCommand("quest").setTabCompleter(new TabQuest());
 		
 		reload(Bukkit.getConsoleSender());
+		new InitQuests();
 	}
 	
 	public void reload(CommandSender sender) {
@@ -115,11 +140,6 @@ public final class Main extends JavaPlugin {
 		if (sender instanceof Player) {
 			sender.sendMessage(ColorHelper.setColors("&cReloading Serdana's Configs!"));
 		}
-		
-		shopListen.reload();
-		bountyHandler.reload();
-		bannedItemHandler.reload();
-		prayerHandler.reload();
 		
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
@@ -132,7 +152,7 @@ public final class Main extends JavaPlugin {
 			jails.add("test1");
 			jails.add("test2");
 			
-			randomConfig = new RandomConfig(jails, 2);
+			randomConfig = new RandomConfig(jails, 2, "Max");
 			
 			try {
 				fw = new FileWriter(getDataFolder() + "/" + file_randomConfig + TYPE);
@@ -153,6 +173,12 @@ public final class Main extends JavaPlugin {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		
+		shopListen.reload();
+		bountyHandler.reload();
+		bannedItemHandler.reload();
+		prayerHandler.reload();
+		questHandler.reloadAll();
 		
 		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
 		if (sender instanceof Player) {
@@ -182,5 +208,9 @@ public final class Main extends JavaPlugin {
 	
 	public PartyHandler getPartyHandler() {
 		return partyHandler;
+	}
+	
+	public QuestHandler getQuestHandler() {
+		return questHandler;
 	}
 }

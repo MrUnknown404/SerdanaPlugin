@@ -1,6 +1,6 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
-version: 0.10.1
+version: 0.11.1
 author: -Unknown-
 api-version: 1.13
 
@@ -54,6 +54,10 @@ commands:
     description: Party commands
     usage: "Usage: '/party' [argument] [argument]"
     permission: serdana.party
+  quest:
+    description: Shows quests
+    usage: "Usage: '/quest show' [argument] [page number]"
+    permission: serdana.quests
 
 permissions:
   serdana.setTier:
@@ -87,4 +91,6 @@ permissions:
   serdana.pray.set:
     default: op
   serdana.party:
+    default: true
+  serdana.quest:
     default: true

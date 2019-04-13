@@ -6,10 +6,12 @@ public class RandomConfig {
 
 	private List<String> jailNames;
 	private int jailTimeMinutes;
-
-	public RandomConfig(List<String> jailNames, int jailTimeMinutes) {
+	private String mainWorld;
+	
+	public RandomConfig(List<String> jailNames, int jailTimeMinutes, String mainWorld) {
 		this.jailNames = jailNames;
 		this.jailTimeMinutes = jailTimeMinutes;
+		this.mainWorld = mainWorld;
 	}
 	
 	public List<String> getJailNames() {
@@ -18,5 +20,9 @@ public class RandomConfig {
 	
 	public int getJailTimeMinutes() {
 		return jailTimeMinutes;
+	}
+	
+	public String getMainWorld() {
+		return mainWorld;
 	}
 }

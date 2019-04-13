@@ -4,8 +4,10 @@ import java.util.List;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import main.java.com.mrunknown404.serdana.Main;
@@ -18,14 +20,23 @@ public class PlayerListener implements Listener {
 		this.main = main;
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
+	public void onJoin(PlayerJoinEvent e) {
+		main.getQuestHandler().setupPlayer(e.getPlayer());
+	}
+	
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onLeave(PlayerQuitEvent e) {
 		if (main.getPartyHandler().isPlayerInAnyParty(e.getPlayer().getUniqueId()) ) {
 			main.getPartyHandler().leaveParty(e.getPlayer().getUniqueId());
 		}
+		
+		if ((main.getQuestHandler().isPlayerSetup(e.getPlayer()))) {
+			main.getQuestHandler().unsetupPlayer(e.getPlayer());
+		}
 	}
 	
-	@EventHandler
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent e) {
 		if (main.getPartyHandler().isPlayerInAnyParty(e.getEntity().getUniqueId()) ) {
 			main.getPartyHandler().notifyDeath(e.getEntity().getUniqueId());
