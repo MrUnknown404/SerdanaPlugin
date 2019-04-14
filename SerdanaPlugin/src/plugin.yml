@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.2.0-Beta
+version: 0.3.3.0-Beta
 author: -Unknown-
 api-version: 1.13
 
@@ -49,7 +49,7 @@ commands:
     permission: serdana.coo
   pray:
     description: Write/get prayers
-    usage: "Usage: '/pray' [argument] [argument]"
+    usage: "Usage: '/pray' [argument] [argument] [page #]"
     permission: serdana.pray
   party:
     description: Party commands
@@ -57,7 +57,7 @@ commands:
     permission: serdana.party
   quest:
     description: Shows quests
-    usage: "Usage: '/quest show' [argument] [page number]"
+    usage: "Usage: '/quest' [argument] [argument] [page #]"
     permission: serdana.quests
 
 permissions:

@@ -15,10 +15,8 @@ public class TabSerdana implements TabCompleter {
 		
 		if (args.length == 1) {
 			results.add("reload");
-			
-			return results;
 		}
 		
-		return null;
+		return results;
 	}
 }

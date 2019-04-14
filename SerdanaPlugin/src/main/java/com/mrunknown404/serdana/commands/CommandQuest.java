@@ -24,14 +24,7 @@ public class CommandQuest implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("show")) {
-				boolean found = false;
-				for (EnumQuestState q : EnumQuestState.values()) {
-					if (q.toString().equalsIgnoreCase(args[1])) {
-						found = true;
-					}
-				}
-				
-				if (!found) {
+				if (!EnumQuestState.contains(args[1])) {
 					sender.sendMessage(ColorHelper.setColors("&cUnknown quest type " + args[1] + "!"));
 					return false;
 				}

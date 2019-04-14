@@ -1,5 +1,6 @@
 package main.java.com.mrunknown404.serdana.commands;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.bukkit.Material;
@@ -12,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumPrayerType;
 import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
@@ -30,153 +32,84 @@ public class CommandPray implements CommandExecutor {
 			return false;
 		}
 		
-		if ((args[0].equalsIgnoreCase("showUnset") || args[0].equalsIgnoreCase("showGood") || args[0].equalsIgnoreCase("showBad")) && args.length == 2) {
+		int page = 0;
+		if ((args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("set") || args[0].equalsIgnoreCase("showBad")) && args.length == 3) {
 			try {
-				Integer.parseInt(args[1]);
+				page = Integer.parseInt(args[2]);
 			} catch (NumberFormatException | NullPointerException nfe) {
 				return false;
 			}
 		}
 		
 		Player p = ((Player) sender);
+		PrayerHandler handler = main.getPrayerHandler();
 		
-		if (args[0].equalsIgnoreCase("send") && sender.hasPermission("serdana.pray.send") && args.length == 1) {
-			if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
-				p.sendMessage(ColorHelper.setColors("&cMust hold a written book!"));
-				return false;
+		if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("send") && sender.hasPermission("serdana.pray.send")) {
+				if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
+					p.sendMessage(ColorHelper.setColors("&cMust hold a written book!"));
+					return false;
+				}
+				
+				NBTItem n = new NBTItem(p.getInventory().getItemInMainHand());
+				if (!n.hasKey("isPrayerBook")) {
+					p.sendMessage(ColorHelper.setColors("&cHeld book must be a prayer book!"));
+					return false;
+				}
+				
+				handler.addPrayer(new PrayInfo(p.getUniqueId(), p.getInventory().getItemInMainHand()), EnumPrayerType.unset);
+				p.sendMessage(ColorHelper.setColors("&cPrayer sent!"));
+				p.getInventory().setItemInMainHand(null);
+				return true;
+			} else if (args[0].equalsIgnoreCase("book") && sender.hasPermission("serdana.pray.book")) {
+				if (p.getInventory().firstEmpty() == -1) {
+					p.sendMessage(ColorHelper.setColors("&cInventory is full!"));
+					return false;
+				}
+				
+				ItemStack item = new ItemStack(Material.WRITABLE_BOOK, 1);
+				item.getItemMeta().setDisplayName(ColorHelper.setColors("&bPrayer Book"));
+				
+				NBTItem n = new NBTItem(item);
+				n.setBoolean("isPrayerBook", true);
+				
+				p.getInventory().addItem(n.getItem());
+				p.sendMessage(ColorHelper.setColors("&cPrayer book added!"));
+				return true;
 			}
-			
-			NBTItem n = new NBTItem(p.getInventory().getItemInMainHand());
-			if (!n.hasKey("isPrayerBook")) {
-				p.sendMessage(ColorHelper.setColors("&cHeld book must be a prayer book!"));
-				return false;
-			}
-			
-			main.getPrayerHandler().addPrayer(new PrayInfo(p.getUniqueId(), p.getInventory().getItemInMainHand()), EnumPrayerType.unset);
-			p.sendMessage(ColorHelper.setColors("&cPrayer sent!"));
-			p.getInventory().setItemInMainHand(null);
-			return true;
-		} else if (args[0].equalsIgnoreCase("book") && sender.hasPermission("serdana.pray.book") && args.length == 1) {
-			if (p.getInventory().firstEmpty() == -1) {
-				p.sendMessage(ColorHelper.setColors("&cInventory is full!"));
-				return false;
-			}
-			
-			ItemStack item = new ItemStack(Material.WRITABLE_BOOK, 1);
-			item.getItemMeta().setDisplayName(ColorHelper.setColors("&bPrayer Book"));
-			
-			NBTItem n = new NBTItem(item);
-			n.setBoolean("isPrayerBook", true);
-			
-			p.getInventory().addItem(n.getItem());
-			p.sendMessage(ColorHelper.setColors("&cPrayer book added!"));
-			return true;
-		} else if (args[0].equalsIgnoreCase("showUnset") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
-			List<Inventory> inv = main.getPrayerHandler().getUnsortedInventories();
-			if (inv.isEmpty()) {
-				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
-				return false;
-			} else if (Integer.parseInt(args[1]) >= inv.size() || inv.get(Integer.parseInt(args[1])) == null) {
-				p.sendMessage(ColorHelper.setColors("&cUnknown page!"));
-				return false;
-			}
-			
-			p.openInventory(inv.get(Integer.parseInt(args[1])));
-			return true;
-		} else if (args[0].equalsIgnoreCase("showGood") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
-			List<Inventory> inv = main.getPrayerHandler().getGoodInventories();
-			if (inv.isEmpty()) {
-				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
-				return false;
-			} else if (Integer.parseInt(args[1]) >= inv.size() || inv.get(Integer.parseInt(args[1])) == null) {
-				p.sendMessage(ColorHelper.setColors("&cUnknown page!"));
-				return false;
-			}
-			
-			p.openInventory(inv.get(Integer.parseInt(args[1])));
-			return true;
-		} else if (args[0].equalsIgnoreCase("showBad") && sender.hasPermission("serdana.pray.show") && args.length == 2) {
-			List<Inventory> inv = main.getPrayerHandler().getBadInventories();
-			if (inv.isEmpty()) {
-				p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
-				return false;
-			} else if (Integer.parseInt(args[1]) >= inv.size() || inv.get(Integer.parseInt(args[1])) == null) {
-				p.sendMessage(ColorHelper.setColors("&cUnknown page!"));
-				return false;
-			}
-			
-			p.openInventory(inv.get(Integer.parseInt(args[1])));
-			return true;
-		} else if ((args[0].equalsIgnoreCase("setUnset") || args[0].equalsIgnoreCase("setGood") || args[0].equalsIgnoreCase("setBad")) && args.length == 1) {
-			if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
-				p.sendMessage(ColorHelper.setColors("&cMust hold a prayer book!"));
-				return false;
-			}
-			
-			if (sender.hasPermission("serdana.pray.set")) {
-				if (args[0].equalsIgnoreCase("setUnset")) {
-					PrayInfo info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-						return false;
+		} else if (args.length == 2) {
+			if (args[0].equalsIgnoreCase("set") && sender.hasPermission("serdana.pray.set")) {
+				if (!EnumPrayerType.contains(args[1])) {
+					sender.sendMessage(ColorHelper.setColors("&cUnknown prayer type " + args[1] + "!"));
+					return false;
+				}
+				
+				EnumPrayerType newType = EnumPrayerType.valueOf(args[1]);
+				
+				if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
+					p.sendMessage(ColorHelper.setColors("&cMust hold a prayer book!"));
+					return false;
+				}
+				
+				PrayInfo info = search(newType, p.getInventory().getItemInMainHand());
+				if (info != null) {
+					p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
+					return false;
+				}
+				
+				List<EnumPrayerType> notThese = new ArrayList<EnumPrayerType>();
+				for (EnumPrayerType t : EnumPrayerType.values()) {
+					if (!t.name().equals(newType.name())) {
+						notThese.add(t);
 					}
+				}
+				
+				for (EnumPrayerType oldType : notThese) {
+					info = search(oldType, p.getInventory().getItemInMainHand());
 					
-					info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
 					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-						return true;
-					}
-					
-					info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.unset);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-						return true;
-					}
-				} else if (args[0].equalsIgnoreCase("setGood")) {
-					PrayInfo info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-						return false;
-					}
-					
-					info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-						return true;
-					}
-					
-					info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.bad);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.good);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-						return true;
-					}
-				} else if (args[0].equalsIgnoreCase("setBad")) {
-					PrayInfo info = search(EnumPrayerType.bad, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
-						return false;
-					}
-					
-					info = search(EnumPrayerType.unset, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.unset);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
-						return true;
-					}
-					
-					info = search(EnumPrayerType.good, p.getInventory().getItemInMainHand());
-					if (info != null) {
-						main.getPrayerHandler().removePrayer(info, EnumPrayerType.good);
-						main.getPrayerHandler().addPrayer(info, EnumPrayerType.bad);
+						main.getPrayerHandler().removePrayer(info, oldType);
+						main.getPrayerHandler().addPrayer(info, newType);
 						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
 						return true;
 					}
@@ -185,16 +118,47 @@ public class CommandPray implements CommandExecutor {
 				p.sendMessage(ColorHelper.setColors("&cCould not find that prayer!"));
 				return false;
 			}
+		} else if (args.length == 3) {
+			if (args[0].equalsIgnoreCase("show") && sender.hasPermission("serdana.pray.show")) {
+				if (!EnumPrayerType.contains(args[1])) {
+					sender.sendMessage(ColorHelper.setColors("&cUnknown prayer type " + args[1] + "!"));
+					return false;
+				}
+				
+				EnumPrayerType type = EnumPrayerType.valueOf(args[1]);
+				
+				List<Inventory> inv = null;
+				if (type == EnumPrayerType.unset) {
+					inv = main.getPrayerHandler().getUnsetInventories();
+				} else if (type == EnumPrayerType.good) {
+					inv = main.getPrayerHandler().getGoodInventories();
+				} else if (type == EnumPrayerType.bad) {
+					inv = main.getPrayerHandler().getBadInventories();
+				}
+				
+				if (inv == null) {
+					return false;
+				} else if (inv.isEmpty()) {
+					p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
+					return false;
+				} else if (page >= inv.size() || inv.get(page) == null) {
+					p.sendMessage(ColorHelper.setColors("&cUnknown page!"));
+					return false;
+				}
+				
+				p.openInventory(inv.get(page));
+				return true;
+			}
 		}
 		
 		return false;
 	}
 	
-	public PrayInfo search(EnumPrayerType type, ItemStack item) {
-		List<Inventory> inv = main.getPrayerHandler().getUnsortedInventories();
+	private PrayInfo search(EnumPrayerType type, ItemStack itemToFind) {
+		List<Inventory> inv = main.getPrayerHandler().getUnsetInventories();
 		
 		if (type == EnumPrayerType.unset) {
-			inv = main.getPrayerHandler().getUnsortedInventories();
+			inv = main.getPrayerHandler().getUnsetInventories();
 		} else if (type == EnumPrayerType.good) {
 			inv = main.getPrayerHandler().getGoodInventories();
 		} else if (type == EnumPrayerType.bad) {
@@ -203,12 +167,12 @@ public class CommandPray implements CommandExecutor {
 		
 		for (int i = 0; i < inv.size(); i++) {
 			for (int j = 0; j < inv.get(i).getSize(); j++) {
-				ItemStack itm = inv.get(i).getItem(j);
+				ItemStack item = inv.get(i).getItem(j);
 				
-				if (itm != null) {
-					if (itm.isSimilar(item)) {
+				if (item != null) {
+					if (item.isSimilar(itemToFind)) {
 						if (type == EnumPrayerType.unset) {
-							return main.getPrayerHandler().getUnsortedPrayers().get(i);
+							return main.getPrayerHandler().getUnsetPrayers().get(i);
 						} else if (type == EnumPrayerType.good) {
 							return main.getPrayerHandler().getGoodPrayers().get(i);
 						} else if (type == EnumPrayerType.bad) {

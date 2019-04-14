@@ -23,7 +23,7 @@ public class InventoryListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority=EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent event) {
-		for (Inventory inv : main.getPrayerHandler().getUnsortedInventories()) {
+		for (Inventory inv : main.getPrayerHandler().getUnsetInventories()) {
 			if (event.getInventory().getName().equalsIgnoreCase(inv.getName())) {
 				if (event.getAction() != InventoryAction.CLONE_STACK && event.getAction() != InventoryAction.PLACE_ALL &&
 						event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME) {

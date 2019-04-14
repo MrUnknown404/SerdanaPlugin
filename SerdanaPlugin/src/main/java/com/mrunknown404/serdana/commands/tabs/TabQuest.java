@@ -15,12 +15,14 @@ public class TabQuest implements TabCompleter {
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> r = new ArrayList<String>();
 		
-		if (args.length == 2) {
+		if (args.length == 1) {
+			r.add("show");
+		} else if (args.length == 2) {
 			for (EnumQuestState s : EnumQuestState.values()) {
 				r.add(s.toString());
 			}
-		} else if (args.length == 1) {
-			r.add("show");
+		} else if (args.length == 3) {
+			r.add("#");
 		}
 		
 		List<String> finalResults = new ArrayList<String>();

@@ -17,15 +17,15 @@ import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 public class PrayerHandler {
 	
 	private final File path;
-	private final File file_unsortedPrayers = new File("UnsetPrayers");
+	private final File file_unsetPrayers = new File("UnsetPrayers");
 	private final File file_goodPrayers = new File("GoodPrayers");
 	private final File file_badPrayers = new File("BadPrayers");
 	
-	private List<PrayInfo> unsortedPrayers = new ArrayList<PrayInfo>();
+	private List<PrayInfo> unsetPrayers = new ArrayList<PrayInfo>();
 	private List<PrayInfo> goodPrayers = new ArrayList<PrayInfo>();
 	private List<PrayInfo> badPrayers = new ArrayList<PrayInfo>();
 	
-	public static List<Inventory> unsortedPrayersInventory = new ArrayList<Inventory>();
+	public static List<Inventory> unsetPrayersInventory = new ArrayList<Inventory>();
 	public static List<Inventory> goodPrayersInventory = new ArrayList<Inventory>();
 	public static List<Inventory> badPrayersInventory = new ArrayList<Inventory>();
 	
@@ -34,13 +34,13 @@ public class PrayerHandler {
 	}
 	
 	private void createInventories() {
-		unsortedPrayersInventory.clear();
+		unsetPrayersInventory.clear();
 		goodPrayersInventory.clear();
 		badPrayersInventory.clear();
 		
-		for (int i = 0; i < unsortedPrayers.size(); i++) {
+		for (int i = 0; i < unsetPrayers.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				unsortedPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&cUnsorted Prayers [" + (int) Math.ceil(i / 54) + "]")));
+				unsetPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&cUnsorted Prayers [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
@@ -58,10 +58,10 @@ public class PrayerHandler {
 	}
 	
 	private void addPrayerstoInventories() {
-		for (int i = 0; i < unsortedPrayers.size(); i++) {
-			PrayInfo pi = unsortedPrayers.get(i);
+		for (int i = 0; i < unsetPrayers.size(); i++) {
+			PrayInfo pi = unsetPrayers.get(i);
 			
-			unsortedPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, pi.getBook());
+			unsetPrayersInventory.get((int) Math.ceil(i / 54)).setItem(i % 54, pi.getBook());
 		}
 		
 		for (int i = 0; i < goodPrayers.size(); i++) {
@@ -90,7 +90,7 @@ public class PrayerHandler {
 	
 	public void addPrayer(PrayInfo info, EnumPrayerType type) {
 		if (type == EnumPrayerType.unset) {
-			unsortedPrayers.add(info);
+			unsetPrayers.add(info);
 			writeUnsortedPrayers();
 		} else if (type == EnumPrayerType.good) {
 			goodPrayers.add(info);
@@ -105,9 +105,9 @@ public class PrayerHandler {
 	
 	public void removePrayer(PrayInfo info, EnumPrayerType type) {
 		if (type == EnumPrayerType.unset) {
-			for (int k = 0; k < unsortedPrayers.size(); k++) {
-				if (unsortedPrayers.get(k).equals(info)) {
-					unsortedPrayers.remove(info);
+			for (int k = 0; k < unsetPrayers.size(); k++) {
+				if (unsetPrayers.get(k).equals(info)) {
+					unsetPrayers.remove(info);
 					writeUnsortedPrayers();
 				}
 			}
@@ -131,8 +131,8 @@ public class PrayerHandler {
 	}
 	
 	private void writeAllPrayers() {
-		if (!new File(path + "/Prayers/" + file_unsortedPrayers + ".yml").exists()) {
-			System.out.println("Could not find file: " + file_unsortedPrayers + ".yml! (Will be created)");
+		if (!new File(path + "/Prayers/" + file_unsetPrayers + ".yml").exists()) {
+			System.out.println("Could not find file: " + file_unsetPrayers + ".yml! (Will be created)");
 			writeUnsortedPrayers();
 		}
 		
@@ -148,10 +148,10 @@ public class PrayerHandler {
 	}
 	
 	private void writeUnsortedPrayers() {
-		File f = new File(path + "/Prayers/" + file_unsortedPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_unsetPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("Prays", unsortedPrayers);
+		write.set("Prays", unsetPrayers);
 		
 		try {
 			write.save(f);
@@ -187,14 +187,14 @@ public class PrayerHandler {
 	}
 	
 	private void readAllPrayers() {
-		File f = new File(path + "/Prayers/" + file_unsortedPrayers + ".yml");
+		File f = new File(path + "/Prayers/" + file_unsetPrayers + ".yml");
 		
-		unsortedPrayers.clear();
+		unsetPrayers.clear();
 		List<?> list = YamlConfiguration.loadConfiguration(f).getList("Prays");
 		
 		if (list != null) {
 			for (int i = 0; i < list.size(); i++) {
-				unsortedPrayers.add((PrayInfo) list.get(i));
+				unsetPrayers.add((PrayInfo) list.get(i));
 			}
 		}
 		
@@ -221,8 +221,8 @@ public class PrayerHandler {
 		}
 	}
 	
-	public List<Inventory> getUnsortedInventories() {
-		return unsortedPrayersInventory;
+	public List<Inventory> getUnsetInventories() {
+		return unsetPrayersInventory;
 	}
 	
 	public List<Inventory> getGoodInventories() {
@@ -233,8 +233,8 @@ public class PrayerHandler {
 		return badPrayersInventory;
 	}
 	
-	public List<PrayInfo> getUnsortedPrayers() {
-		return unsortedPrayers;
+	public List<PrayInfo> getUnsetPrayers() {
+		return unsetPrayers;
 	}
 	
 	public List<PrayInfo> getGoodPrayers() {
