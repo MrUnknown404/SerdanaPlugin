@@ -6,25 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
-import main.java.com.mrunknown404.serdana.util.QuestState;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class Quest implements ConfigurationSerializable {
 
-	private int questID;
 	private String name;
-	private String[] description;
-	private int startID, finishID, currentTaskID = 0;
+	private String[] description, completionMessage, turnInMessage;
+	private int questID, startID, finishID, currentTaskID = 0;
 	private boolean readyToTurnIn = false;
-	private QuestState state = QuestState.unknown;
+	private EnumQuestState state = EnumQuestState.unknown;
 	private ItemStack[] rewards;
 	
 	private List<QuestTask> tasks = new ArrayList<>();
 	
-	Quest(int questID, String name, String[] description, List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards) {
+	Quest(int questID, String name, String[] description, String[] completionMessage, String[] turnInMessage, List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards) {
 		this.questID = questID;
 		this.name = name;
 		this.tasks = tasks;
@@ -32,29 +32,24 @@ public class Quest implements ConfigurationSerializable {
 		this.finishID = finishID;
 		this.rewards = rewards;
 		this.description = description;
+		this.completionMessage = completionMessage;
+		this.turnInMessage = turnInMessage;
 	}
 	
 	@SuppressWarnings("unchecked")
 	public Quest(Map<String, Object> map) {
 		questID = (int) map.get("questID");
 		name = (String) map.get("name");
-		
-		List<String> list1 = (List<String>) map.get("description");
-		description = new String[list1.size()];
-		for (int i = 0; i < list1.size(); i++) {
-			description[i] = list1.get(i);
-		}
-		
 		startID = (int) map.get("startID");
 		finishID = (int) map.get("finishID");
-		state = QuestState.valueOf((String) map.get("state"));
+		currentTaskID = (int) map.get("currentTaskID");
+		state = EnumQuestState.valueOf((String) map.get("state"));
 		tasks = (List<QuestTask>) map.get("tasks");
-		
-		List<ItemStack> list2 = (List<ItemStack>) map.get("rewards");
-		rewards = new ItemStack[list2.size()];
-		for (int i = 0; i < list2.size(); i++) {
-			rewards[i] = list2.get(i);
-		}
+		description = ((List<String>) map.get("description")).toArray(new String[0]);
+		completionMessage = ((List<String>) map.get("completionMessage")).toArray(new String[0]);
+		turnInMessage = ((List<String>) map.get("turnInMessage")).toArray(new String[0]);
+		rewards = ((List<ItemStack>) map.get("rewards")).toArray(new ItemStack[0]);
+		readyToTurnIn = (boolean) map.get("readyToTurnIn");
 	}
 	
 	@Override
@@ -62,44 +57,63 @@ public class Quest implements ConfigurationSerializable {
 		LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>();
 		result.put("questID", questID);
 		result.put("name", name);
-		
-		List<String> list1 = new ArrayList<String>();
-		if (description.length != 0) {
-			for (int i = 0; i < description.length; i++) {
-				list1.add(description[i]);
-			}
-		}
-		
-		result.put("description", list1);
+		result.put("description", description);
+		result.put("completionMessage", completionMessage);
+		result.put("turnInMessage", turnInMessage);
 		result.put("startID", startID);
 		result.put("finishID", finishID);
+		result.put("currentTaskID", currentTaskID);
+		result.put("readyToTurnIn", readyToTurnIn);
 		result.put("state", state.toString());
-		
-		List<ItemStack> list2 = new ArrayList<ItemStack>();
-		if (rewards.length != 0) {
-			for (int i = 0; i < rewards.length; i++) {
-				list2.add(rewards[i]);
-			}
-		}
-		
-		result.put("rewards", list2);
+		result.put("rewards", rewards);
 		result.put("tasks", tasks);
 		return result;
 	}
 	
-	public void check(Player p) {
-		if (state == QuestState.accepted) {
-			if (tasks.get(currentTaskID).checkForTask(p)) {
-				increaseTask();
-			}
+	public boolean check(Player p) {
+		if (state == EnumQuestState.accepted) {
+			boolean b = getCurrentTask().checkForTask(p);
+			checkFinished(p);
+			return b;
 		}
+		
+		return false;
 	}
 	
-	public void increaseTask() {
+	public boolean check(Player p, Entity e) {
+		if (state == EnumQuestState.accepted) {
+			boolean b = getCurrentTask().checkForTask(e);
+			checkFinished(p);
+			return b;
+		}
+		
+		return false;
+	}
+	
+	private boolean checkFinished(Player p) {
+		if (state == EnumQuestState.accepted) {
+			if (getCurrentTask().checkForFinishedTask()) {
+				for (String s : getCurrentTask().getCompletionMessage()) {
+					p.sendMessage(ColorHelper.setColors(s));
+				}
+				
+				increaseTask(p);
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public void increaseTask(Player p) {
 		currentTaskID++;
 		
-		if (currentTaskID > tasks.size()) {
+		if (currentTaskID == tasks.size()) {
 			readyToTurnIn = true;
+			
+			for (String s : completionMessage) {
+				p.sendMessage(ColorHelper.setColors(s));
+			}
 		}
 	}
 	
@@ -119,6 +133,14 @@ public class Quest implements ConfigurationSerializable {
 		return description;
 	}
 	
+	public String[] getCompletionMessage() {
+		return completionMessage;
+	}
+	
+	public String[] getTurnInMessage() {
+		return turnInMessage;
+	}
+	
 	public int getStartID() {
 		return startID;
 	}
@@ -135,7 +157,7 @@ public class Quest implements ConfigurationSerializable {
 		return readyToTurnIn;
 	}
 	
-	public QuestState getState() {
+	public EnumQuestState getState() {
 		return state;
 	}
 	

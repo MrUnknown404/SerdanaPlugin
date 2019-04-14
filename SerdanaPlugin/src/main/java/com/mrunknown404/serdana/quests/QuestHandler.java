@@ -14,11 +14,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitScheduler;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
@@ -27,7 +29,6 @@ import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
-import main.java.com.mrunknown404.serdana.util.QuestState;
 
 public class QuestHandler {
 
@@ -59,27 +60,43 @@ public class QuestHandler {
 			setupPlayer(p);
 		}
 		
+		checkTickTask();
+		
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
-	public void checkAllTask(EnumTaskCheckType type) { int runthis;
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			QuestPlayerData info = getQuestPlayersData(p);
-			
-			for (Quest q : info.getQuests()) {
-				if (q.getCurrentTask().getTaskCheckType() == type) {
-					q.check(Bukkit.getPlayer(info.getPlayerUUID()));
+	private BukkitScheduler scheduler;
+	private void checkTickTask() {;
+		scheduler = Bukkit.getServer().getScheduler();
+		scheduler.scheduleSyncRepeatingTask(main, new Runnable() {
+			@Override
+			public void run() {
+				for (QuestPlayerData info : playersQuests) {
+					for (Quest q : info.getQuests()) {
+						if (!q.isReadyToTurnIn()) {
+							if (q.getState() == EnumQuestState.accepted && q.getCurrentTask().getTaskCheckType() == EnumTaskCheckType.playerTick) {
+								Player p = Bukkit.getPlayer(info.getPlayerUUID());
+								if (q.check(p)) {
+									writeQuestPlayerData(p);
+									setupQuestChestGUI(p);
+								}
+							}
+						}
+					}
 				}
 			}
-		}
+		}, 0L, 1L);
 	}
 	
-	public void checkTask(Player p, EnumTaskCheckType type) {
+	public void checkEntityDeathTask(Player p, Entity e) {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
 		for (Quest q : info.getQuests()) {
-			if (q.getCurrentTask().getTaskCheckType() == type) {
-				q.check(Bukkit.getPlayer(info.getPlayerUUID()));
+			if (!q.isReadyToTurnIn() && q.getCurrentTask().getTaskCheckType() == EnumTaskCheckType.entityDeath) {
+				if (q.check(p, e)) {
+					writeQuestPlayerData(p);
+					setupQuestChestGUI(p);
+				}
 			}
 		}
 	}
@@ -154,9 +171,9 @@ public class QuestHandler {
 		List<Inventory> invAccepted = new ArrayList<Inventory>(); //writable book
 		List<Inventory> invFinished = new ArrayList<Inventory>(); //written book
 		
-		List<Quest> unknownQuests = getQuestPlayersData(p).getQuestsThatHaveState(QuestState.unknown);
-		List<Quest> acceptedQuests = getQuestPlayersData(p).getQuestsThatHaveState(QuestState.accepted);
-		List<Quest> FinishedQuests = getQuestPlayersData(p).getQuestsThatHaveState(QuestState.finished);
+		List<Quest> unknownQuests = getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.unknown);
+		List<Quest> acceptedQuests = getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.accepted);
+		List<Quest> FinishedQuests = getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.finished);
 		
 		for (int i = 0; i < unknownQuests.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
@@ -184,9 +201,7 @@ public class QuestHandler {
 				meta.setDisplayName(ColorHelper.setColors("&4" + q.getName()));
 				
 				List<String> newLore = new ArrayList<String>();
-				for (String s : q.getDescription()) {
-					newLore.add(ColorHelper.setColors("&c" + s));
-				}
+				newLore.add(ColorHelper.setColors("&c???"));
 				
 				meta.setLore(newLore);
 				item.setItemMeta(meta);
@@ -208,10 +223,18 @@ public class QuestHandler {
 				}
 				
 				newLore.add(ColorHelper.setColors("&a---"));
-				for (String s : q.getCurrentTask().getDescription()) {
-					newLore.add(ColorHelper.setColors("&a" + s));
+				if (!q.isReadyToTurnIn()) {
+					for (String s : q.getCurrentTask().getDescription()) {
+						newLore.add(ColorHelper.setColors("&a" + s));
+					}
+					
+					newLore.add(ColorHelper.setColors("&a---"));
+					newLore.add(ColorHelper.setColors("&a" + q.getCurrentTask().getAmount() + "/" + q.getCurrentTask().getAmountNeeded()));
+				} else {
+					for (String s : q.getTurnInMessage()) {
+						newLore.add(ColorHelper.setColors("&a" + s));
+					}
 				}
-				
 				
 				meta.setLore(newLore);
 				item.setItemMeta(meta);
@@ -231,6 +254,9 @@ public class QuestHandler {
 				for (String s : q.getDescription()) {
 					newLore.add(ColorHelper.setColors("&b" + s));
 				}
+				
+				newLore.add(ColorHelper.setColors("&b---"));
+				newLore.add(ColorHelper.setColors("&bCOMPLETED"));
 				
 				meta.setLore(newLore);
 				item.setItemMeta(meta);
@@ -271,16 +297,26 @@ public class QuestHandler {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskFetch(new ItemStack(Material.ROTTEN_FLESH), 3, new String[] {
-					"Get 3 Rotten Flesh",
-					"String 1"
+					"Get 3 Rotten Flesh"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
 			tasks.add(new QuestTaskFetch(new ItemStack(Material.BONE), 3, new String[] {
-					"Get 3 Bones",
-					"String 2"
+					"Get 3 Bones"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
 			
 			q = new Quest(0, "Debug Fetch!", new String[] {
 					"Description Fetch"
+			}, new String[] {
+					"Complete Quest Message 1",
+					"Complete Quest Message 2"
+			}, new String[] {
+					"Turn in Message 1",
+					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.DIAMOND, 2)
 			});
@@ -289,16 +325,26 @@ public class QuestHandler {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskKill(EntityType.ZOMBIE, 3, new String[] {
-					"Kill 3 Zombies",
-					"String 1"
+					"Kill 3 Zombies"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
 			tasks.add(new QuestTaskKill(EntityType.SKELETON, 3, new String[] {
-					"Kill 3 Skeletons",
-					"String 2"
+					"Kill 3 Skeletons"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
 			
 			q = new Quest(1, "Debug Kill!", new String[] {
 					"Description Kill"
+			}, new String[] {
+					"Complete Quest Message 1",
+					"Complete Quest Message 2"
+			}, new String[] {
+					"Turn in Message 1",
+					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.BONE, 5)
 			});
@@ -307,16 +353,26 @@ public class QuestHandler {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getMainWorld()), 0, 0, 0), new String[] {
-					"Walk to (0, 0, 0)",
-					"String 1"
+					"Walk to (0, 0, 0)"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
-			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getMainWorld()), 0, 0, 0), new String[] {
-					"Now walk to (0, 0, 0)",
-					"String 2"
+			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getMainWorld()), 10, 10, 10), new String[] {
+					"Now walk to (10, 10, 10)"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
 			}));
 			
 			q = new Quest(2, "Debug Walk!", new String[] {
 					"Description Walk"
+			}, new String[] {
+					"Complete Quest Message 1",
+					"Complete Quest Message 2"
+			}, new String[] {
+					"Turn in Message 1",
+					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.FEATHER, 2)
 			});
@@ -324,6 +380,12 @@ public class QuestHandler {
 		} else {
 			q = new Quest(3, "Unfinished Quest!", new String[] {
 					"Unfinished description"
+			}, new String[] {
+					"Complete Quest Message 1",
+					"Complete Quest Message 2"
+			}, new String[] {
+					"Turn in Message 1",
+					"Turn in Message 2"
 			}, new ArrayList<QuestTask>(), 0, 0, new ItemStack[] {});
 			write.set("Quest", q);
 		}
@@ -360,7 +422,7 @@ public class QuestHandler {
 		return false;
 	}
 	
-	private QuestPlayerData getQuestPlayersData(Player p) {
+	public QuestPlayerData getQuestPlayersData(Player p) {
 		for (QuestPlayerData info : playersQuests) {
 			if (info.getPlayerUUID().equals(p.getUniqueId())) {
 				return info;
@@ -370,7 +432,7 @@ public class QuestHandler {
 		return null;
 	}
 	
-	public List<Inventory> getPlayersQuestGUIs(Player p, QuestState state) {
+	public List<Inventory> getPlayersQuestGUIs(Player p, EnumQuestState state) {
 		Iterator<Entry<UUID, List<Inventory>>> it = null;
 		switch (state) {
 			case unknown:

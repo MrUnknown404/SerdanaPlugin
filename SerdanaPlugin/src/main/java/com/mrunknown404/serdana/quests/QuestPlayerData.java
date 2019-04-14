@@ -8,8 +8,6 @@ import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
-import main.java.com.mrunknown404.serdana.util.QuestState;
-
 public class QuestPlayerData implements ConfigurationSerializable {
 
 	private final UUID playerID;
@@ -42,7 +40,7 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return quests;
 	}
 	
-	public List<Quest> getQuestsThatHaveState(QuestState type) {
+	public List<Quest> getQuestsThatHaveState(EnumQuestState type) {
 		List<Quest> list = new ArrayList<Quest>();
 		
 		for (Quest q : quests) {
@@ -55,7 +53,8 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	}
 	
 	public void addQuest(Quest quest) {
-		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards()));
+		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getCompletionMessage(), quest.getTurnInMessage(),
+				quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards()));
 	}
 	
 	public void removeQuest(Quest quest) {

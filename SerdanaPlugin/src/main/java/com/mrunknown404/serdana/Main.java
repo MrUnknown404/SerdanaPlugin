@@ -140,7 +140,6 @@ public final class Main extends JavaPlugin {
 		getCommand("quest").setTabCompleter(new TabQuest());
 		
 		reload(Bukkit.getConsoleSender());
-		new InitQuests();
 	}
 	
 	public void reload(CommandSender sender) {
@@ -187,6 +186,8 @@ public final class Main extends JavaPlugin {
 		bannedItemHandler.reload();
 		prayerHandler.reload();
 		questHandler.reloadAll();
+		
+		InitQuests.register(this);
 		
 		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
 		if (sender instanceof Player) {

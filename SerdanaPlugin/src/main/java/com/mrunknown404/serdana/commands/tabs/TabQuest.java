@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import main.java.com.mrunknown404.serdana.util.QuestState;
+import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 
 public class TabQuest implements TabCompleter {
 	
@@ -16,7 +16,7 @@ public class TabQuest implements TabCompleter {
 		List<String> r = new ArrayList<String>();
 		
 		if (args.length == 2) {
-			for (QuestState s : QuestState.values()) {
+			for (EnumQuestState s : EnumQuestState.values()) {
 				r.add(s.toString());
 			}
 		} else if (args.length == 1) {

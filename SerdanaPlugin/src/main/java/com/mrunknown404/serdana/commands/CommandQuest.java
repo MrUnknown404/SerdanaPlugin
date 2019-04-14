@@ -9,8 +9,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
-import main.java.com.mrunknown404.serdana.util.QuestState;
 
 public class CommandQuest implements CommandExecutor {
 
@@ -25,7 +25,7 @@ public class CommandQuest implements CommandExecutor {
 		if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("show")) {
 				boolean found = false;
-				for (QuestState q : QuestState.values()) {
+				for (EnumQuestState q : EnumQuestState.values()) {
 					if (q.toString().equalsIgnoreCase(args[1])) {
 						found = true;
 					}
@@ -36,14 +36,14 @@ public class CommandQuest implements CommandExecutor {
 					return false;
 				}
 				
-				List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, QuestState.valueOf(args[1]));
+				List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(args[1]));
 				
 				if (Integer.parseInt(args[2]) >= invs.size() || invs.get(Integer.parseInt(args[2])) == null) {
 					sender.sendMessage(ColorHelper.setColors("&cUnknown page!"));
 					return false;
 				}
 				
-				((Player) sender).openInventory(main.getQuestHandler().getPlayersQuestGUIs((Player) sender, QuestState.valueOf(args[1])).get(Integer.parseInt(args[2])));
+				((Player) sender).openInventory(main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(args[1])).get(Integer.parseInt(args[2])));
 				return true;
 			}
 		}

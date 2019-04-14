@@ -1,6 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
-version: 0.11.2
+# Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
+version: 0.3.2.0-Beta
 author: -Unknown-
 api-version: 1.13
 

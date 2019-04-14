@@ -13,8 +13,8 @@ public class QuestTaskWalk extends QuestTask implements ConfigurationSerializabl
 
 	protected Location whereTo;
 	
-	public QuestTaskWalk(Location whereTo, String[] description) {
-		super(EnumTaskCheckType.playerTick, description);
+	public QuestTaskWalk(Location whereTo, String[] description, String[] completionMessage) {
+		super(EnumTaskCheckType.playerTick, 1, description, completionMessage);
 		this.whereTo = whereTo;
 	}
 	
@@ -36,6 +36,7 @@ public class QuestTaskWalk extends QuestTask implements ConfigurationSerializabl
 		if (checkType(obj)) {
 			Player p = (Player) obj;
 			if (p.getLocation().distance(whereTo) <= 5d) {
+				amount++;
 				return true;
 			}
 		}

@@ -17,7 +17,6 @@ import org.bukkit.inventory.meta.SpawnEggMeta;
 import de.tr7zw.itemnbtapi.NBTEntity;
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class EntityListener implements Listener {
@@ -31,7 +30,7 @@ public class EntityListener implements Listener {
 	@EventHandler
 	public void entityDeath(EntityDeathEvent e) {
 		if (e.getEntity().getKiller() instanceof Player) {
-			main.getQuestHandler().checkTask(e.getEntity().getKiller(), EnumTaskCheckType.entityDeath);
+			main.getQuestHandler().checkEntityDeathTask(e.getEntity().getKiller(), e.getEntity());
 		}
 	}
 	

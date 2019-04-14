@@ -8,14 +8,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
+import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class QuestTaskFetch extends QuestTask implements ConfigurationSerializable {
 
-	protected int amountNeeded;
 	protected ItemStack item;
 	
-	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description) {
-		super(EnumTaskCheckType.playerTick, description);
+	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description, String[] completionMessage) {
+		super(EnumTaskCheckType.playerTick, amountNeeded, description, completionMessage);
 		this.item = item;
 		this.amountNeeded = amountNeeded;
 	}
@@ -41,9 +41,12 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 			Player p = (Player) obj;
 			
 			for (int i = 0; i < p.getInventory().getSize(); i++) {
-				ItemStack item = p.getInventory().getItem(i);
-				if (this.item.isSimilar(item) && item.getAmount() >= amountNeeded) {
-					return true;
+				ItemStack it = p.getInventory().getItem(i);
+				if (this.item.isSimilar(it)) {
+					if (it.getAmount() > amount) {
+						amount = (int) MathHelper.clamp(it.getAmount(), 0, amountNeeded);
+						return true;
+					}
 				}
 			}
 		}

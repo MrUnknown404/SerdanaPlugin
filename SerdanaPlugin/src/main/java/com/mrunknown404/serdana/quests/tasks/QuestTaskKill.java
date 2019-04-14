@@ -12,11 +12,9 @@ import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 public class QuestTaskKill extends QuestTask implements ConfigurationSerializable {
 
 	protected EntityType entityType;
-	protected int amountNeeded;
-	protected int amountKilled;
 	
-	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description) {
-		super(EnumTaskCheckType.entityDeath, description);
+	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description, String[] completionMessage) {
+		super(EnumTaskCheckType.entityDeath, amountNeeded, description, completionMessage);
 		this.amountNeeded = amountNeeded;
 		this.entityType = entityType;
 	}
@@ -40,11 +38,8 @@ public class QuestTaskKill extends QuestTask implements ConfigurationSerializabl
 	public boolean checkForTask(Object obj) {
 		if (checkType(obj)) {
 			if (((Entity) obj).getType() == entityType) {
-				amountKilled++;
-				
-				if (amountKilled == amountNeeded) {
-					return true;
-				}
+				amount++;
+				return true;
 			}
 		}
 		
