@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.3.0-Beta
+version: 0.3.4.0-Beta
 author: -Unknown-
 api-version: 1.13
 
@@ -59,6 +59,10 @@ commands:
     description: Shows quests
     usage: "Usage: '/quest' [argument] [argument] [page #]"
     permission: serdana.quests
+  unbreakable:
+    description: Makes held item unbreakable
+    usage: "Usage: '/unbreakable' must hold an item"
+    permission: serdana.unbreakable
 
 permissions:
   serdana.setTier:
@@ -95,3 +99,5 @@ permissions:
     default: true
   serdana.quest:
     default: true
+  serdana.unbreakable:
+    default: op

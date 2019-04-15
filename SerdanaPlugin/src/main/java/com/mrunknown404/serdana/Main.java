@@ -29,6 +29,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
+import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
@@ -132,6 +133,7 @@ public final class Main extends JavaPlugin {
 		getCommand("pray").setExecutor(new CommandPray(this));
 		getCommand("party").setExecutor(new CommandParty(this));
 		getCommand("quest").setExecutor(new CommandQuest(this));
+		getCommand("unbreakable").setExecutor(new CommandUnbreakable());
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
