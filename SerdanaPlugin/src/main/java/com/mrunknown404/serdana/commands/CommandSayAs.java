@@ -20,7 +20,7 @@ public class CommandSayAs implements CommandExecutor {
 			}
 			
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				player.sendMessage("<" + ColorHelper.setColors(name) + "\u00a7f> " + ColorHelper.setColors(msg));
+				player.sendMessage("<" + ColorHelper.setColors(name) + ColorHelper.setColors("&f> ") + ColorHelper.setColors(msg));
 			}
 			
 			return true;
