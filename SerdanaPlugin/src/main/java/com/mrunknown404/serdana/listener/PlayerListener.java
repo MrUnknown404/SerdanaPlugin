@@ -2,14 +2,17 @@ package main.java.com.mrunknown404.serdana.listener;
 
 import java.util.List;
 
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 
@@ -18,6 +21,17 @@ public class PlayerListener implements Listener {
 	
 	public PlayerListener(Main main) {
 		this.main = main;
+	}
+	
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onDropItem(PlayerDropItemEvent e) {
+		if (e.getItemDrop().getItemStack().getType() == Material.NETHER_WART) {
+			NBTItem n = new NBTItem(e.getItemDrop().getItemStack());
+			
+			if (n.hasKey("isParasite")) {
+				e.setCancelled(true);
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)

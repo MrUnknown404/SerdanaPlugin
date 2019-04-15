@@ -21,6 +21,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandCoo;
 import main.java.com.mrunknown404.serdana.commands.CommandDots;
 import main.java.com.mrunknown404.serdana.commands.CommandJoin;
 import main.java.com.mrunknown404.serdana.commands.CommandLeave;
+import main.java.com.mrunknown404.serdana.commands.CommandParasite;
 import main.java.com.mrunknown404.serdana.commands.CommandParty;
 import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandQuest;
@@ -31,6 +32,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabParasite;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
@@ -38,6 +40,7 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
+import main.java.com.mrunknown404.serdana.handlers.ParasiteHandler;
 import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
 import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
@@ -73,6 +76,7 @@ public final class Main extends JavaPlugin {
 	private PrayerHandler prayerHandler;
 	private PartyHandler partyHandler;
 	private QuestHandler questHandler;
+	private ParasiteHandler parasiteHandler;
 	
 	@Override
 	public void onEnable() {
@@ -107,6 +111,7 @@ public final class Main extends JavaPlugin {
 		prayerHandler = new PrayerHandler(this);
 		partyHandler = new PartyHandler();
 		questHandler = new QuestHandler(this);
+		parasiteHandler = new ParasiteHandler(this);
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -134,14 +139,17 @@ public final class Main extends JavaPlugin {
 		getCommand("party").setExecutor(new CommandParty(this));
 		getCommand("quest").setExecutor(new CommandQuest(this));
 		getCommand("unbreakable").setExecutor(new CommandUnbreakable());
+		getCommand("parasite").setExecutor(new CommandParasite(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
 		getCommand("pray").setTabCompleter(new TabPray());
 		getCommand("party").setTabCompleter(new TabParty());
 		getCommand("quest").setTabCompleter(new TabQuest());
+		getCommand("parasite").setTabCompleter(new TabParasite());
 		
 		reload(Bukkit.getConsoleSender());
+		parasiteHandler.start();
 	}
 	
 	public void reload(CommandSender sender) {
@@ -161,7 +169,7 @@ public final class Main extends JavaPlugin {
 			jails.add("test1");
 			jails.add("test2");
 			
-			randomConfig = new RandomConfig(jails, 2, "Max");
+			randomConfig = new RandomConfig(jails, 2, "Max", 16d, 5);
 			
 			try {
 				fw = new FileWriter(getDataFolder() + "/" + file_randomConfig + TYPE);
@@ -223,5 +231,9 @@ public final class Main extends JavaPlugin {
 	
 	public QuestHandler getQuestHandler() {
 		return questHandler;
+	}
+
+	public ParasiteHandler getParasiteHandler() {
+		return parasiteHandler;
 	}
 }

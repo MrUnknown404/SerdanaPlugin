@@ -20,7 +20,7 @@ public class TabBounty implements TabCompleter {
 		
 		List<String> finalResults = new ArrayList<String>();
 		for (int i = 0; i < r.size(); i++) {
-			if (r.get(i).toLowerCase().contains(args[0].toLowerCase())) {
+			if (r.get(i).toLowerCase().contains(args[args.length - 1].toLowerCase())) {
 				finalResults.add(r.get(i));
 			}
 		}

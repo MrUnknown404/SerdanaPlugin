@@ -17,10 +17,10 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 public class HealthBarHandler {
 	
-	private Main plugin;
+	private Main main;
 	
-	public HealthBarHandler(Main plugin) {
-		this.plugin = plugin;
+	public HealthBarHandler(Main main) {
+		this.main = main;
 	}
 	
 	public void sendHealth(Player receiver, LivingEntity entity, double health) {
@@ -48,7 +48,7 @@ public class HealthBarHandler {
 					sendActionBar(receiver, output);
 				}
 			}
-		}.runTaskLater(plugin, 1L);
+		}.runTaskLater(main, 1L);
 	}
 	
 	private String getOutput(double health, Player receiver, LivingEntity entity) {
@@ -116,7 +116,7 @@ public class HealthBarHandler {
 				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.setColors(message)));
 			}
 			
-		}.runTaskLater(this.plugin, 30);
+		}.runTaskLater(main, 30);
 		
 		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.setColors(message)));
 	}

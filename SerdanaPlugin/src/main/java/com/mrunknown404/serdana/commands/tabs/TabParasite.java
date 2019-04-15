@@ -9,20 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class TabParty implements TabCompleter {
+public class TabParasite implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> r = new ArrayList<String>();
 		
 		if (args.length == 1) {
-			r.add("create");
-			r.add("invite");
-			r.add("join");
-			r.add("leave");
-			r.add("kick");
+			r.add("give");
+			r.add("stop");
 		} else if (args.length == 2) {
-			if (args[0].equalsIgnoreCase("invite") || args[0].equalsIgnoreCase("join") || args[0].equalsIgnoreCase("kick")) {
+			if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("stop")) {
 				for (Player p :Bukkit.getOnlinePlayers()) {
 					r.add(p.getName());
 				}

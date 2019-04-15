@@ -1,5 +1,6 @@
 package main.java.com.mrunknown404.serdana.listener;
 
+import org.bukkit.GameMode;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
@@ -9,6 +10,7 @@ import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 
+import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 
@@ -21,23 +23,32 @@ public class InventoryListener implements Listener {
 	}
 	
 	@SuppressWarnings("deprecation")
-	@EventHandler(priority=EventPriority.HIGHEST)
-	public void onInventoryClick(InventoryClickEvent event) {
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onInventoryClick(InventoryClickEvent e) {
+		if (e.getCurrentItem() != null && e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
+			NBTItem n = new NBTItem(e.getCurrentItem());
+			
+			if (n.hasKey("isParasite")) {
+				e.setCancelled(true);
+				e.setResult(Event.Result.DENY);
+			}
+		}
+		
 		for (Inventory inv : main.getPrayerHandler().getUnsetInventories()) {
-			if (event.getInventory().getName().equalsIgnoreCase(inv.getName())) {
-				if (event.getAction() != InventoryAction.CLONE_STACK && event.getAction() != InventoryAction.PLACE_ALL &&
-						event.getAction() != InventoryAction.PLACE_ONE && event.getAction() != InventoryAction.PLACE_SOME) {
-					event.setCancelled(true);
-					event.setResult(Event.Result.DENY);
+			if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
+				if (e.getAction() != InventoryAction.CLONE_STACK && e.getAction() != InventoryAction.PLACE_ALL &&
+						e.getAction() != InventoryAction.PLACE_ONE && e.getAction() != InventoryAction.PLACE_SOME) {
+					e.setCancelled(true);
+					e.setResult(Event.Result.DENY);
 				}
 			}
 		}
 		
 		for (EnumQuestState state : EnumQuestState.values()) {
-			for (Inventory inv : main.getQuestHandler().getPlayersQuestGUIs((Player) event.getWhoClicked(), state)) {
-				if (event.getInventory().getName().equalsIgnoreCase(inv.getName())) {
-					event.setCancelled(true);
-					event.setResult(Event.Result.DENY);
+			for (Inventory inv : main.getQuestHandler().getPlayersQuestGUIs((Player) e.getWhoClicked(), state)) {
+				if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
+					e.setCancelled(true);
+					e.setResult(Event.Result.DENY);
 				}
 			}
 		}
