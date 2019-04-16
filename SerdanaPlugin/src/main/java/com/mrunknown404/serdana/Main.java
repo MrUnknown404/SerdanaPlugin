@@ -66,6 +66,7 @@ import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 public final class Main extends JavaPlugin {
 	
 	public static final String TYPE = ".json";
+	public static final String BASE_LOCATION_TEXTURES = "/main/resources/serdana/assets/quests/";
 	private final File file_randomConfig = new File("RandomConfig");
 	
 	private ShopkeeperListener shopListen;

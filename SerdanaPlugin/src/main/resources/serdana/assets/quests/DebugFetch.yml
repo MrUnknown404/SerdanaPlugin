@@ -1,0 +1,49 @@
+Quest:
+  ==: main.java.com.mrunknown404.serdana.quests.Quest
+  questID: 0
+  name: Debug Fetch!
+  description:
+  - Description Fetch
+  completionMessage:
+  - Complete Quest Message 1
+  - Complete Quest Message 2
+  turnInMessage:
+  - Turn in Message 1
+  - Turn in Message 2
+  startID: 0
+  finishID: 0
+  currentTaskID: 0
+  readyToTurnIn: false
+  state: unknown
+  rewards:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 1631
+    type: DIAMOND
+    amount: 2
+  tasks:
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch
+    type: playerTick
+    amount: 0
+    amountNeeded: 3
+    description:
+    - Get 3 Rotten Flesh
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 1631
+      type: ROTTEN_FLESH
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch
+    type: playerTick
+    amount: 0
+    amountNeeded: 3
+    description:
+    - Get 3 Bones
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    item:
+      ==: org.bukkit.inventory.ItemStack
+      v: 1631
+      type: BONE

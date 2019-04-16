@@ -1,0 +1,43 @@
+Quest:
+  ==: main.java.com.mrunknown404.serdana.quests.Quest
+  questID: 1
+  name: Debug Kill!
+  description:
+  - Description Kill
+  completionMessage:
+  - Complete Quest Message 1
+  - Complete Quest Message 2
+  turnInMessage:
+  - Turn in Message 1
+  - Turn in Message 2
+  startID: 0
+  finishID: 0
+  currentTaskID: 0
+  readyToTurnIn: false
+  state: unknown
+  rewards:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 1631
+    type: BONE
+    amount: 5
+  tasks:
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill
+    type: entityDeath
+    amount: 0
+    amountNeeded: 3
+    description:
+    - Kill 3 Zombies
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    entityType: ZOMBIE
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill
+    type: entityDeath
+    amount: 0
+    amountNeeded: 3
+    description:
+    - Kill 3 Skeletons
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    entityType: SKELETON

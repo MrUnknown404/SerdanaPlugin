@@ -2,6 +2,8 @@ package main.java.com.mrunknown404.serdana.quests;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -400,16 +402,22 @@ public class QuestHandler {
 	}
 	
 	public Quest getQuestFile(String questFileName) {
-		File f = new File(path + "/Quests/" + questFileName + ".yml");
-		
-		Quest q = (Quest) YamlConfiguration.loadConfiguration(f).getObject("Quest", Quest.class);
-		
-		if (q == null) {
-			System.out.println("Could not find file: " + questFileName + ".yml! (Will be created)");
-			return writeDefaultQuest(questFileName);
+		if (getClass().getResourceAsStream(Main.BASE_LOCATION_TEXTURES + questFileName + ".yml") == null) {
+			System.out.println("Could not find file inside jar: " + questFileName + ".yml!");
+			
+			File f = new File(path + "/Quests/" + questFileName + ".yml");
+			Quest q = YamlConfiguration.loadConfiguration(f).getObject("Quest", Quest.class);
+			
+			if (q == null) {
+				System.out.println("Could not find file in config: " + questFileName + ".yml! (Will be created)");
+				return writeDefaultQuest(questFileName);
+			}
+			
+			return q;
+		} else {
+			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION_TEXTURES + questFileName + ".yml");
+			return YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getObject("Quest", Quest.class);
 		}
-		
-		return q;
 	}
 	
 	public boolean isPlayerSetup(Player p) {

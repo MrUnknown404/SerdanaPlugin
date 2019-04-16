@@ -1,0 +1,57 @@
+Quest:
+  ==: main.java.com.mrunknown404.serdana.quests.Quest
+  questID: 2
+  name: Debug Walk!
+  description:
+  - Description Walk
+  completionMessage:
+  - Complete Quest Message 1
+  - Complete Quest Message 2
+  turnInMessage:
+  - Turn in Message 1
+  - Turn in Message 2
+  startID: 0
+  finishID: 0
+  currentTaskID: 0
+  readyToTurnIn: false
+  state: unknown
+  rewards:
+  - ==: org.bukkit.inventory.ItemStack
+    v: 1631
+    type: FEATHER
+    amount: 2
+  tasks:
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk
+    type: playerTick
+    amount: 0
+    amountNeeded: 1
+    description:
+    - Walk to (0, 0, 0)
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    whereTo:
+      ==: org.bukkit.Location
+      world: world
+      x: 0.0
+      y: 0.0
+      z: 0.0
+      pitch: 0.0
+      yaw: 0.0
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk
+    type: playerTick
+    amount: 0
+    amountNeeded: 1
+    description:
+    - Now walk to (10, 10, 10)
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    whereTo:
+      ==: org.bukkit.Location
+      world: world
+      x: 10.0
+      y: 10.0
+      z: 10.0
+      pitch: 0.0
+      yaw: 0.0
