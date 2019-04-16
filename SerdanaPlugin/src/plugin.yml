@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.6.0-Beta
+version: 0.3.7.0-Beta
 author: -Unknown-
 api-version: 1.13
 
@@ -67,6 +67,10 @@ commands:
     description: Parasite commands
     usage: "Usage: '/parasite' [argument] [player (optional)]"
     permission: serdana.parasite
+  timer:
+    description: Created a timer for a player
+    usage: "Usage: '/timer' [argument] [player]"
+    permission: serdana.timer
 
 permissions:
   serdana.setTier:
@@ -106,4 +110,6 @@ permissions:
   serdana.unbreakable:
     default: op
   serdana.parasite:
+    default: op
+  serdana.timer:
     default: op

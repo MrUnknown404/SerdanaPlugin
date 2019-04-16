@@ -9,15 +9,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-public class TabBounty implements TabCompleter {
-	
+public class TabTimer implements TabCompleter {
+
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(CommandSender sebder, Command cmd, String label, String[] args) {
 		List<String> r = new ArrayList<String>();
 		
 		if (args.length == 1) {
-			r.add("create");
-			r.add("cancel");
+			r.add("start");
+			r.add("stop");
 		} else if (args.length == 2) {
 			for (Player p :Bukkit.getOnlinePlayers()) {
 				r.add(p.getName());

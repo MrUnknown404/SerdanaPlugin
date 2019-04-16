@@ -48,6 +48,10 @@ public class PlayerListener implements Listener {
 		if ((main.getQuestHandler().isPlayerSetup(e.getPlayer()))) {
 			main.getQuestHandler().unsetupPlayer(e.getPlayer());
 		}
+		
+		if (main.getCommandTimer().getPlayers().containsKey(e.getPlayer().getUniqueId())) {
+			main.getCommandTimer().getPlayers().remove(e.getPlayer().getUniqueId());
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)

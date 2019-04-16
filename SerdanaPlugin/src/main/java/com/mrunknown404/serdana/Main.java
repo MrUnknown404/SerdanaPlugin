@@ -30,6 +30,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
+import main.java.com.mrunknown404.serdana.commands.CommandTimer;
 import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParasite;
@@ -37,6 +38,7 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
@@ -70,6 +72,7 @@ public final class Main extends JavaPlugin {
 	private final File file_randomConfig = new File("RandomConfig");
 	
 	private ShopkeeperListener shopListen;
+	
 	private HealthBarHandler healthBarHandler;
 	private BannedItemHandler bannedItemHandler;
 	private RandomConfig randomConfig;
@@ -78,6 +81,8 @@ public final class Main extends JavaPlugin {
 	private PartyHandler partyHandler;
 	private QuestHandler questHandler;
 	private ParasiteHandler parasiteHandler;
+	
+	private CommandTimer commandTimer;
 	
 	@Override
 	public void onEnable() {
@@ -105,6 +110,8 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(QuestTaskFetch.class, "QuestTaskFetch");
 		ConfigurationSerialization.registerClass(QuestTaskKill.class, "QuestTaskKill");
 		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
+		
+		commandTimer = new CommandTimer(this);
 		
 		healthBarHandler = new HealthBarHandler(this);
 		bountyHandler = new BountyHandler(this);
@@ -141,6 +148,7 @@ public final class Main extends JavaPlugin {
 		getCommand("quest").setExecutor(new CommandQuest(this));
 		getCommand("unbreakable").setExecutor(new CommandUnbreakable());
 		getCommand("parasite").setExecutor(new CommandParasite(this));
+		getCommand("timer").setExecutor(commandTimer);
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
@@ -148,6 +156,7 @@ public final class Main extends JavaPlugin {
 		getCommand("party").setTabCompleter(new TabParty());
 		getCommand("quest").setTabCompleter(new TabQuest());
 		getCommand("parasite").setTabCompleter(new TabParasite());
+		getCommand("timer").setTabCompleter(new TabTimer());
 		
 		reload(Bukkit.getConsoleSender());
 		parasiteHandler.start();
@@ -236,5 +245,9 @@ public final class Main extends JavaPlugin {
 
 	public ParasiteHandler getParasiteHandler() {
 		return parasiteHandler;
+	}
+	
+	public CommandTimer getCommandTimer() {
+		return commandTimer;
 	}
 }
