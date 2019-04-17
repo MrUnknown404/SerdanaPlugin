@@ -8,11 +8,14 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.AnvilInventory;
+import org.bukkit.inventory.EnchantingInventory;
 import org.bukkit.inventory.Inventory;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class InventoryListener implements Listener {
 	
@@ -25,12 +28,22 @@ public class InventoryListener implements Listener {
 	@SuppressWarnings("deprecation")
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent e) {
-		if (e.getCurrentItem() != null && e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
-			NBTItem n = new NBTItem(e.getCurrentItem());
+		if (e.getCurrentItem() != null) {
+			if (e.getInventory() instanceof AnvilInventory || e.getInventory() instanceof EnchantingInventory) {
+				if (main.getTierHandler().isItemTiered(e.getCurrentItem())) {
+					e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot put that in an anvil!"));
+					e.setCancelled(true);
+					e.setResult(Event.Result.DENY);
+				}
+			}
 			
-			if (n.hasKey("isParasite")) {
-				e.setCancelled(true);
-				e.setResult(Event.Result.DENY);
+			if (e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
+				NBTItem n = new NBTItem(e.getCurrentItem());
+				
+				if (n.hasKey("isParasite")) {
+					e.setCancelled(true);
+					e.setResult(Event.Result.DENY);
+				}
 			}
 		}
 		
