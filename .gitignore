@@ -2,6 +2,8 @@
 .recommenders/
 .externalToolBuilders/
 .settings/
+SerdanaPlugin/.classpath
+SerdanaPlugin/.project
 SerdanaPlugin/bin
 SerdanaPlugin/lib
 SerdanaPlugin/target
