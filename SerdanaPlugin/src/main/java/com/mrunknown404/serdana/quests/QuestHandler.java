@@ -354,13 +354,13 @@ public class QuestHandler {
 		} else if (questFileName == "DebugWalk") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
-			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getMainWorld()), 0, 0, 0), new String[] {
+			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getWorlds().get(0)), 0, 0, 0), new String[] {
 					"Walk to (0, 0, 0)"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
 			}));
-			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getMainWorld()), 10, 10, 10), new String[] {
+			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getWorlds().get(0)), 10, 10, 10), new String[] {
 					"Now walk to (10, 10, 10)"
 			}, new String[] {
 					"Complete Task Message 1",

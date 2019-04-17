@@ -6,6 +6,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
@@ -41,10 +42,12 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
+import main.java.com.mrunknown404.serdana.handlers.EntityHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
 import main.java.com.mrunknown404.serdana.handlers.ParasiteHandler;
 import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
 import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
+import main.java.com.mrunknown404.serdana.handlers.TierHandler;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.BookListener;
 import main.java.com.mrunknown404.serdana.listener.CraftingListener;
@@ -81,6 +84,8 @@ public final class Main extends JavaPlugin {
 	private PartyHandler partyHandler;
 	private QuestHandler questHandler;
 	private ParasiteHandler parasiteHandler;
+	private EntityHandler entityhandler;
+	private TierHandler tierHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -120,6 +125,8 @@ public final class Main extends JavaPlugin {
 		partyHandler = new PartyHandler();
 		questHandler = new QuestHandler(this);
 		parasiteHandler = new ParasiteHandler(this);
+		entityhandler = new EntityHandler(this);
+		tierHandler = new TierHandler();
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -133,7 +140,7 @@ public final class Main extends JavaPlugin {
 		
 		getServer().getPluginManager().registerEvents(shopListen, this);
 		
-		getCommand("setTier").setExecutor(new CommandSetTier());
+		getCommand("setTier").setExecutor(new CommandSetTier(this));
 		getCommand("serdana").setExecutor(new CommandSerdana(this));
 		getCommand("setBan").setExecutor(new CommandSetBan());
 		getCommand("bounty").setExecutor(new CommandBounty(this));
@@ -176,10 +183,10 @@ public final class Main extends JavaPlugin {
 			System.out.println("Could not find file: " + file_randomConfig + TYPE + "! (Will be created)");
 			
 			ArrayList<String> jails = new ArrayList<String>();
-			jails.add("test1");
-			jails.add("test2");
+			jails.add("jail1");
+			jails.add("jail2");
 			
-			randomConfig = new RandomConfig(jails, 2, "Max", 16d, 5);
+			randomConfig = new RandomConfig(jails, 2, Arrays.asList("Max"), 16d, 5);
 			
 			try {
 				fw = new FileWriter(getDataFolder() + "/" + file_randomConfig + TYPE);
@@ -215,6 +222,10 @@ public final class Main extends JavaPlugin {
 		}
 	}
 	
+	public ShopkeeperListener getShopListen() {
+		return shopListen;
+	}
+	
 	public HealthBarHandler getHealthBarHandler() {
 		return healthBarHandler;
 	}
@@ -242,9 +253,17 @@ public final class Main extends JavaPlugin {
 	public QuestHandler getQuestHandler() {
 		return questHandler;
 	}
-
+	
 	public ParasiteHandler getParasiteHandler() {
 		return parasiteHandler;
+	}
+	
+	public EntityHandler getEntityhandler() {
+		return entityhandler;
+	}
+	
+	public TierHandler getTierHandler() {
+		return tierHandler;
 	}
 	
 	public CommandTimer getCommandTimer() {

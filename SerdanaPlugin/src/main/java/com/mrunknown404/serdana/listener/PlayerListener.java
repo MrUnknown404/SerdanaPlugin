@@ -3,12 +3,17 @@ package main.java.com.mrunknown404.serdana.listener;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -21,6 +26,25 @@ public class PlayerListener implements Listener {
 	
 	public PlayerListener(Main main) {
 		this.main = main;
+	}
+	
+	@EventHandler
+	public void onRightClick(PlayerInteractEvent e) {
+		if (e.getItem() != null && e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+			EntityType finalType = null;
+			for (EntityType type : EntityType.values()) {
+				if (type.toString().contains(e.getItem().getType().toString().replace("SPAWN_EGG", ""))) {
+					finalType = type;
+					break;
+				}
+			}
+			
+			if (finalType != null) {
+				Entity ent = e.getPlayer().getWorld().spawnEntity(e.getClickedBlock().getLocation().add(0, 1, 0), finalType);
+				
+				main.getEntityhandler().setupEntity((LivingEntity) ent, main.getTierHandler().getItemsTier(e.getItem()));
+			}
+		}
 	}
 	
 	@EventHandler(priority = EventPriority.HIGHEST)

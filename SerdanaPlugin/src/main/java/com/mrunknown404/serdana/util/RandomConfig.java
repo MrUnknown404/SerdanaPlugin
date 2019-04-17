@@ -6,13 +6,13 @@ public class RandomConfig {
 
 	private List<String> jailNames;
 	private int jailTimeMinutes, parasiteSpreadChance;
-	private String mainWorld;
+	private List<String> worlds;
 	private double parasiteSpreadDistance;
 	
-	public RandomConfig(List<String> jailNames, int jailTimeMinutes, String mainWorld, double parasiteSpreadDistance, int parasiteSpreadChance) {
+	public RandomConfig(List<String> jailNames, int jailTimeMinutes, List<String> worlds, double parasiteSpreadDistance, int parasiteSpreadChance) {
 		this.jailNames = jailNames;
 		this.jailTimeMinutes = jailTimeMinutes;
-		this.mainWorld = mainWorld;
+		this.worlds = worlds;
 		this.parasiteSpreadDistance = parasiteSpreadDistance;
 		this.parasiteSpreadChance = parasiteSpreadChance;
 	}
@@ -25,8 +25,8 @@ public class RandomConfig {
 		return jailTimeMinutes;
 	}
 	
-	public String getMainWorld() {
-		return mainWorld;
+	public List<String> getWorlds() {
+		return worlds;
 	}
 	
 	public double getParasiteSpreadDistance() {
