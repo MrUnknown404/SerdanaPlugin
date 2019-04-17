@@ -68,7 +68,7 @@ public class QuestHandler {
 	}
 	
 	private BukkitScheduler scheduler;
-	private void checkTickTask() {;
+	private void checkTickTask() {
 		scheduler = Bukkit.getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(main, new Runnable() {
 			@Override
