@@ -42,7 +42,6 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
-import main.java.com.mrunknown404.serdana.handlers.EntityHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
 import main.java.com.mrunknown404.serdana.handlers.ParasiteHandler;
 import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
@@ -84,7 +83,6 @@ public final class Main extends JavaPlugin {
 	private PartyHandler partyHandler;
 	private QuestHandler questHandler;
 	private ParasiteHandler parasiteHandler;
-	private EntityHandler entityhandler;
 	private TierHandler tierHandler;
 	
 	private CommandTimer commandTimer;
@@ -125,7 +123,6 @@ public final class Main extends JavaPlugin {
 		partyHandler = new PartyHandler();
 		questHandler = new QuestHandler(this);
 		parasiteHandler = new ParasiteHandler(this);
-		entityhandler = new EntityHandler(this);
 		tierHandler = new TierHandler();
 		
 		shopListen = new ShopkeeperListener(this);
@@ -256,10 +253,6 @@ public final class Main extends JavaPlugin {
 	
 	public ParasiteHandler getParasiteHandler() {
 		return parasiteHandler;
-	}
-	
-	public EntityHandler getEntityhandler() {
-		return entityhandler;
 	}
 	
 	public TierHandler getTierHandler() {
