@@ -17,6 +17,7 @@ import org.bukkit.inventory.meta.SpawnEggMeta;
 import de.tr7zw.itemnbtapi.NBTEntity;
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
 public class EntityListener implements Listener {
@@ -124,10 +125,16 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void entityDamage(EntityDamageByEntityEvent e) {
-		PlayerInventory inv = null;
-		
 		if (e.getEntity() instanceof Player) {
-			inv = ((Player) e.getEntity()).getInventory();
+			if (e.getDamager() instanceof Player) {
+				if (main.getPartyHandler().arePlayersInSameParty(e.getEntity().getUniqueId(), e.getDamager().getUniqueId())) {
+					e.setCancelled(true);
+					e.getDamager().sendMessage(ColorHelper.setColors("&cYou cannot hurt that person!"));
+					return;
+				}
+			}
+			
+			PlayerInventory inv = ((Player) e.getEntity()).getInventory();
 			float finalMulti = 1;
 			
 			for (ItemStack item : inv.getArmorContents()) {

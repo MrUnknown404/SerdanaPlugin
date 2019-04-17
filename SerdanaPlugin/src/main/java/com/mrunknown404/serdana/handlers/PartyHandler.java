@@ -130,4 +130,19 @@ public class PartyHandler {
 		
 		return false;
 	}
+	
+	public boolean arePlayersInSameParty(UUID player1, UUID player2) {
+		if (!isPlayerInAnyParty(player1) || !isPlayerInAnyParty(player2)) {
+			return false;
+		}
+		
+		PartyInfo info = getPlayersParty(player1);
+		if (info.getLeader() == player2) {
+			return true;
+		} else if (info.getMembers().contains(player2)) {
+			return true;
+		}
+		
+		return false;
+	}
 }
