@@ -42,26 +42,12 @@ public class TierHandler {
 	public int getHighestTierFromPlayer(Player p) {
 		int highest = 0;
 		
-		List<ItemStack> itemsToCheck = new ArrayList<ItemStack>();
-		
 		for (ItemStack item : p.getInventory().getArmorContents()) {
 			if (item != null) {
-				itemsToCheck.add(item);
-			}
-		}
-		
-		if (p.getInventory().getItemInMainHand() != null) {
-			itemsToCheck.add(p.getInventory().getItemInMainHand());
-		}
-		
-		if (p.getInventory().getItemInOffHand() != null) {
-			itemsToCheck.add(p.getInventory().getItemInOffHand());
-		}
-		
-		for (ItemStack item : itemsToCheck) {
-			int tier = getItemsTier(item);
-			if (tier > highest) {
-				highest = tier;
+				int tier = getItemsTier(item);
+				if (tier > highest) {
+					highest = tier;
+				}
 			}
 		}
 		
@@ -84,25 +70,11 @@ public class TierHandler {
 	public int getTiersOnPlayer(Player p) {
 		int tiers = 0;
 		
-		List<ItemStack> itemsToCheck = new ArrayList<ItemStack>();
-		
 		for (ItemStack item : p.getInventory().getArmorContents()) {
 			if (item != null) {
-				itemsToCheck.add(item);
-			}
-		}
-		
-		if (p.getInventory().getItemInMainHand() != null) {
-			itemsToCheck.add(p.getInventory().getItemInMainHand());
-		}
-		
-		if (p.getInventory().getItemInOffHand() != null) {
-			itemsToCheck.add(p.getInventory().getItemInOffHand());
-		}
-		
-		for (ItemStack item : itemsToCheck) {
-			if (isItemTiered(item)) {
-				tiers += getItemsTier(item);
+				if (isItemTiered(item)) {
+					tiers += getItemsTier(item);
+				}
 			}
 		}
 		

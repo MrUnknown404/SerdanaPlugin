@@ -1,10 +1,8 @@
 package main.java.com.mrunknown404.serdana.listener;
 
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 
@@ -27,17 +25,6 @@ public class EntityListener implements Listener {
 	}
 	
 	@EventHandler
-	public void entitySpawn(CreatureSpawnEvent e) {
-		if (e.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER_EGG) {
-			e.setCancelled(true);
-		}
-		
-		if (e.getEntity() instanceof Monster) {
-			main.getEntityhandler().setupEntity(e.getEntity());
-		}
-	}
-	
-	@EventHandler
 	public void entityDamage(EntityDamageByEntityEvent e) {
 		if (e.getEntity() instanceof Player) {
 			if (e.getDamager() instanceof Player) {
@@ -48,7 +35,7 @@ public class EntityListener implements Listener {
 				}
 			}
 			
-			e.setDamage(e.getDamage() * 1 + main.getTierHandler().getTiersOnPlayer((Player) e.getEntity()) / 10);
+			e.setDamage(e.getDamage() * (1 + main.getTierHandler().getTiersOnPlayer((Player) e.getEntity()) / 10));
 		}
 	}
 }
