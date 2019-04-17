@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.8.3-Beta
+version: 0.3.9.0-Beta
 author: [-Unknown-, RetroSpaceMan123]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
