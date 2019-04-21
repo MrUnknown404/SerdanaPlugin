@@ -60,6 +60,10 @@ public class PlayerListener implements Listener {
 			main.getPartyHandler().notifyDeath(e.getEntity().getUniqueId());
 		}
 		
+		if (main.getCommandTimer().getPlayers().containsKey(e.getEntity().getUniqueId())) {
+			main.getCommandTimer().getPlayers().remove(e.getEntity().getUniqueId());
+		}
+		
 		if (e.getEntity().getKiller() instanceof Player) {
 			List<BountyInfo> bounties = main.getBountyHandler().getBounties();
 			

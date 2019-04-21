@@ -168,6 +168,18 @@ public class QuestHandler {
 		}
 	}
 	
+	public void setPlayersQuestState(Player p, Quest quest, EnumQuestState state) {
+		QuestPlayerData info = getQuestPlayersData(p);
+		
+		if (info != null) {
+			info.setQuestState(quest, state);
+			writeQuestPlayerData(p);
+			setupQuestChestGUI(p);
+		} else {
+			System.err.println("Player " + p.getDisplayName() + " does not have a quest playerdata");
+		}
+	}
+	
 	public void setupQuestChestGUI(Player p) {
 		List<Inventory> invUnknown = new ArrayList<Inventory>(); //paper
 		List<Inventory> invAccepted = new ArrayList<Inventory>(); //writable book
@@ -321,7 +333,8 @@ public class QuestHandler {
 					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.DIAMOND, 2)
-			});
+			}, new int[] {});
+			
 			write.set("Quest", q);
 		} else if (questFileName == "DebugKill") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
@@ -349,7 +362,8 @@ public class QuestHandler {
 					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.BONE, 5)
-			});
+			}, new int[] {});
+			
 			write.set("Quest", q);
 		} else if (questFileName == "DebugWalk") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
@@ -377,18 +391,21 @@ public class QuestHandler {
 					"Turn in Message 2"
 			}, tasks, 0, 0, new ItemStack[] {
 					new ItemStack(Material.FEATHER, 2)
-			});
+			}, new int[] {});
+			
 			write.set("Quest", q);
 		} else {
 			q = new Quest(3, "Unfinished Quest!", new String[] {
-					"Unfinished description"
+					"Unfinished description 1",
+					"Unfinished description 2"
 			}, new String[] {
 					"Complete Quest Message 1",
 					"Complete Quest Message 2"
 			}, new String[] {
 					"Turn in Message 1",
 					"Turn in Message 2"
-			}, new ArrayList<QuestTask>(), 0, 0, new ItemStack[] {});
+			}, new ArrayList<QuestTask>(), 0, 0, new ItemStack[] {}, new int[] {});
+			
 			write.set("Quest", q);
 		}
 		

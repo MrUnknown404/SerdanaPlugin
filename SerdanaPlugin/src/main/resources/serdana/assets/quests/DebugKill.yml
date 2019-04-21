@@ -14,6 +14,7 @@ Quest:
   finishID: 0
   currentTaskID: 0
   readyToTurnIn: false
+  requirements: []
   state: unknown
   rewards:
   - ==: org.bukkit.inventory.ItemStack

@@ -21,7 +21,13 @@ public class CommandUnbreakable implements CommandExecutor {
 		if (((Player) sender).getInventory().getItemInMainHand().getType() != Material.AIR) {
 			ItemStack item = ((Player) sender).getInventory().getItemInMainHand();
 			ItemMeta meta = item.getItemMeta();
-			meta.setUnbreakable(true);
+			
+			if (!meta.isUnbreakable()) {
+				meta.setUnbreakable(true);
+			} else {
+				meta.setUnbreakable(false);
+			}
+			
 			item.setItemMeta(meta);
 			
 			return true;

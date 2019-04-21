@@ -96,6 +96,10 @@ public class ShowItem {
 			itemBookInfo = metaBuilder.toString();
 		}
 		
+		if (itemDisplayName.contains("\"")) {
+			itemDisplayName = itemDisplayName.replaceAll("\"", "''");
+		}
+		
 		msg.append("{\"text\": \"" + p.getDisplayName() + " has shared [" + itemDisplayName + "\u00a7f]\",\"hoverEvent\": {\"action\": \"show_item\",\"value\":\""
 				+ "{\\\"id\\\": \\\"" + itemName + "\\\","
 				+ "\\\"Count\\\": 1,"
