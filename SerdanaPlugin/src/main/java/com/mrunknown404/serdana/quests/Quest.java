@@ -21,10 +21,12 @@ public class Quest implements ConfigurationSerializable {
 	private boolean readyToTurnIn = false;
 	private EnumQuestState state = EnumQuestState.unknown;
 	private ItemStack[] rewards;
+	private int[] requirements;
 	
-	private List<QuestTask> tasks = new ArrayList<>();
+	private List<QuestTask> tasks = new ArrayList<QuestTask>();
 	
-	Quest(int questID, String name, String[] description, String[] completionMessage, String[] turnInMessage, List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards) {
+	Quest(int questID, String name, String[] description, String[] completionMessage, String[] turnInMessage, List<QuestTask> tasks, int startID, int finishID,
+			ItemStack[] rewards, int[] requirements) {
 		this.questID = questID;
 		this.name = name;
 		this.tasks = tasks;
@@ -34,6 +36,7 @@ public class Quest implements ConfigurationSerializable {
 		this.description = description;
 		this.completionMessage = completionMessage;
 		this.turnInMessage = turnInMessage;
+		this.requirements = requirements;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -50,6 +53,7 @@ public class Quest implements ConfigurationSerializable {
 		turnInMessage = ((List<String>) map.get("turnInMessage")).toArray(new String[0]);
 		rewards = ((List<ItemStack>) map.get("rewards")).toArray(new ItemStack[0]);
 		readyToTurnIn = (boolean) map.get("readyToTurnIn");
+		requirements = ((List<Integer>) map.get("requirements")).stream().mapToInt(i -> i).toArray();
 	}
 	
 	@Override
@@ -64,6 +68,7 @@ public class Quest implements ConfigurationSerializable {
 		result.put("finishID", finishID);
 		result.put("currentTaskID", currentTaskID);
 		result.put("readyToTurnIn", readyToTurnIn);
+		result.put("requirements", requirements);
 		result.put("state", state.toString());
 		result.put("rewards", rewards);
 		result.put("tasks", tasks);
@@ -117,6 +122,10 @@ public class Quest implements ConfigurationSerializable {
 		}
 	}
 	
+	public void setState(EnumQuestState state) {
+		this.state = state;
+	}
+	
 	public QuestTask getCurrentTask() {
 		return tasks.get(currentTaskID);
 	}
@@ -165,17 +174,20 @@ public class Quest implements ConfigurationSerializable {
 		return rewards;
 	}
 	
+	public int[] getRequirements() {
+		return requirements;
+	}
+	
 	public List<QuestTask> getTasks() {
 		return tasks;
 	}
 	
 	@Override
 	public boolean equals(Object obj) {
-		if (!(obj instanceof Quest)) {
-			return false;
-		}
-		if (((Quest) obj).questID == questID) {
-			return true;
+		if (obj instanceof Quest) {
+			if (((Quest) obj).questID == questID) {
+				return true;
+			}
 		}
 		
 		return false;

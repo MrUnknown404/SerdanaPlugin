@@ -26,6 +26,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandParasite;
 import main.java.com.mrunknown404.serdana.commands.CommandParty;
 import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandQuest;
+import main.java.com.mrunknown404.serdana.commands.CommandRainbow;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
@@ -153,6 +154,7 @@ public final class Main extends JavaPlugin {
 		getCommand("unbreakable").setExecutor(new CommandUnbreakable());
 		getCommand("parasite").setExecutor(new CommandParasite(this));
 		getCommand("timer").setExecutor(commandTimer);
+		getCommand("rainbow").setExecutor(new CommandRainbow());
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());

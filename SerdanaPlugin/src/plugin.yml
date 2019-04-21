@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.9.0-Beta
+version: 0.3.10.0-Beta
 author: [-Unknown-, RetroSpaceMan123]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -58,9 +58,9 @@ commands:
     usage: "Usage: '/party' [argument] [argument]"
     permission: serdana.party
   quest:
-    description: Shows quests
-    usage: "Usage: '/quest' [argument] [argument] [page #]"
-    permission: serdana.quests
+    description: Quest commands
+    usage: "Usage: '/quest' [argument] [argument] [argument]"
+    permission: serdana.quest
   unbreakable:
     description: Makes held item unbreakable
     usage: "Usage: '/unbreakable' must hold an item"
@@ -73,6 +73,10 @@ commands:
     description: Created a timer for a player
     usage: "Usage: '/timer' [argument] [player]"
     permission: serdana.timer
+  rainbow:
+    description: Makes the given string all rainbow-y
+    usage: "Usage: '/rainbow' [message]"
+    permission: serdana.rainbow
 
 permissions:
   serdana.setTier:
@@ -109,9 +113,13 @@ permissions:
     default: true
   serdana.quest:
     default: true
+  serdana.quest.admin:
+    default: op
   serdana.unbreakable:
     default: op
   serdana.parasite:
     default: op
   serdana.timer:
+    default: op
+  serdana.rainbow:
     default: op

@@ -13,6 +13,7 @@ public class CommandSayAs implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		String name = args[0];
+		
 		if (args.length >= 2) {
 			String msg = "";
 			for (int i = 1; i < args.length; i++) {
@@ -20,7 +21,7 @@ public class CommandSayAs implements CommandExecutor {
 			}
 			
 			for (Player player : Bukkit.getOnlinePlayers()) {
-				player.sendMessage("<" + ColorHelper.setColors(name) + ColorHelper.setColors("&f> ") + ColorHelper.setColors(msg));
+				player.sendMessage(ColorHelper.setColors("<" + name + "&f> " + msg));
 			}
 			
 			return true;

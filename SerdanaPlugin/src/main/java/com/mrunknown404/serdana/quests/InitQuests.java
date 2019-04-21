@@ -24,6 +24,24 @@ public class InitQuests {
 		allQuests.get(isActive).add(q);
 	}
 	
+	public static boolean doesQuestExist(String name) {
+		if (getQuest(name) != null) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	public static Quest getQuest(String name) {
+		for (Quest q : allQuests.get(true)) {
+			if (q.getName().equalsIgnoreCase(name)) {
+				return q;
+			}
+		}
+		
+		return null;
+	}
+	
 	public static Map<Boolean, List<Quest>> getAllQuests() {
 		return allQuests;
 	}

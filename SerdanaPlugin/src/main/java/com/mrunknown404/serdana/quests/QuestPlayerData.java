@@ -52,9 +52,24 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return list;
 	}
 	
+	public void setQuestState(Quest quest, EnumQuestState state) {
+		for (int i = 0; i < quests.size(); i++) {
+			Quest q = quests.get(i);
+			
+			if (q.equals(quest)) {
+				if (state == EnumQuestState.unknown) {
+					q.setState(state);
+				} else {
+					removeQuest(q);
+					addQuest(InitQuests.getQuest(quest.getName()));
+				}
+			}
+		}
+	}
+	
 	public void addQuest(Quest quest) {
 		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getCompletionMessage(), quest.getTurnInMessage(),
-				quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards()));
+				quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards(), quest.getRequirements()));
 	}
 	
 	public void removeQuest(Quest quest) {
@@ -70,6 +85,16 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	public boolean hasQuest(Quest q) {
 		for (Quest qs : quests) {
 			if (qs.equals(q)) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean hasAcceptedQuest(Quest q) {
+		for (Quest qs : quests) {
+			if (qs.equals(q) && qs.getState() == EnumQuestState.accepted) {
 				return true;
 			}
 		}
