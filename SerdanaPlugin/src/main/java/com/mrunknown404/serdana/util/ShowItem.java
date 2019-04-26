@@ -17,6 +17,9 @@ import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 
 public class ShowItem {
 	
+	/** Shows all {@link Player}s the given Player's {@link ItemStack} in their hand
+	 * @param p Player to get the ItemStack from
+	 */
 	public ShowItem(Player p) {
 		ItemStack item = p.getInventory().getItemInMainHand();
 		

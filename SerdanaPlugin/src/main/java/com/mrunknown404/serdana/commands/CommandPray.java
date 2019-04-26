@@ -154,6 +154,11 @@ public class CommandPray implements CommandExecutor {
 		return false;
 	}
 	
+	/** Searches in the given {@link EnumPrayerType}'s {@link Inventory} for the given {@link ItemStack}
+	 * @param type Prayer type to search in
+	 * @param itemToFind The ItemStack to find
+	 * @return The PrayerInfo the given ItemStack is in
+	 */
 	private PrayInfo search(EnumPrayerType type, ItemStack itemToFind) {
 		List<Inventory> inv = main.getPrayerHandler().getUnsetInventories();
 		

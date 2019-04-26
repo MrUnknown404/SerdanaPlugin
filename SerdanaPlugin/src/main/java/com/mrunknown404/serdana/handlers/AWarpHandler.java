@@ -27,6 +27,7 @@ public class AWarpHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	/** Reloads this class's Configs */
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -42,17 +43,25 @@ public class AWarpHandler {
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
+	/** Sets a warp at the give {@link Location} with the given name
+	 * @param l The Location to set the warp at
+	 * @param name The name of the warp
+	 */
 	public void setWarp(Location l, String name) {
 		warps.put(name, l);
 		
 		writeWarps();
 	}
 	
+	/** Removes the warp with the given name
+	 * @param name The name of the warp to remove
+	 */
 	public void removeWarp(String name) {
 		warps.remove(name);
 		writeWarps();
 	}
 	
+	/** Writes all warps */
 	public void writeWarps() {
 		File f = new File(path + "/" + file_warps + ".yml");
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -65,6 +74,7 @@ public class AWarpHandler {
 		}
 	}
 	
+	/** Reads all warps */
 	@SuppressWarnings("unchecked")
 	public void readWarps() {
 		File f = new File(path + "/" + file_warps + ".yml");
@@ -73,10 +83,16 @@ public class AWarpHandler {
 		warps = (Map<String, Location>) temp;
 	}
 	
+	/** Returns the amount of warps
+	 * @return The amount of warps
+	 */
 	public int getAmountOfWarps() {
 		return warps.keySet().size();
 	}
 	
+	/** Returns all warp names
+	 * @return Returns a List of all warp names
+	 */
 	public List<String> getAllNames() {
 		List<String> str = new ArrayList<String>();
 		for (String s : warps.keySet()) {
@@ -86,6 +102,10 @@ public class AWarpHandler {
 		return str;
 	}
 
+	/** Gets the warp with the specified name and returns the warp's {@link Location}
+	 * @param string The warp to find
+	 * @return The warps Location
+	 */
 	public Location getWarp(String string) {
 		if (!warps.isEmpty()) {
 			Iterator<Entry<String, Location>> it = warps.entrySet().iterator();

@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.11.0-Beta
+version: 0.4.0.0-Beta
 author: [-Unknown-, RetroSpaceMan123]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -62,7 +62,7 @@ commands:
     usage: "Usage: '/quest' [argument] [argument] [argument]"
     permission: serdana.quest
   unbreakable:
-    description: Makes held item unbreakable
+    description: Makes held item unbreakable/breakable
     usage: "Usage: '/unbreakable' must hold an item"
     permission: serdana.unbreakable
   parasite:
@@ -97,7 +97,12 @@ commands:
     description: Teleports the player to the specified admin warp
     usage: "Usage: '/adminWarps' [warp]"
     permission: serdana.adminWarp
-    
+  adminChatToggle:
+    aliases: act
+    description: Toggles admin chat
+    usage: "Usage: '/adminChatToggle'"
+    permission: serdana.adminChat
+
 permissions:
   serdana.setTier:
     default: op
@@ -144,4 +149,6 @@ permissions:
   serdana.rainbow:
     default: op
   serdana.adminWarp:
+    default: op
+  serdana.adminChat:
     default: op

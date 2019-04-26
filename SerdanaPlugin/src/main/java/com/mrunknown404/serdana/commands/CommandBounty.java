@@ -68,7 +68,7 @@ public class CommandBounty implements CommandExecutor {
 				return false;
 			}
 			
-			main.getBountyHandler().removeBounty(new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount()), false);
+			main.getBountyHandler().removeBounty(new BountyInfo(((Player) sender).getUniqueId(), p.getUniqueId(), item.getAmount()), true);
 			return true;
 		}
 		

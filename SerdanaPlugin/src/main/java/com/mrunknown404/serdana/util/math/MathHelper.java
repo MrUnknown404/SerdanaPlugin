@@ -12,6 +12,7 @@ public class MathHelper {
 		for (int i = 0; i < decimal; i++) {
 			tempDecimal *= 10;
 		}
+		
 		return (float) (Math.round(number * tempDecimal) / tempDecimal);
 	}
 }

@@ -33,6 +33,9 @@ public class BountyHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	/** Adds the given {@link BountyInfo} to the list of bounties
+	 * @param b BountyInfo to add
+	 */
 	public void addBounty(BountyInfo b) {
 		Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty created!"));
 		
@@ -41,9 +44,13 @@ public class BountyHandler {
 		readBounties();
 	}
 	
-	public void removeBounty(BountyInfo b, boolean wasDeath) {
+	/** Removed the given {@link BountyInfo} from the list of bounties
+	 * @param b BountyInfo to remove
+	 * @param wasCanceled Was the bounty canceled
+	 */
+	public void removeBounty(BountyInfo b, boolean wasCanceled) {
 		if (bounties.contains(b)) {
-			if (!wasDeath) {
+			if (wasCanceled) {
 				Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty canceled!"));
 			}
 			
@@ -55,6 +62,10 @@ public class BountyHandler {
 		}
 	}
 	
+	/** Rewards the given {@link Player}
+	 * @param info The BountyInfo that was claimed
+	 * @param killer The killer
+	 */
 	public void rewardPlayer(BountyInfo info, Player killer) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			p.sendMessage(ColorHelper.setColors("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
@@ -72,6 +83,7 @@ public class BountyHandler {
 		}
 	}
 	
+	/** Reloads this class's Configs */
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -87,6 +99,7 @@ public class BountyHandler {
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
+	/** Writes all bounties to file  */
 	public void writeBounties() {
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
@@ -103,6 +116,7 @@ public class BountyHandler {
 		}
 	}
 	
+	/** Reads all bounties from file */
 	public void readBounties() {
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileReader fr = null;

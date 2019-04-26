@@ -29,39 +29,47 @@ public class InventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (e.getCurrentItem() != null) {
-			if (e.getInventory() instanceof AnvilInventory || e.getInventory() instanceof EnchantingInventory) {
-				if (main.getTierHandler().isItemTiered(e.getCurrentItem())) {
-					e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot put that in an anvil!"));
-					e.setCancelled(true);
-					e.setResult(Event.Result.DENY);
+			if (main.getComponent(Main.Components.StopNamedItemUse)) {
+				if (e.getInventory() instanceof AnvilInventory || e.getInventory() instanceof EnchantingInventory) {
+					if (main.getTierHandler().isItemTiered(e.getCurrentItem())) {
+						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot put that in an anvil!"));
+						e.setCancelled(true);
+						e.setResult(Event.Result.DENY);
+					}
 				}
 			}
 			
-			if (e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
-				NBTItem n = new NBTItem(e.getCurrentItem());
-				
-				if (n.hasKey("isParasite")) {
-					e.setCancelled(true);
-					e.setResult(Event.Result.DENY);
+			if (main.getComponent(Main.Components.Parasite)) {
+				if (e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
+					NBTItem n = new NBTItem(e.getCurrentItem());
+					
+					if (n.hasKey("isParasite")) {
+						e.setCancelled(true);
+						e.setResult(Event.Result.DENY);
+					}
 				}
 			}
 		}
 		
-		for (Inventory inv : main.getPrayerHandler().getUnsetInventories()) {
-			if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
-				if (e.getAction() != InventoryAction.CLONE_STACK && e.getAction() != InventoryAction.PLACE_ALL &&
-						e.getAction() != InventoryAction.PLACE_ONE && e.getAction() != InventoryAction.PLACE_SOME) {
-					e.setCancelled(true);
-					e.setResult(Event.Result.DENY);
-				}
-			}
-		}
-		
-		for (EnumQuestState state : EnumQuestState.values()) {
-			for (Inventory inv : main.getQuestHandler().getPlayersQuestGUIs((Player) e.getWhoClicked(), state)) {
+		if (main.getComponent(Main.Components.Prayers)) {
+			for (Inventory inv : main.getPrayerHandler().getUnsetInventories()) {
 				if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
-					e.setCancelled(true);
-					e.setResult(Event.Result.DENY);
+					if (e.getAction() != InventoryAction.CLONE_STACK && e.getAction() != InventoryAction.PLACE_ALL &&
+							e.getAction() != InventoryAction.PLACE_ONE && e.getAction() != InventoryAction.PLACE_SOME) {
+						e.setCancelled(true);
+						e.setResult(Event.Result.DENY);
+					}
+				}
+			}
+		}
+		
+		if (main.getComponent(Main.Components.Quests)) {
+			for (EnumQuestState state : EnumQuestState.values()) {
+				for (Inventory inv : main.getQuestHandler().getPlayersQuestGUIs((Player) e.getWhoClicked(), state)) {
+					if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
+						e.setCancelled(true);
+						e.setResult(Event.Result.DENY);
+					}
 				}
 			}
 		}

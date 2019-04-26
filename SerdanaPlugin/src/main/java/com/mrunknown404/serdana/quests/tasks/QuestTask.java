@@ -43,8 +43,15 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		return result;
 	}
 	
+	/** Checks if the {@link QuestTask} was successful
+	 * @param obj Object to check
+	 * @return true if task was successful, otherwise false
+	 */
 	public abstract boolean checkForTask(Object obj);
 	
+	/** Checks if the {@link QuestTask} is finished
+	 * @return true if the task is finished, otherwise false
+	 */
 	public boolean checkForFinishedTask() {
 		if (amount >= amountNeeded) {
 			return true;
@@ -53,19 +60,23 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		return false;
 	}
 	
+	/** Checks if the given {@link Object} is the right type
+	 * @param obj Object to check
+	 * @return true if the given Object is the right type, otherwise false
+	 */
 	protected boolean checkType(Object obj) {
 		switch (type) {
-		case entityDeath:
-			if (obj instanceof Entity) {
-				return true;
-			}
-		case playerTick:
-			if (obj instanceof Player) {
-				return true;
-			}
-	}
-	
-	return false;
+			case entityDeath:
+				if (obj instanceof Entity) {
+					return true;
+				}
+			case playerTick:
+				if (obj instanceof Player) {
+					return true;
+				}
+		}
+		
+		return false;
 	}
 	
 	public int getAmount() {

@@ -75,6 +75,10 @@ public class Quest implements ConfigurationSerializable {
 		return result;
 	}
 	
+	/** Checks the {@link Quest}'s {@link QuestTask}s
+	 * @param p Player to check
+	 * @return true if the task was successful, otherwise false
+	 */
 	public boolean check(Player p) {
 		if (state == EnumQuestState.accepted) {
 			boolean b = getCurrentTask().checkForTask(p);
@@ -85,6 +89,11 @@ public class Quest implements ConfigurationSerializable {
 		return false;
 	}
 	
+	/** Checks the {@link Quest}'s {@link QuestTask}s
+	 * @param p Player to check
+	 * @param e Entity to check
+	 * @return true if the task was successful, otherwise false
+	 */
 	public boolean check(Player p, Entity e) {
 		if (state == EnumQuestState.accepted) {
 			boolean b = getCurrentTask().checkForTask(e);
@@ -95,7 +104,10 @@ public class Quest implements ConfigurationSerializable {
 		return false;
 	}
 	
-	private boolean checkFinished(Player p) {
+	/** Checks if the {@link QuestTask} is finished
+	 * @param p Player to check
+	 */
+	private void checkFinished(Player p) {
 		if (state == EnumQuestState.accepted) {
 			if (getCurrentTask().checkForFinishedTask()) {
 				for (String s : getCurrentTask().getCompletionMessage()) {
@@ -103,13 +115,13 @@ public class Quest implements ConfigurationSerializable {
 				}
 				
 				increaseTask(p);
-				return true;
 			}
 		}
-		
-		return false;
 	}
 	
+	/** Increases the currentTaskID
+	 * @param p Player to send the task completion messages to
+	 */
 	public void increaseTask(Player p) {
 		currentTaskID++;
 		

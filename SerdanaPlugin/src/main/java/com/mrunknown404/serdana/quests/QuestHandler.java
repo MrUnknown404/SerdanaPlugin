@@ -47,6 +47,9 @@ public class QuestHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	/** Reloads the given {@link Player}'s {@link QuestPlayerData}
+	 * @param p Player to reload
+	 */
 	public void reloadPlayer(Player p) {
 		if (playersQuests.isEmpty()) {
 			return;
@@ -55,6 +58,7 @@ public class QuestHandler {
 		setupPlayer(p);
 	}
 	
+	/** Reloads this class's Configs/{@link QuestPlayerData} */
 	public void reloadAll() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -68,6 +72,7 @@ public class QuestHandler {
 	}
 	
 	private BukkitScheduler scheduler;
+	/** Checks tick {@link QuestTask} */
 	private void checkTickTask() {
 		scheduler = Bukkit.getServer().getScheduler();
 		scheduler.scheduleSyncRepeatingTask(main, new Runnable() {
@@ -90,6 +95,10 @@ public class QuestHandler {
 		}, 0L, 1L);
 	}
 	
+	/** Checks the given {@link Player}'s Entity {@link QuestTask}
+	 * @param p Player to check
+	 * @param e Entity that'll be checked
+	 */
 	public void checkEntityDeathTask(Player p, Entity e) {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
@@ -103,6 +112,9 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Sets up the given {@link Player}
+	 * @param p Player to setup
+	 */
 	public void setupPlayer(Player p) {
 		if (playersQuests.contains(getQuestPlayersData(p))) {
 			playersQuests.remove(getQuestPlayersData(p));
@@ -139,13 +151,20 @@ public class QuestHandler {
 		setupQuestChestGUI(p);
 	}
 	
-	public void unsetupPlayer(Player p) {
+	/** Closes the given {@link Player}
+	 * @param p Player to close
+	 */
+	public void closePlayer(Player p) {
 		playersQuests.remove(getQuestPlayersData(p));
 		questInventoriesAccepted.remove(p.getUniqueId());
 		questInventoriesUnknown.remove(p.getUniqueId());
 		questInventoriesFinished.remove(p.getUniqueId());
 	}
 	
+	/** Gives the given {@link Player} the given {@link Quest}
+	 * @param p Player to add Quest to
+	 * @param q Quest to add
+	 */
 	private void addQuestToPlayer(Player p, Quest quest) {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
@@ -157,6 +176,10 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Removes the given {@link Quest} from the given {@link Player}
+	 * @param p Player to remove Quest from
+	 * @param q Quest to remove
+	 */
 	private void removeQuestFromPlayer(Player p, Quest quest) {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
@@ -168,6 +191,11 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Set the given {@link Player}'s {@link Quest} {@link EnumQuestState}
+	 * @param p Player to modify
+	 * @param quest Quest to modify
+	 * @param state New EnumQuestState
+	 */
 	public void setPlayersQuestState(Player p, Quest quest, EnumQuestState state) {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
@@ -180,6 +208,9 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Sets up the {@link Quest} chest GUI
+	 * @param p Player to setup a chest GUI for
+	 */
 	public void setupQuestChestGUI(Player p) {
 		List<Inventory> invUnknown = new ArrayList<Inventory>(); //paper
 		List<Inventory> invAccepted = new ArrayList<Inventory>(); //writable book
@@ -284,6 +315,9 @@ public class QuestHandler {
 		questInventoriesUnknown.put(p.getUniqueId(), invUnknown);
 	}
 	
+	/** Write the given {@link Player}'s {@link QuestPlayerData}
+	 * @param p Player to setup
+	 */
 	private void writeQuestPlayerData(Player p) {
 		File f = new File(path + "/Quests/PlayerData/" + p.getUniqueId().toString() + ".yml");
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -297,11 +331,19 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Reads the given {@link Player}'s {@link QuestPlayerData}
+	 * @param p The Player's QuestPlayerData to read
+	 * @return The given Player's QuestPlayerData
+	 */
 	private QuestPlayerData readQuestPlayerData(Player p) {
 		File f = new File(path + "/Quests/PlayerData/" + p.getUniqueId().toString() + ".yml");
 		return (QuestPlayerData) YamlConfiguration.loadConfiguration(f).getObject("PlayerData", QuestPlayerData.class);
 	}
 	
+	/** Writes the given default {@link Quest}
+	 * @param questFileName Quest File name
+	 * @return A default Quest
+	 */
 	private Quest writeDefaultQuest(String questFileName) {
 		File f = new File(path + "/Quests/" + questFileName + ".yml");
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -418,6 +460,10 @@ public class QuestHandler {
 		return q;
 	}
 	
+	/** Gets a {@link Quest} from the given String
+	 * @param questFileName String to use to find a Quest
+	 * @return A Quest found from the given String
+	 */
 	public Quest getQuestFile(String questFileName) {
 		if (getClass().getResourceAsStream(Main.BASE_LOCATION_TEXTURES + questFileName + ".yml") == null) {
 			System.out.println("Could not find file inside jar: " + questFileName + ".yml!");
@@ -437,6 +483,10 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Checks if the given {@link Player} is setup
+	 * @param p Player to check
+	 * @return true if the given Player is setup, otherwise false
+	 */
 	public boolean isPlayerSetup(Player p) {
 		for (QuestPlayerData info : playersQuests) {
 			if (info.getPlayerUUID().equals(p.getUniqueId())) {
@@ -447,6 +497,10 @@ public class QuestHandler {
 		return false;
 	}
 	
+	/** Gets the given {@link Player}'s {@link QuestPlayerData}
+	 * @param p Player to get their QuestPlayerData from
+	 * @return The given Player's QuestPlayerData
+	 */
 	public QuestPlayerData getQuestPlayersData(Player p) {
 		for (QuestPlayerData info : playersQuests) {
 			if (info.getPlayerUUID().equals(p.getUniqueId())) {
@@ -457,6 +511,11 @@ public class QuestHandler {
 		return null;
 	}
 	
+	/** Gets the given {@link Player}'s {@link Quest} GUI
+	 * @param p Player to get Quest GUI from
+	 * @param state Quest GUI type
+	 * @return A Inventory from the given Player & state
+	 */
 	public List<Inventory> getPlayersQuestGUIs(Player p, EnumQuestState state) {
 		Iterator<Entry<UUID, List<Inventory>>> it = null;
 		switch (state) {

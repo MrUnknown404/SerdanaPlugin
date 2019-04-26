@@ -33,6 +33,7 @@ public class PrayerHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	/** Creates the Prayer {@link Inventory}s */
 	private void createInventories() {
 		unsetPrayersInventory.clear();
 		goodPrayersInventory.clear();
@@ -57,6 +58,7 @@ public class PrayerHandler {
 		}
 	}
 	
+	/** Adds Prayers to the Prayer {@link Inventory}s */
 	private void addPrayerstoInventories() {
 		for (int i = 0; i < unsetPrayers.size(); i++) {
 			PrayInfo pi = unsetPrayers.get(i);
@@ -77,6 +79,7 @@ public class PrayerHandler {
 		}
 	}
 	
+	/** Reloads this class's Configs */
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -88,10 +91,14 @@ public class PrayerHandler {
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
+	/** Adds the given {@link PrayInfo} to the given {@link EnumPrayerType}'s {@link Inventory}
+	 * @param info PrayInfo to add
+	 * @param type Type to add to
+	 */
 	public void addPrayer(PrayInfo info, EnumPrayerType type) {
 		if (type == EnumPrayerType.unset) {
 			unsetPrayers.add(info);
-			writeUnsortedPrayers();
+			writeUnsetPrayers();
 		} else if (type == EnumPrayerType.good) {
 			goodPrayers.add(info);
 			writeGoodPrayers();
@@ -103,12 +110,16 @@ public class PrayerHandler {
 		reload();
 	}
 	
+	/** Removed the given {@link PrayInfo} from the given {@link EnumPrayerType}'s {@link Inventory}
+	 * @param info PrayInfo to remove
+	 * @param type Type to remove from
+	 */
 	public void removePrayer(PrayInfo info, EnumPrayerType type) {
 		if (type == EnumPrayerType.unset) {
 			for (int k = 0; k < unsetPrayers.size(); k++) {
 				if (unsetPrayers.get(k).equals(info)) {
 					unsetPrayers.remove(info);
-					writeUnsortedPrayers();
+					writeUnsetPrayers();
 				}
 			}
 		} else if (type == EnumPrayerType.good) {
@@ -130,10 +141,11 @@ public class PrayerHandler {
 		reload();
 	}
 	
+	/** Write all Prayers to file */
 	private void writeAllPrayers() {
 		if (!new File(path + "/Prayers/" + file_unsetPrayers + ".yml").exists()) {
 			System.out.println("Could not find file: " + file_unsetPrayers + ".yml! (Will be created)");
-			writeUnsortedPrayers();
+			writeUnsetPrayers();
 		}
 		
 		if (!new File(path + "/Prayers/" + file_goodPrayers + ".yml").exists()) {
@@ -147,7 +159,8 @@ public class PrayerHandler {
 		}
 	}
 	
-	private void writeUnsortedPrayers() {
+	/** Writes UnsetPrayers to file */
+	private void writeUnsetPrayers() {
 		File f = new File(path + "/Prayers/" + file_unsetPrayers + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -160,6 +173,7 @@ public class PrayerHandler {
 		}
 	}
 	
+	/** Writes GoodPrayers to file */
 	private void writeGoodPrayers() {
 		File f = new File(path + "/Prayers/" + file_goodPrayers + ".yml");
 		
@@ -173,6 +187,7 @@ public class PrayerHandler {
 		}
 	}
 	
+	/** Writes BadPrayers to file */
 	private void writeBadPrayers() {
 		File f = new File(path + "/Prayers/" + file_badPrayers + ".yml");
 		
@@ -186,6 +201,7 @@ public class PrayerHandler {
 		}
 	}
 	
+	/** Reads all Prayers from file */
 	private void readAllPrayers() {
 		File f = new File(path + "/Prayers/" + file_unsetPrayers + ".yml");
 		
