@@ -17,6 +17,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import main.java.com.mrunknown404.serdana.commands.CommandAChatToggle;
 import main.java.com.mrunknown404.serdana.commands.CommandAWarp;
 import main.java.com.mrunknown404.serdana.commands.CommandAWarps;
 import main.java.com.mrunknown404.serdana.commands.CommandAddAWarp;
@@ -47,6 +48,7 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabRemoveAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
+import main.java.com.mrunknown404.serdana.handlers.AChatHandler;
 import main.java.com.mrunknown404.serdana.handlers.AWarpHandler;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
@@ -93,6 +95,7 @@ public final class Main extends JavaPlugin {
 	private ParasiteHandler parasiteHandler;
 	private TierHandler tierHandler;
 	private AWarpHandler aWarpHandler;
+	private AChatHandler aChatHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -134,6 +137,7 @@ public final class Main extends JavaPlugin {
 		parasiteHandler = new ParasiteHandler(this);
 		tierHandler = new TierHandler();
 		aWarpHandler = new AWarpHandler(this);
+		aChatHandler = new AChatHandler(this);
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -168,6 +172,7 @@ public final class Main extends JavaPlugin {
 		getCommand("remAdminWarp").setExecutor(new CommandRemoveAWarp(this));
 		getCommand("adminWarps").setExecutor(new CommandAWarps(this));
 		getCommand("adminWarp").setExecutor(new CommandAWarp(this));
+		getCommand("adminChatToggle").setExecutor(new CommandAChatToggle(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
@@ -228,6 +233,7 @@ public final class Main extends JavaPlugin {
 		prayerHandler.reload();
 		questHandler.reloadAll();
 		aWarpHandler.reload();
+		aChatHandler.reload();
 		
 		InitQuests.register(this);
 		
@@ -283,5 +289,9 @@ public final class Main extends JavaPlugin {
 	
 	public AWarpHandler getAWarpHandler() {
 		return aWarpHandler;
+	}
+	
+	public AChatHandler getAChatHandler() {
+		return aChatHandler;
 	}
 }
