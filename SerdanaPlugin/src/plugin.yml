@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.3.10.0-Beta
+version: 0.3.11.0-Beta
 author: [-Unknown-, RetroSpaceMan123]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -77,7 +77,27 @@ commands:
     description: Makes the given string all rainbow-y
     usage: "Usage: '/rainbow' [message]"
     permission: serdana.rainbow
-
+  setAdminWarp:
+    aliases: setawarp
+    description: Adds an admin warp
+    usage: "Usage: '/setAdminWarp' [name]"
+    permission: serdana.adminWarp
+  remAdminWarp:
+    aliases: remawarp
+    description: Removes an admin warp
+    usage: "Usage: '/remAdminWarp' [name]"
+    permission: serdana.adminWarp
+  adminWarps:
+    aliases: awarps
+    description: Adds an admin warp
+    usage: "Usage: '/adminWarps'"
+    permission: serdana.adminWarp
+  adminWarp:
+    aliases: awarp
+    description: Teleports the player to the specified admin warp
+    usage: "Usage: '/adminWarps' [warp]"
+    permission: serdana.adminWarp
+    
 permissions:
   serdana.setTier:
     default: op
@@ -122,4 +142,6 @@ permissions:
   serdana.timer:
     default: op
   serdana.rainbow:
+    default: op
+  serdana.adminWarp:
     default: op

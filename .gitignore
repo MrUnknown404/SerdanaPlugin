@@ -2,6 +2,7 @@
 .recommenders/
 .externalToolBuilders/
 .settings/
+Update.bat
 SerdanaPlugin/.classpath
 SerdanaPlugin/.project
 SerdanaPlugin/bin

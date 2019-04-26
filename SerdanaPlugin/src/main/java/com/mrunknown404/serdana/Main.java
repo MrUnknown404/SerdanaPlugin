@@ -17,6 +17,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import main.java.com.mrunknown404.serdana.commands.CommandAWarp;
+import main.java.com.mrunknown404.serdana.commands.CommandAWarps;
+import main.java.com.mrunknown404.serdana.commands.CommandAddAWarp;
 import main.java.com.mrunknown404.serdana.commands.CommandBounty;
 import main.java.com.mrunknown404.serdana.commands.CommandCoo;
 import main.java.com.mrunknown404.serdana.commands.CommandDots;
@@ -27,6 +30,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandParty;
 import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandQuest;
 import main.java.com.mrunknown404.serdana.commands.CommandRainbow;
+import main.java.com.mrunknown404.serdana.commands.CommandRemoveAWarp;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
@@ -34,13 +38,16 @@ import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.CommandTimer;
 import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParasite;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabRemoveAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
+import main.java.com.mrunknown404.serdana.handlers.AWarpHandler;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
@@ -85,6 +92,7 @@ public final class Main extends JavaPlugin {
 	private QuestHandler questHandler;
 	private ParasiteHandler parasiteHandler;
 	private TierHandler tierHandler;
+	private AWarpHandler aWarpHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -125,6 +133,7 @@ public final class Main extends JavaPlugin {
 		questHandler = new QuestHandler(this);
 		parasiteHandler = new ParasiteHandler(this);
 		tierHandler = new TierHandler();
+		aWarpHandler = new AWarpHandler(this);
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -155,6 +164,10 @@ public final class Main extends JavaPlugin {
 		getCommand("parasite").setExecutor(new CommandParasite(this));
 		getCommand("timer").setExecutor(commandTimer);
 		getCommand("rainbow").setExecutor(new CommandRainbow());
+		getCommand("setAdminWarp").setExecutor(new CommandAddAWarp(this));
+		getCommand("remAdminWarp").setExecutor(new CommandRemoveAWarp(this));
+		getCommand("adminWarps").setExecutor(new CommandAWarps(this));
+		getCommand("adminWarp").setExecutor(new CommandAWarp(this));
 		
 		getCommand("serdana").setTabCompleter(new TabSerdana());
 		getCommand("bounty").setTabCompleter(new TabBounty());
@@ -163,6 +176,8 @@ public final class Main extends JavaPlugin {
 		getCommand("quest").setTabCompleter(new TabQuest());
 		getCommand("parasite").setTabCompleter(new TabParasite());
 		getCommand("timer").setTabCompleter(new TabTimer());
+		getCommand("remAdminWarp").setTabCompleter(new TabRemoveAWarp(this));
+		getCommand("adminWarp").setTabCompleter(new TabAWarp(this));
 		
 		reload(Bukkit.getConsoleSender());
 		parasiteHandler.start();
@@ -212,6 +227,7 @@ public final class Main extends JavaPlugin {
 		bannedItemHandler.reload();
 		prayerHandler.reload();
 		questHandler.reloadAll();
+		aWarpHandler.reload();
 		
 		InitQuests.register(this);
 		
@@ -263,5 +279,9 @@ public final class Main extends JavaPlugin {
 	
 	public CommandTimer getCommandTimer() {
 		return commandTimer;
+	}
+	
+	public AWarpHandler getAWarpHandler() {
+		return aWarpHandler;
 	}
 }
