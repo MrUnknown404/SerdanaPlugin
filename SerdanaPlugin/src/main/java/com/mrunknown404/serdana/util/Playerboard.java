@@ -34,6 +34,9 @@ public class Playerboard {
 		addPlayer(player);
 	}
 	
+	/** Adds the given {@link Player}
+	 * @param p Player to add
+	 */
 	public void addPlayer(Player p) {
 		players.add(p);
 		
@@ -48,6 +51,9 @@ public class Playerboard {
 		}
 	}
 	
+	/** Removes the given {@link Player}
+	 * @param p Player to remove
+	 */
 	public void removePlayer(Player p) {
 		sendObjective(objective, ObjectiveMode.REMOVE);
 		sendObjective(buffer, ObjectiveMode.REMOVE);
@@ -64,6 +70,11 @@ public class Playerboard {
 		}
 	}
 	
+	/** Sets the {@link Scoreboard}'s info
+	 * @param id Player UUID to update
+	 * @param score Player's health
+	 * @param remove Should remove
+	 */
 	public void set(UUID id, int score, boolean remove) {
 		String oldName = null;
 		
@@ -97,10 +108,6 @@ public class Playerboard {
 				lines.add(new PlayerboardInfo(id, Bukkit.getPlayer(id).getDisplayName(), score));
 			}
 		} else {
-			sendScore(buffer, oldName, score, true);
-			swapBuffers();
-			sendScore(buffer, oldName, score, true);
-			
 			for (int i = 0; i < lines.size(); i++) {
 				PlayerboardInfo info = lines.get(i);
 				
@@ -111,6 +118,7 @@ public class Playerboard {
 		}
 	}
 	
+	/** Swaps buffers */
 	private void swapBuffers() {
 		sendObjectiveDisplay(buffer);
 		
@@ -120,6 +128,10 @@ public class Playerboard {
 		objective = temp;
 	}
 	
+	/** Sends the given {@link Objective} with the given {@link ObjectiveMode}
+	 * @param obj Objective to send
+	 * @param mode Type to send
+	 */
 	private void sendObjective(Objective obj, ObjectiveMode mode) {
 		try {
 			Object objHandle = NMS.getHandle(obj);
@@ -129,10 +141,13 @@ public class Playerboard {
 				NMS.sendPacket(packetObj, player);
 			}
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 	}
 	
+	/** Sends the given {@link Objective} to display
+	 * @param obj Objective to send to display
+	 */
 	private void sendObjectiveDisplay(Objective obj) {
 		try {
 			Object objHandle = NMS.getHandle(obj);
@@ -142,11 +157,17 @@ public class Playerboard {
 				NMS.sendPacket(packet, player);
 			}
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 	}
 	
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	/** Sends the given Score
+	 * @param obj Objective to send
+	 * @param name Name to send
+	 * @param score Score to send
+	 * @param remove Should remove
+	 */
+	@SuppressWarnings({"rawtypes", "unchecked"})
 	private void sendScore(Objective obj, String name, int score, boolean remove) {
 		try {
 			Object sbHandle = NMS.getHandle(scoreboard);
@@ -174,7 +195,7 @@ public class Playerboard {
 				NMS.sendPacket(packet, player);
 			}
 		} catch (InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
-			System.out.println(e);
+			System.err.println(e);
 		}
 	}
 	

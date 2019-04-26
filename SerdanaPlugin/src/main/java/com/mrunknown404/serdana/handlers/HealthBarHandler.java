@@ -23,6 +23,11 @@ public class HealthBarHandler {
 		this.main = main;
 	}
 	
+	/** Sends the given {@link LivingEntity} to the given {@link Player}'s Actionbar
+	 * @param receiver The Player to send the Actionbar to
+	 * @param entity The Entity that took damage
+	 * @param health The Entities health
+	 */
 	public void sendHealth(Player receiver, LivingEntity entity, double health) {
 		if (entity instanceof Player) {
 			Player player = (Player) entity;
@@ -51,6 +56,10 @@ public class HealthBarHandler {
 		}.runTaskLater(main, 1L);
 	}
 	
+	/** Returns a formated String based around the given Entities health
+	 * @param entity The Entity to format off of
+	 * @return The formated String based around the given Entities health
+	 */
 	private String getOutput(LivingEntity entity) {
 		double maxHealth = entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		
@@ -69,6 +78,10 @@ public class HealthBarHandler {
 	
 	private BukkitTask b = null;
 	
+	/** Sends an Actionbar to the given {@link Player} with the given text
+	 * @param player Player to send to
+	 * @param message String to send
+	 */
 	public void sendActionBar(Player player, String message) {
 		if (b != null) {
 			b.cancel();

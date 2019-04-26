@@ -33,7 +33,16 @@ public class CommandQuest implements CommandExecutor {
 				
 				List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(args[1]));
 				
-				if (Integer.parseInt(args[2]) >= invs.size() || invs.get(Integer.parseInt(args[2])) == null) {
+				try {
+					Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					return false;
+				}
+				
+				if (invs.size() == 0) {
+					sender.sendMessage(ColorHelper.setColors("&cYou don't have any quests in that category!"));
+					return false;
+				} else if (Integer.parseInt(args[2]) >= invs.size()) {
 					sender.sendMessage(ColorHelper.setColors("&cUnknown page!"));
 					return false;
 				}

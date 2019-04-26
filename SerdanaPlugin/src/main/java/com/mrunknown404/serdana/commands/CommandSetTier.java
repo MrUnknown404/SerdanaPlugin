@@ -51,5 +51,4 @@ public class CommandSetTier implements CommandExecutor {
 		
 		return false;
 	}
-
 }

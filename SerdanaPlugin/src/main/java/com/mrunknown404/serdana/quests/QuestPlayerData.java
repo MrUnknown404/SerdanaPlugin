@@ -32,14 +32,10 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return result;
 	}
 	
-	public UUID getPlayerUUID() {
-		return playerID;
-	}
-	
-	public List<Quest> getQuests() {
-		return quests;
-	}
-	
+	/** Gets all {@link Quest}s that have the given {@link EnumQuestState}
+	 * @param type Type to check for
+	 * @return All Quests that have the given EnumQuestState
+	 */
 	public List<Quest> getQuestsThatHaveState(EnumQuestState type) {
 		List<Quest> list = new ArrayList<Quest>();
 		
@@ -52,26 +48,36 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return list;
 	}
 	
+	/** Sets the given {@link Quest}'s state to the given {@link EnumQuestState}
+	 * @param quest Quest who's state will be edited
+	 * @param state New EnumQuestState
+	 */
 	public void setQuestState(Quest quest, EnumQuestState state) {
 		for (int i = 0; i < quests.size(); i++) {
 			Quest q = quests.get(i);
 			
 			if (q.equals(quest)) {
 				if (state == EnumQuestState.unknown) {
-					q.setState(state);
-				} else {
 					removeQuest(q);
 					addQuest(InitQuests.getQuest(quest.getName()));
+				} else {
+					q.setState(state);
 				}
 			}
 		}
 	}
 	
+	/** Adds the given {@link Quest}
+	 * @param quest Quest to add
+	 */
 	public void addQuest(Quest quest) {
 		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getCompletionMessage(), quest.getTurnInMessage(),
 				quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards(), quest.getRequirements()));
 	}
 	
+	/** Removes the given {@link Quest}
+	 * @param quest Quest to remove
+	 */
 	public void removeQuest(Quest quest) {
 		for (int i = 0; i < quests.size(); i++) {
 			Quest q = quests.get(i);
@@ -82,6 +88,10 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		}
 	}
 	
+	/** Checks if this {@link QuestPlayerData} contains the given {@link Quest}
+	 * @param q Quest to check for
+	 * @return true if this contains the given Quest, otherwise false
+	 */
 	public boolean hasQuest(Quest q) {
 		for (Quest qs : quests) {
 			if (qs.equals(q)) {
@@ -92,6 +102,10 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return false;
 	}
 	
+	/** Checks if the given {@link Quest} is accepted
+	 * @param q Quest to check if accepted
+	 * @return true of the given Quest is accepted, otherwise false
+	 */
 	public boolean hasAcceptedQuest(Quest q) {
 		for (Quest qs : quests) {
 			if (qs.equals(q) && qs.getState() == EnumQuestState.accepted) {
@@ -100,5 +114,13 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		}
 		
 		return false;
+	}
+	
+	public UUID getPlayerUUID() {
+		return playerID;
+	}
+	
+	public List<Quest> getQuests() {
+		return quests;
 	}
 }

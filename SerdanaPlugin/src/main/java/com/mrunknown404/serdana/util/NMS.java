@@ -138,7 +138,7 @@ public class NMS {
 				Object playerConnection = PLAYER_CONNECTION.get(getHandle(p));
 				SEND_PACKET.invoke(playerConnection, packet);
 			} catch (IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
-				System.out.println(e);
+				System.err.println(e);
 			}
 		}
 	}

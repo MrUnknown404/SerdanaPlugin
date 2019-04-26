@@ -12,6 +12,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import com.google.gson.Gson;
@@ -28,13 +29,16 @@ public class BannedItemHandler {
 	
 	private List<Material> bannedVanillaItems = new ArrayList<Material>();
 	private final File file_bannedVanillaItems = new File("BannedVanillaItems");
-	private final File file_exampleBannedVanillaItems = new File("ExampleBannedVanillaItems");
 	
 	public BannedItemHandler(Main main) {
 		this.main = main;
 		this.path = main.getDataFolder();
 	}
 	
+	/** Searches the given {@link Player}'s {@link Inventory} for any banned {@link ItemStack}
+	 * @param p The Player to search
+	 * @return A List containing any banned ItemStacks
+	 */
 	public List<ItemStack> getPlayersBannedItems(Player p) {
 		List<ItemStack> items = new ArrayList<ItemStack>();
 		
@@ -46,10 +50,25 @@ public class BannedItemHandler {
 			}
 		}
 		
-		performBannedAction(p, items.size());
 		return items;
 	}
 	
+	/** Searches the given {@link Player}'s {@link Inventory} for any banned {@link ItemStack}
+	 * @param p The Player to search
+	 * @return true if the given Player has any banned ItemStacks, otherwise false
+	 */
+	public boolean doesPlayerHaveBannedItems(Player p) {
+		if (!getPlayersBannedItems(p).isEmpty()) {
+			return true;
+		}
+		
+		return false;
+	}
+	
+	/** Checks if the given {@link ItemStack} is banned
+	 * @param item ItemStack to check
+	 * @return true if the given ItemStack is banned, otherwise false
+	 */
 	public boolean isBannedItem(ItemStack item) {
 		NBTItem n = new NBTItem(item);
 		if (n.hasKey("banned") || bannedVanillaItems.contains(item.getType())) {
@@ -59,13 +78,18 @@ public class BannedItemHandler {
 		return false;
 	}
 	
-	private void performBannedAction(Player p, int amount) {
+	/** Performs the banned action (Jails player)
+	 * @param p The Player to perform the banned action on
+	 * @param amount The amount of different ItemStacks the Player has on them
+	 */
+	public void performBannedAction(Player p, int amount) {
 		int totalTime = amount * main.getRandomConfig().getJailTimeMinutes();
 		String jailName = main.getRandomConfig().getJailNames().get(new Random().nextInt(main.getRandomConfig().getJailNames().size()));
 		
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "jail " + p.getName() + " " + jailName + " " + totalTime + "m");
 	}
 	
+	/** Reloads this class's Configs */
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -82,26 +106,6 @@ public class BannedItemHandler {
 			
 			try {
 				fw = new FileWriter(path + "/" + file_bannedVanillaItems + Main.TYPE);
-				
-				g.toJson(bannedVanillaItems, fw);
-				
-				fw.flush();
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		if (!new File(path + "/" + file_exampleBannedVanillaItems + Main.TYPE).exists()) {
-			System.out.println("Could not find file: " + file_exampleBannedVanillaItems + Main.TYPE + "! (Will be created)");
-			
-			bannedVanillaItems = new ArrayList<Material>();
-			for (Material m : Material.values()) {
-				bannedVanillaItems.add(m);
-			}
-			
-			try {
-				fw = new FileWriter(path + "/" + file_exampleBannedVanillaItems + Main.TYPE);
 				
 				g.toJson(bannedVanillaItems, fw);
 				

@@ -1,5 +1,7 @@
 package main.java.com.mrunknown404.serdana.commands;
 
+import java.util.Random;
+
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -16,8 +18,14 @@ public class CommandCoo implements CommandExecutor {
 			return false;
 		}
 		
+		StringBuilder sb = new StringBuilder("Coo");
+		
+		for (int i = 0; i < new Random().nextInt(3); i++) {
+			sb.append("o");
+		}
+		
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.sendMessage("Cooo");
+			player.sendMessage(sb.toString());
 		}
 		
 		return true;

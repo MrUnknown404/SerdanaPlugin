@@ -78,6 +78,7 @@ public class CommandTimer implements CommandExecutor {
 		return false;
 	}
 	
+	/** Starts the timers */
 	public void startTimer() {
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
 			@Override

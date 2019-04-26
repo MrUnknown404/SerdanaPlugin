@@ -36,6 +36,7 @@ public class ParasiteHandler {
 		parasite = nItem.getItem();
 	}
 	
+	/** Starts all parasite logic */
 	public void start() {
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
 			@Override
@@ -78,6 +79,7 @@ public class ParasiteHandler {
 						} else if (amount >= 64) {
 							p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 0));
 						}
+						
 						if (amount >= 896) {
 							p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 200, 1));
 							p.addPotionEffect(new PotionEffect(PotionEffectType.POISON, 200, 2));
@@ -109,6 +111,10 @@ public class ParasiteHandler {
 		}, 0L, 200L);
 	}
 	
+	/** Attempts to spread the infection from the given {@link Player} to nearby Players
+	 * @param source The Player the infection is spreading from
+	 * @param amount Amount of parasites the given Player has
+	 */
 	private void spread(Player source, int amount) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			if (p.getLocation().distance(source.getLocation()) <= main.getRandomConfig().getParasiteSpreadDistance()) {
@@ -119,12 +125,16 @@ public class ParasiteHandler {
 		}
 	}
 	
+	/** Kills all parasites */
 	public void killAll() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			kill(p);
 		}
 	}
 	
+	/** Kills the given {@link Player}'s parasites
+	 * @param p Player's parasites to kill
+	 */
 	public void kill(Player p) {
 		for (int i = 0; i < p.getInventory().getSize(); i++) {
 			ItemStack item = p.getInventory().getItem(i);
@@ -140,6 +150,10 @@ public class ParasiteHandler {
 		}
 	}
 	
+	/** Gives the given {@link Player} the given amount parasites
+	 * @param p The player to give parasites
+	 * @param amount The amount of parasites to give
+	 */
 	public void giveParasite(Player p, int amount) {
 		for (int i = 0; i < amount; i++) {
 			p.getInventory().addItem(parasite);

@@ -10,6 +10,7 @@ import java.util.UUID;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.entity.Player;
 
 import main.java.com.mrunknown404.serdana.Main;
 
@@ -24,6 +25,7 @@ public class AChatHandler {
 		this.path = main.getDataFolder();
 	}
 	
+	/** Reloads this class's Configs */
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
@@ -39,6 +41,9 @@ public class AChatHandler {
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
+	/** Toggles the given {@link Player}'s admin chat state
+	 * @param id The Player's UUID
+	 */
 	public void togglePlayer(UUID id) {
 		if (!chatStates.isEmpty() && chatStates.containsKey(id)) {
 			chatStates.put(id, !chatStates.get(id));
@@ -49,6 +54,7 @@ public class AChatHandler {
 		write();
 	}
 	
+	/** Writes all {@link Player}'s admin chat state */
 	private void write() {
 		File f = new File(path + "/" + file_chatStates + ".yml");
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
@@ -69,21 +75,26 @@ public class AChatHandler {
 		}
 	}
 	
+	/** Read all {@link Player}'s admin chat states */
 	@SuppressWarnings("unchecked")
 	private void read() {
 		File f = new File(path + "/" + file_chatStates + ".yml");
 		
 		Map<String, ?> temp = YamlConfiguration.loadConfiguration(f).getConfigurationSection("AdminChatStates").getValues(false);
 		Iterator<?> it = temp.entrySet().iterator();
+		chatStates = new HashMap<UUID, Boolean>();
 		
 		while (it.hasNext()) {
 			Entry<String, Boolean> pair = (Entry<String, Boolean>) it.next();
 			
-			chatStates = new HashMap<UUID, Boolean>();
 			chatStates.put(UUID.fromString(pair.getKey()), pair.getValue());
 		}
 	}
 	
+	/** returns the given {@link Player}'s admin chat state
+	 * @param id Player to check
+	 * @return The given Player's admin chat state
+	 */
 	public boolean isPlayerEnabled(UUID id) {
 		if (chatStates.containsKey(id)) {
 			return chatStates.get(id);

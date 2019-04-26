@@ -19,23 +19,29 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void entityDeath(EntityDeathEvent e) {
-		if (e.getEntity().getKiller() instanceof Player) {
-			main.getQuestHandler().checkEntityDeathTask(e.getEntity().getKiller(), e.getEntity());
+		if (main.getComponent(Main.Components.Quests)) {
+			if (e.getEntity().getKiller() instanceof Player) {
+				main.getQuestHandler().checkEntityDeathTask(e.getEntity().getKiller(), e.getEntity());
+			}
 		}
 	}
 	
 	@EventHandler
 	public void entityDamage(EntityDamageByEntityEvent e) {
-		if (e.getEntity() instanceof Player) {
-			if (e.getDamager() instanceof Player) {
+		if (main.getComponent(Main.Components.Tiers)) {
+			if (e.getEntity() instanceof Player) {
+				e.setDamage(e.getDamage() * (1 + main.getTierHandler().getTiersOnPlayer((Player) e.getEntity()) / 10));
+			}
+		}
+		
+		if (main.getComponent(Main.Components.Parties)) {
+			if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
 				if (main.getPartyHandler().arePlayersInSameParty(e.getEntity().getUniqueId(), e.getDamager().getUniqueId())) {
 					e.setCancelled(true);
 					e.getDamager().sendMessage(ColorHelper.setColors("&cYou cannot hurt that person!"));
 					return;
 				}
 			}
-			
-			e.setDamage(e.getDamage() * (1 + main.getTierHandler().getTiersOnPlayer((Player) e.getEntity()) / 10));
 		}
 	}
 }
