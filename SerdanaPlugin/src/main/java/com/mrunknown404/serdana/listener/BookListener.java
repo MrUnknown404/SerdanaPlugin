@@ -20,7 +20,7 @@ public class BookListener implements Listener {
 	
 	@EventHandler
 	public void onBookEdit(PlayerEditBookEvent e) {
-		if (main.getComponent(Main.Components.Prayers)) {
+		if (main.isComponentEnabled(Main.Components.Prayers)) {
 			if (e.isSigning()) {
 				ItemStack main = e.getPlayer().getInventory().getItemInMainHand();
 				ItemStack off = e.getPlayer().getInventory().getItemInOffHand();

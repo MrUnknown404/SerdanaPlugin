@@ -19,6 +19,7 @@ public class InitQuests {
 		addQuest(true, main.getQuestHandler().getQuestFile("DebugFetch"));
 		addQuest(true, main.getQuestHandler().getQuestFile("DebugKill"));
 		addQuest(true, main.getQuestHandler().getQuestFile("DebugWalk"));
+		addQuest(true, main.getQuestHandler().getQuestFile("DebugTalk"));
 	}
 	
 	/** Adds the given {@link Quest} to a {@link List} and then added to a {@link Map} containing all Quests

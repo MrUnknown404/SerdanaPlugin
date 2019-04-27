@@ -78,6 +78,7 @@ import main.java.com.mrunknown404.serdana.quests.QuestPlayerData;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
@@ -137,6 +138,7 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(QuestTaskFetch.class, "QuestTaskFetch");
 		ConfigurationSerialization.registerClass(QuestTaskKill.class, "QuestTaskKill");
 		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
+		ConfigurationSerialization.registerClass(QuestTaskTalk.class, "QuestTaskTalk");
 		
 		shopListen = new ShopkeeperListener(this);
 		
@@ -322,7 +324,7 @@ public final class Main extends JavaPlugin {
 					case Quests:
 						questHandler = new QuestHandler(this);
 						getCommand("quest").setExecutor(new CommandQuest(this));
-						getCommand("quest").setTabCompleter(new TabQuest());
+						getCommand("quest").setTabCompleter(new TabQuest(this));
 						break;
 					case Misc:
 						commandTimer = new CommandTimer(this);
@@ -355,7 +357,7 @@ public final class Main extends JavaPlugin {
 	 * @param comp The Component to check
 	 * @return returns true if the given component is enabled, returns false if disabled
 	 */
-	public boolean getComponent(Components comp) {
+	public boolean isComponentEnabled(Components comp) {
 		if (components.containsKey(comp)) {
 			return components.get(comp);
 		}

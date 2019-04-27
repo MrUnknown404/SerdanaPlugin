@@ -19,6 +19,7 @@ import com.google.gson.reflect.TypeToken;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.quests.QuestHandler;
 
 public class ShopkeeperHandler {
 
@@ -117,6 +118,29 @@ public class ShopkeeperHandler {
 		}
 		
 		return true;
+	}
+	
+	/** Makes given {@link Shopkeeper} talk to the specified {@link Player}
+	 * @param shop The Shopkeeper that will talk
+	 * @param p The Player the Shopkeeper that will talk to
+	 * @param type The talk type
+	 * @return true if the task was successful, otherwise false
+	 */
+	public boolean talk(Shopkeeper shop, Player p, QuestHandler.QuestTalkType type) {
+		switch (type) {
+			case start:
+				//start quest
+				return true;
+			case finish:
+				//finish quest
+				return true;
+			case talkTask:
+				return main.getQuestHandler().checkTalkTask(p, shop);
+			default:
+				break;
+		}
+		
+		return false;
 	}
 	
 	/** Writes a new {@link HashMap} for the given {@link File}

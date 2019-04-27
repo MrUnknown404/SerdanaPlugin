@@ -24,10 +24,13 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scheduler.BukkitScheduler;
 
+import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
+
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
+import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
@@ -95,7 +98,42 @@ public class QuestHandler {
 		}, 0L, 1L);
 	}
 	
-	/** Checks the given {@link Player}'s Entity {@link QuestTask}
+	/** Checks the given {@link Player}'s Talk {@link QuestTask}
+	 * @param p Player to check
+	 * @param shop Shopkeeper that'll be checked
+	 * @return true if the check was successful, otherwise false
+	 */
+	public boolean checkTalkTask(Player p, Shopkeeper shop) {
+		String shopName = shop.getName();
+		
+		if (shopName.isEmpty()) {
+			shopName = "null";
+		}
+		
+		for (Quest q : getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.accepted)) {
+			QuestTask tempTask = q.getCurrentTask();
+			
+			if (tempTask.getTaskCheckType() == EnumTaskCheckType.shopTalk) {
+				QuestTaskTalk t = (QuestTaskTalk) tempTask;
+				
+				if (q.check(p, shop)) {
+					p.sendMessage(ColorHelper.setColors(shopName + ": " + t.getCurrentMessage()));
+					
+					q.getCurrentTask().increaseAmmount();
+					q.checkFinishedTask(p);
+					
+					writeQuestPlayerData(p);
+					setupQuestChestGUI(p);
+					
+					return true;
+				}
+			}
+		}
+		
+		return false;
+	}
+	
+	/** Checks the given {@link Player}'s {@link Entity} {@link QuestTask}
 	 * @param p Player to check
 	 * @param e Entity that'll be checked
 	 */
@@ -211,7 +249,7 @@ public class QuestHandler {
 	/** Sets up the {@link Quest} chest GUI
 	 * @param p Player to setup a chest GUI for
 	 */
-	public void setupQuestChestGUI(Player p) {
+	private void setupQuestChestGUI(Player p) {
 		List<Inventory> invUnknown = new ArrayList<Inventory>(); //paper
 		List<Inventory> invAccepted = new ArrayList<Inventory>(); //writable book
 		List<Inventory> invFinished = new ArrayList<Inventory>(); //written book
@@ -373,7 +411,7 @@ public class QuestHandler {
 			}, new String[] {
 					"Turn in Message 1",
 					"Turn in Message 2"
-			}, tasks, 0, 0, new ItemStack[] {
+			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.DIAMOND, 2)
 			}, new int[] {});
 			
@@ -402,7 +440,7 @@ public class QuestHandler {
 			}, new String[] {
 					"Turn in Message 1",
 					"Turn in Message 2"
-			}, tasks, 0, 0, new ItemStack[] {
+			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.BONE, 5)
 			}, new int[] {});
 			
@@ -431,8 +469,46 @@ public class QuestHandler {
 			}, new String[] {
 					"Turn in Message 1",
 					"Turn in Message 2"
-			}, tasks, 0, 0, new ItemStack[] {
+			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.FEATHER, 2)
+			}, new int[] {});
+			
+			write.set("Quest", q);
+		} else if (questFileName == "DebugTalk") {
+			List<QuestTask> tasks = new ArrayList<QuestTask>();
+			
+			tasks.add(new QuestTaskTalk(new String[] {
+					"Talk to Shopkeeper 1"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
+			}, 1, new String[] {
+					"Message 1-1",
+					"Message 1-2",
+					"Message 1-3"
+			}));
+			
+			tasks.add(new QuestTaskTalk(new String[] {
+					"Talk to Shopkeeper 3"
+			}, new String[] {
+					"Complete Task Message 1",
+					"Complete Task Message 2"
+			}, 3, new String[] {
+					"Message 2-1",
+					"Message 2-2",
+					"Message 2-3"
+			}));
+			
+			q = new Quest(3, "Debug Talk!", new String[] {
+					"Description Talk"
+			}, new String[] {
+					"Complete Quest Message 1",
+					"Complete Quest Message 2"
+			}, new String[] {
+					"Turn in Message 1",
+					"Turn in Message 2"
+			}, tasks, -1, -1, new ItemStack[] {
+					new ItemStack(Material.CLAY, 23)
 			}, new int[] {});
 			
 			write.set("Quest", q);
@@ -446,7 +522,7 @@ public class QuestHandler {
 			}, new String[] {
 					"Turn in Message 1",
 					"Turn in Message 2"
-			}, new ArrayList<QuestTask>(), 0, 0, new ItemStack[] {}, new int[] {});
+			}, new ArrayList<QuestTask>(), -1, -1, new ItemStack[] {}, new int[] {});
 			
 			write.set("Quest", q);
 		}
@@ -538,5 +614,41 @@ public class QuestHandler {
 		}
 		
 		return null;
+	}
+	
+	/** Searches the {@link Player}'s {@link Quest}s for {@link QuestTalkType}
+	 * @param p Player to check
+	 * @param shop Shopkeeper to check
+	 * @return A QuestTalkType based off the given Player's Quests & Shop
+	 */
+	public QuestTalkType getQuestShopTalkType(Player p, Shopkeeper shop) {
+		QuestPlayerData data = getQuestPlayersData(p);
+		
+		for (Quest q : data.getQuestsThatHaveState(EnumQuestState.unknown)) {
+			if (q.getStartID() == shop.getId()) {
+				return QuestTalkType.start;
+			}
+		}
+		
+		for (Quest q : data.getQuestsThatHaveState(EnumQuestState.accepted)) {
+			if (q.getFinishID() == shop.getId()) {
+				return QuestTalkType.finish;
+			}
+			
+			for (QuestTask t : q.getTasks()) {
+				if (t.getTaskCheckType() == EnumTaskCheckType.shopTalk) {
+					return QuestTalkType.talkTask;
+				}
+			}
+		}
+		
+		return QuestTalkType.none;
+	}
+	
+	public enum QuestTalkType {
+		none,
+		start,
+		finish,
+		talkTask;
 	}
 }

@@ -24,7 +24,7 @@ public class CraftingListener implements Listener {
 		ItemStack item = e.getRecipe().getResult();
 		
 		if (item != null) {
-			if (main.getComponent(Main.Components.StopNamedItemUse)) {
+			if (main.isComponentEnabled(Main.Components.StopNamedItemUse)) {
 				for (int i = 0; i < e.getInventory().getMatrix().length; i++) {
 					if (e.getInventory().getMatrix()[i] != null) {
 						if (e.getInventory().getMatrix()[i].hasItemMeta() && e.getInventory().getMatrix()[i].getItemMeta().hasDisplayName()) {
@@ -37,7 +37,7 @@ public class CraftingListener implements Listener {
 				}
 			}
 			
-			if (main.getComponent(Main.Components.StopItemCrafting)) {
+			if (main.isComponentEnabled(Main.Components.StopItemCrafting)) {
 				if (item.getType() == Material.LEATHER_HELMET || item.getType() == Material.LEATHER_CHESTPLATE || item.getType() == Material.LEATHER_LEGGINGS || item.getType() == Material.LEATHER_BOOTS ||
 						item.getType() == Material.IRON_HELMET || item.getType() == Material.IRON_CHESTPLATE || item.getType() == Material.IRON_LEGGINGS || item.getType() == Material.IRON_BOOTS ||
 						item.getType() == Material.GOLDEN_HELMET || item.getType() == Material.GOLDEN_CHESTPLATE || item.getType() == Material.GOLDEN_LEGGINGS || item.getType() == Material.GOLDEN_BOOTS ||

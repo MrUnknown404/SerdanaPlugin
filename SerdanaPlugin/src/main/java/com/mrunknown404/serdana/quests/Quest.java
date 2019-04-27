@@ -10,6 +10,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
+
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
@@ -17,7 +19,7 @@ public class Quest implements ConfigurationSerializable {
 
 	private String name;
 	private String[] description, completionMessage, turnInMessage;
-	private int questID, startID, finishID, currentTaskID = 0;
+	private int questID, startID = -1, finishID = -1, currentTaskID = 0;
 	private boolean readyToTurnIn = false;
 	private EnumQuestState state = EnumQuestState.unknown;
 	private ItemStack[] rewards;
@@ -82,7 +84,7 @@ public class Quest implements ConfigurationSerializable {
 	public boolean check(Player p) {
 		if (state == EnumQuestState.accepted) {
 			boolean b = getCurrentTask().checkForTask(p);
-			checkFinished(p);
+			checkFinishedTask(p);
 			return b;
 		}
 		
@@ -97,8 +99,21 @@ public class Quest implements ConfigurationSerializable {
 	public boolean check(Player p, Entity e) {
 		if (state == EnumQuestState.accepted) {
 			boolean b = getCurrentTask().checkForTask(e);
-			checkFinished(p);
+			checkFinishedTask(p);
 			return b;
+		}
+		
+		return false;
+	}
+	
+	/** Checks the {@link Quest}'s {@link QuestTask}s
+	 * @param p Player to check
+	 * @param shop Shopkeeper to check
+	 * @return true if the task was successful, otherwise false
+	 */
+	public boolean check(Player p, Shopkeeper shop) {
+		if (state == EnumQuestState.accepted) {
+			return getCurrentTask().checkForTask(shop);
 		}
 		
 		return false;
@@ -107,7 +122,7 @@ public class Quest implements ConfigurationSerializable {
 	/** Checks if the {@link QuestTask} is finished
 	 * @param p Player to check
 	 */
-	private void checkFinished(Player p) {
+	public void checkFinishedTask(Player p) {
 		if (state == EnumQuestState.accepted) {
 			if (getCurrentTask().checkForFinishedTask()) {
 				for (String s : getCurrentTask().getCompletionMessage()) {

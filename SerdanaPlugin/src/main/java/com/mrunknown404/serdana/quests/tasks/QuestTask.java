@@ -8,6 +8,8 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
+
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 
 public abstract class QuestTask implements ConfigurationSerializable {
@@ -74,9 +76,17 @@ public abstract class QuestTask implements ConfigurationSerializable {
 				if (obj instanceof Player) {
 					return true;
 				}
+			case shopTalk:
+				if (obj instanceof Shopkeeper) {
+					return true;
+				}
 		}
 		
 		return false;
+	}
+	
+	public void increaseAmmount() {
+		amount++;
 	}
 	
 	public int getAmount() {

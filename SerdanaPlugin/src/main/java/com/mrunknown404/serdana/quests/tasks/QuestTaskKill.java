@@ -23,14 +23,12 @@ public class QuestTaskKill extends QuestTask implements ConfigurationSerializabl
 		super(map);
 		
 		entityType = EntityType.valueOf((String) map.get("entityType"));
-		amountNeeded = (int) map.get("amountNeeded");
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = (LinkedHashMap<String, Object>) super.serialize();
 		result.put("entityType", entityType.toString());
-		result.put("amountNeeded", amountNeeded);
 		return result;
 	}
 	

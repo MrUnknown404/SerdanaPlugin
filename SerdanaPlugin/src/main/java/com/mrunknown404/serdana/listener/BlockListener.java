@@ -18,7 +18,7 @@ public class BlockListener implements Listener {
 	
 	@EventHandler
 	public void blockPlace(BlockPlaceEvent e) {
-		if (main.getComponent(Main.Components.StopNamedItemUse)) {
+		if (main.isComponentEnabled(Main.Components.StopNamedItemUse)) {
 			if (e.getItemInHand().hasItemMeta() && e.getItemInHand().getItemMeta().hasDisplayName()) {
 				if (e.getBlock().getType() != Material.CHEST && e.getBlock().getType() != Material.TRAPPED_CHEST) {
 					if (!e.getBlock().getType().toString().contains("SHULKER_BOX")) {

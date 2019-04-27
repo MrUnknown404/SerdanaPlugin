@@ -29,7 +29,7 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler
 	public void onChat(AsyncPlayerChatEvent e) {
-		if (main.getComponent(Main.Components.AChat)) {
+		if (main.isComponentEnabled(Main.Components.AChat)) {
 			if (main.getAChatHandler().isPlayerEnabled(e.getPlayer().getUniqueId())) {
 				e.setCancelled(true);
 				
@@ -44,7 +44,7 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onDropItem(PlayerDropItemEvent e) {
-		if (main.getComponent(Main.Components.Parasite)) {
+		if (main.isComponentEnabled(Main.Components.Parasite)) {
 			if (e.getPlayer().getGameMode() != GameMode.CREATIVE) {
 				if (e.getItemDrop().getItemStack().getType() == Material.NETHER_WART) {
 					NBTItem n = new NBTItem(e.getItemDrop().getItemStack());
@@ -59,26 +59,26 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e) {
-		if (main.getComponent(Main.Components.Quests)) {
+		if (main.isComponentEnabled(Main.Components.Quests)) {
 			main.getQuestHandler().setupPlayer(e.getPlayer());
 		}
 	}
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onLeave(PlayerQuitEvent e) {
-		if (main.getComponent(Main.Components.Parties)) {
+		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (main.getPartyHandler().isPlayerInAnyParty(e.getPlayer().getUniqueId()) ) {
 				main.getPartyHandler().leaveParty(e.getPlayer().getUniqueId());
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Quests)) {
+		if (main.isComponentEnabled(Main.Components.Quests)) {
 			if ((main.getQuestHandler().isPlayerSetup(e.getPlayer()))) {
 				main.getQuestHandler().closePlayer(e.getPlayer());
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Misc)) {
+		if (main.isComponentEnabled(Main.Components.Misc)) {
 			if (main.getCommandTimer().getPlayers().containsKey(e.getPlayer().getUniqueId())) {
 				main.getCommandTimer().getPlayers().remove(e.getPlayer().getUniqueId());
 			}
@@ -87,19 +87,19 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onPlayerDeath(PlayerDeathEvent e) {
-		if (main.getComponent(Main.Components.Parties)) {
+		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (main.getPartyHandler().isPlayerInAnyParty(e.getEntity().getUniqueId()) ) {
 				main.getPartyHandler().notifyDeath(e.getEntity().getUniqueId());
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Misc)) {
+		if (main.isComponentEnabled(Main.Components.Misc)) {
 			if (main.getCommandTimer().getPlayers().containsKey(e.getEntity().getUniqueId())) {
 				main.getCommandTimer().getPlayers().remove(e.getEntity().getUniqueId());
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Bounties)) {
+		if (main.isComponentEnabled(Main.Components.Bounties)) {
 			if (e.getEntity().getKiller() instanceof Player) {
 				List<BountyInfo> bounties = main.getBountyHandler().getBounties();
 				

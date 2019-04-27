@@ -23,14 +23,12 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 	public QuestTaskFetch(Map<String, Object> map) {
 		super(map);
 		
-		amountNeeded = (int) map.get("amountNeeded");
 		item = (ItemStack) map.get("item");
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = (LinkedHashMap<String, Object>) super.serialize();
-		result.put("amountNeeded", amountNeeded);
 		result.put("item", item);
 		return result;
 	}

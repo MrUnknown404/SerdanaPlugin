@@ -84,6 +84,11 @@ public class CommandQuest implements CommandExecutor {
 							sender.sendMessage(ColorHelper.setColors("&cPlayer does not have that quest!"));
 						}
 					} else if (args[0].equalsIgnoreCase("finish")) {
+						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasFinishedQuest(InitQuests.getQuest(quest))) {
+							sender.sendMessage(ColorHelper.setColors("&cPlayer has already finished that quest!"));
+							return false;
+						}
+						
 						sender.sendMessage(ColorHelper.setColors("&cYou have finished " + quest + " for " + args[1] + "!"));
 						main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.finished);
 						return true;

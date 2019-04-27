@@ -36,7 +36,7 @@ public class QuestTaskWalk extends QuestTask implements ConfigurationSerializabl
 		if (checkType(obj)) {
 			Player p = (Player) obj;
 			if (p.getLocation().distance(whereTo) <= 5d) {
-				amount++;
+				amount = amountNeeded;
 				return true;
 			}
 		}

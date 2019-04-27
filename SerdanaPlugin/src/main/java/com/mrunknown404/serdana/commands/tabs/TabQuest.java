@@ -9,11 +9,17 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
+import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
-import main.java.com.mrunknown404.serdana.quests.InitQuests;
 import main.java.com.mrunknown404.serdana.quests.Quest;
 
 public class TabQuest implements TabCompleter {
+	
+	private final Main main;
+	
+	public TabQuest(Main main) {
+		this.main = main;
+	}
 	
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
@@ -38,7 +44,17 @@ public class TabQuest implements TabCompleter {
 			if (args[0].equalsIgnoreCase("show")) {
 				r.add("#");
 			} else if (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("remove") || args[0].equalsIgnoreCase("finish")) {
-				for (Quest q : InitQuests.getAllQuests().get(true)) {
+				List<Quest> quests = null;
+				
+				if (args[0].equalsIgnoreCase("give")) {
+					quests = main.getQuestHandler().getQuestPlayersData((Player) sender).getQuestsThatAreNotState(EnumQuestState.accepted);
+				} else if (args[0].equalsIgnoreCase("remove")) {
+					quests = main.getQuestHandler().getQuestPlayersData((Player) sender).getQuestsThatAreNotState(EnumQuestState.unknown);
+				} else if (args[0].equalsIgnoreCase("finish")) {
+					quests = main.getQuestHandler().getQuestPlayersData((Player) sender).getQuestsThatAreNotState(EnumQuestState.finished);
+				}
+				
+				for (Quest q : quests) {
 					String txt = q.getName();
 					
 					if (txt.contains(" ")) {
