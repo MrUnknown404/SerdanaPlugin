@@ -32,6 +32,7 @@ import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 
@@ -238,7 +239,7 @@ public class QuestHandler {
 		QuestPlayerData info = getQuestPlayersData(p);
 		
 		if (info != null) {
-			info.setQuestState(quest, state);
+			info.setQuestState(p, quest, state);
 			writeQuestPlayerData(p);
 			setupQuestChestGUI(p);
 		} else {
@@ -395,13 +396,13 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}));
+			}, new ScriptInfo[] {}));
 			tasks.add(new QuestTaskFetch(new ItemStack(Material.BONE), 3, new String[] {
 					"Get 3 Bones"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}));
+			}, new ScriptInfo[] {}));
 			
 			q = new Quest(0, "Debug Fetch!", new String[] {
 					"Description Fetch"
@@ -424,13 +425,15 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
+			}, new ScriptInfo[] {
+					new ScriptInfo(0, "TestScript", ScriptInfo.ScriptStartType.start)
 			}));
 			tasks.add(new QuestTaskKill(EntityType.SKELETON, 3, new String[] {
 					"Kill 3 Skeletons"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}));
+			}, new ScriptInfo[] {}));
 			
 			q = new Quest(1, "Debug Kill!", new String[] {
 					"Description Kill"
@@ -453,13 +456,13 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}));
+			}, new ScriptInfo[] {}));
 			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getWorlds().get(0)), 10, 10, 10), new String[] {
 					"Now walk to (10, 10, 10)"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}));
+			}, new ScriptInfo[] {}));
 			
 			q = new Quest(2, "Debug Walk!", new String[] {
 					"Description Walk"
@@ -486,8 +489,7 @@ public class QuestHandler {
 					"Message 1-1",
 					"Message 1-2",
 					"Message 1-3"
-			}));
-			
+			}, new ScriptInfo[] {}));
 			tasks.add(new QuestTaskTalk(new String[] {
 					"Talk to Shopkeeper 3"
 			}, new String[] {
@@ -497,7 +499,7 @@ public class QuestHandler {
 					"Message 2-1",
 					"Message 2-2",
 					"Message 2-3"
-			}));
+			}, new ScriptInfo[] {}));
 			
 			q = new Quest(3, "Debug Talk!", new String[] {
 					"Description Talk"
@@ -541,7 +543,7 @@ public class QuestHandler {
 	 * @return A Quest found from the given String
 	 */
 	public Quest getQuestFile(String questFileName) {
-		if (getClass().getResourceAsStream(Main.BASE_LOCATION_TEXTURES + questFileName + ".yml") == null) {
+		if (getClass().getResourceAsStream(Main.BASE_LOCATION_QUESTS + questFileName + ".yml") == null) {
 			System.out.println("Could not find file inside jar: " + questFileName + ".yml!");
 			
 			File f = new File(path + "/Quests/" + questFileName + ".yml");
@@ -554,7 +556,7 @@ public class QuestHandler {
 			
 			return q;
 		} else {
-			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION_TEXTURES + questFileName + ".yml");
+			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION_QUESTS + questFileName + ".yml");
 			return YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getObject("Quest", Quest.class);
 		}
 	}

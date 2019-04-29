@@ -7,6 +7,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
@@ -14,8 +15,8 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 
 	protected ItemStack item;
 	
-	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description, String[] completionMessage) {
-		super(EnumTaskCheckType.playerTick, amountNeeded, description, completionMessage);
+	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] info) {
+		super(EnumTaskCheckType.playerTick, amountNeeded, description, completionMessage, info);
 		this.item = item;
 		this.amountNeeded = amountNeeded;
 	}

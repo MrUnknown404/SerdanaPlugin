@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Player;
 
 public class QuestPlayerData implements ConfigurationSerializable {
 
@@ -65,10 +66,11 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	}
 	
 	/** Sets the given {@link Quest}'s state to the given {@link EnumQuestState}
+	 * @param p Player to potentially start Script for
 	 * @param quest Quest who's state will be edited
 	 * @param state New EnumQuestState
 	 */
-	public void setQuestState(Quest quest, EnumQuestState state) {
+	public void setQuestState(Player p, Quest quest, EnumQuestState state) {
 		for (int i = 0; i < quests.size(); i++) {
 			Quest q = quests.get(i);
 			
@@ -77,7 +79,7 @@ public class QuestPlayerData implements ConfigurationSerializable {
 					removeQuest(q);
 					addQuest(InitQuests.getQuest(quest.getName()));
 				} else {
-					q.setState(state);
+					q.setState(p, state);
 				}
 			}
 		}

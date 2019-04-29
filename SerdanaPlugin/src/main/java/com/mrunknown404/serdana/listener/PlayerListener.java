@@ -59,6 +59,12 @@ public class PlayerListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onJoin(PlayerJoinEvent e) {
+		if (main.isComponentEnabled(Main.Components.Misc)) {
+			if (!e.getPlayer().hasPlayedBefore()) {
+				e.getPlayer().setDisplayName(ColorHelper.setColors("&7" + e.getPlayer().getName()));
+			}
+		}
+		
 		if (main.isComponentEnabled(Main.Components.Quests)) {
 			main.getQuestHandler().setupPlayer(e.getPlayer());
 		}

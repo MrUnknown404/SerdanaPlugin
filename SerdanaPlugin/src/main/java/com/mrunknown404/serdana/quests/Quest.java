@@ -13,6 +13,7 @@ import org.bukkit.inventory.ItemStack;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTask;
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class Quest implements ConfigurationSerializable {
@@ -138,7 +139,9 @@ public class Quest implements ConfigurationSerializable {
 	 * @param p Player to send the task completion messages to
 	 */
 	public void increaseTask(Player p) {
+		getCurrentTask().doScript(p, ScriptInfo.ScriptStartType.finish, currentTaskID);
 		currentTaskID++;
+		getCurrentTask().doScript(p, ScriptInfo.ScriptStartType.start, currentTaskID);
 		
 		if (currentTaskID == tasks.size()) {
 			readyToTurnIn = true;
@@ -149,7 +152,11 @@ public class Quest implements ConfigurationSerializable {
 		}
 	}
 	
-	public void setState(EnumQuestState state) {
+	public void setState(Player p, EnumQuestState state) {
+		if (state == EnumQuestState.accepted) {
+			getCurrentTask().doScript(p, ScriptInfo.ScriptStartType.start, currentTaskID);
+		}
+		
 		this.state = state;
 	}
 	

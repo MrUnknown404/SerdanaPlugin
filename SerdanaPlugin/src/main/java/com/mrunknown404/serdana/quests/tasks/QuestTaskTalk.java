@@ -8,6 +8,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 
 public class QuestTaskTalk extends QuestTask implements ConfigurationSerializable {
@@ -15,8 +16,8 @@ public class QuestTaskTalk extends QuestTask implements ConfigurationSerializabl
 	protected int talkID;
 	protected String[] messages;
 	
-	public QuestTaskTalk(String[] description, String[] completionMessage, int talkID, String[] messages) {
-		super(EnumTaskCheckType.shopTalk, messages.length, description, completionMessage);
+	public QuestTaskTalk(String[] description, String[] completionMessage, int talkID, String[] messages, ScriptInfo[] info) {
+		super(EnumTaskCheckType.shopTalk, messages.length, description, completionMessage, info);
 		this.talkID = talkID;
 		this.messages = messages;
 	}
