@@ -133,7 +133,7 @@ public class ParasiteHandler {
 			p.removePotionEffect(potion.getType());
 		}
 		
-		if (new NBTItem(p.getInventory().getHelmet()).hasKey("isParasite")) {
+		if (p.getInventory().getHelmet() != null && new NBTItem(p.getInventory().getHelmet()).hasKey("isParasite")) {
 			p.getInventory().setHelmet(null);
 		}
 		
