@@ -129,9 +129,7 @@ public class PartyHandler {
 	 * @return true if the given Player is in any Party, otherwise false
 	 */
 	public boolean isPlayerInAnyParty(UUID pl) {
-		PartyInfo info = getPlayersParty(pl);
-		
-		if (info != null) {
+		if (getPlayersParty(pl) != null) {
 			return true;
 		}
 		
