@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
-import main.java.com.mrunknown404.serdana.util.EnumPrayerType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumPrayerType;
 
 public class TabPray implements TabCompleter {
 

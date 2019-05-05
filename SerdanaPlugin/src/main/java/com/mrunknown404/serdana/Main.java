@@ -43,6 +43,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
 import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
+import main.java.com.mrunknown404.serdana.commands.CommandTestScript;
 import main.java.com.mrunknown404.serdana.commands.CommandTimer;
 import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabAWarp;
@@ -53,16 +54,17 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabRemoveAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabTestScript;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
 import main.java.com.mrunknown404.serdana.handlers.AChatHandler;
 import main.java.com.mrunknown404.serdana.handlers.AWarpHandler;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
 import main.java.com.mrunknown404.serdana.handlers.BountyHandler;
 import main.java.com.mrunknown404.serdana.handlers.HealthBarHandler;
+import main.java.com.mrunknown404.serdana.handlers.NPCHandler;
 import main.java.com.mrunknown404.serdana.handlers.ParasiteHandler;
 import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
 import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
-import main.java.com.mrunknown404.serdana.handlers.ShopkeeperHandler;
 import main.java.com.mrunknown404.serdana.handlers.TierHandler;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.BookListener;
@@ -70,8 +72,8 @@ import main.java.com.mrunknown404.serdana.listener.CraftingListener;
 import main.java.com.mrunknown404.serdana.listener.EntityListener;
 import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.InventoryListener;
+import main.java.com.mrunknown404.serdana.listener.NPCListener;
 import main.java.com.mrunknown404.serdana.listener.PlayerListener;
-import main.java.com.mrunknown404.serdana.listener.ShopkeeperListener;
 import main.java.com.mrunknown404.serdana.quests.InitQuests;
 import main.java.com.mrunknown404.serdana.quests.Quest;
 import main.java.com.mrunknown404.serdana.quests.QuestHandler;
@@ -81,10 +83,12 @@ import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
+import main.java.com.mrunknown404.serdana.scripts.InitScripts;
 import main.java.com.mrunknown404.serdana.scripts.ScriptHandler;
 import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
+import main.java.com.mrunknown404.serdana.util.infos.NPCInfo;
 import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
 public final class Main extends JavaPlugin {
@@ -94,8 +98,6 @@ public final class Main extends JavaPlugin {
 	public static final String BASE_LOCATION_SCRIPTS = "/main/resources/serdana/assets/scripts/";
 	private final File file_randomConfig = new File("RandomConfig");
 	private final File file_components = new File("Components");
-	
-	private ShopkeeperListener shopListen;
 	
 	private HealthBarHandler healthBarHandler;
 	private BannedItemHandler bannedItemHandler;
@@ -108,7 +110,7 @@ public final class Main extends JavaPlugin {
 	private TierHandler tierHandler;
 	private AWarpHandler aWarpHandler;
 	private AChatHandler aChatHandler;
-	private ShopkeeperHandler shopHandler;
+	private NPCHandler NPCHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -148,8 +150,7 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
 		ConfigurationSerialization.registerClass(QuestTaskTalk.class, "QuestTaskTalk");
 		ConfigurationSerialization.registerClass(ScriptInfo.class, "ScriptInfo");
-		
-		shopListen = new ShopkeeperListener(this);
+		ConfigurationSerialization.registerClass(NPCInfo.class, "NPCInfo");
 		
 		getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
@@ -158,8 +159,7 @@ public final class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BlockListener(this), this);
 		getServer().getPluginManager().registerEvents(new BookListener(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
-		
-		getServer().getPluginManager().registerEvents(shopListen, this);
+		getServer().getPluginManager().registerEvents(new NPCListener(this), this);
 		
 		reload(Bukkit.getConsoleSender());
 	}
@@ -210,8 +210,8 @@ public final class Main extends JavaPlugin {
 			
 			if (pair.getValue()) {
 				switch (pair.getKey()) {
-					case CustomShops:
-						shopHandler.reload();
+					case CustomNPCs:
+						NPCHandler.reload();
 						break;
 					case Bounties:
 						bountyHandler.reload();
@@ -224,6 +224,7 @@ public final class Main extends JavaPlugin {
 						break;
 					case Quests:
 						questHandler.reloadAll();
+						InitScripts.register();
 						InitQuests.register(this);
 						break;
 					case AWarp:
@@ -333,7 +334,10 @@ public final class Main extends JavaPlugin {
 					case Quests:
 						questHandler = new QuestHandler(this);
 						getCommand("quest").setExecutor(new CommandQuest(this));
+						getCommand("testScript").setExecutor(new CommandTestScript());
+						
 						getCommand("quest").setTabCompleter(new TabQuest(this));
+						getCommand("testScript").setTabCompleter(new TabTestScript());
 						break;
 					case Misc:
 						ScriptHandler.run(this);
@@ -355,8 +359,8 @@ public final class Main extends JavaPlugin {
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());
 						break;
-					case CustomShops:
-						shopHandler = new ShopkeeperHandler(this);
+					case CustomNPCs:
+						NPCHandler = new NPCHandler(this);
 						break;
 					default:
 						break;
@@ -377,8 +381,8 @@ public final class Main extends JavaPlugin {
 		return false;
 	}
 	
-	public ShopkeeperListener getShopListener() {
-		return shopListen;
+	public Map<Components, Boolean> getComponents() {
+		return components;
 	}
 	
 	public HealthBarHandler getHealthBarHandler() {
@@ -429,8 +433,8 @@ public final class Main extends JavaPlugin {
 		return aChatHandler;
 	}
 	
-	public ShopkeeperHandler getShopHandler() {
-		return shopHandler;
+	public NPCHandler getNPCHandler() {
+		return NPCHandler;
 	}
 	
 	public enum Components {
@@ -444,7 +448,7 @@ public final class Main extends JavaPlugin {
 		Prayers         (true),
 		Tiers           (false),
 		Quests          (false),
-		CustomShops     (false),
+		CustomNPCs      (false),
 		StopNamedItemUse(true),
 		StopItemCrafting(false),
 		Misc            (true);

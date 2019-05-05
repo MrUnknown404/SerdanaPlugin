@@ -10,23 +10,23 @@ import org.bukkit.entity.Player;
 
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
+import main.java.com.mrunknown404.serdana.scripts.InitScripts;
 import main.java.com.mrunknown404.serdana.scripts.ScriptHandler;
 import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
-import main.java.com.mrunknown404.serdana.scripts.ScriptInfo.ScriptStartType;
-import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumScriptStartType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
 
 public abstract class QuestTask implements ConfigurationSerializable {
 	protected EnumTaskCheckType type;
-	protected String[] description, completionMessage;
-	protected ScriptInfo[] scripts;
+	protected String[] description, completionMessage, scriptNames;
 	protected int amount = 0, amountNeeded;
 	
-	public QuestTask(EnumTaskCheckType type, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] scripts) {
+	public QuestTask(EnumTaskCheckType type, int amountNeeded, String[] description, String[] completionMessage, String[] scriptNames) {
 		this.type = type;
 		this.description = description;
 		this.completionMessage = completionMessage;
 		this.amountNeeded = amountNeeded;
-		this.scripts = scripts;
+		this.scriptNames = scriptNames;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -36,7 +36,7 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		amountNeeded = (int) map.get("amountNeeded");
 		description = ((List<String>) map.get("description")).toArray(new String[0]);
 		completionMessage = ((List<String>) map.get("completionMessage")).toArray(new String[0]);
-		scripts = ((List<ScriptInfo>) map.get("scripts")).toArray(new ScriptInfo[0]);
+		scriptNames = ((List<String>) map.get("scriptNames")).toArray(new String[0]);
 	}
 	
 	@Override
@@ -47,7 +47,7 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		result.put("amountNeeded", amountNeeded);
 		result.put("description", description);
 		result.put("completionMessage", completionMessage);
-		result.put("scripts", scripts);
+		result.put("scriptNames", scriptNames);
 		return result;
 	}
 	
@@ -56,8 +56,8 @@ public abstract class QuestTask implements ConfigurationSerializable {
 	 * @param type Script start Type
 	 * @param id Script Task ID to run
 	 */
-	public void doScript(Player p, ScriptStartType type, int id) {
-		for (ScriptInfo scr : scripts) {
+	public void doScript(Player p, EnumScriptStartType type, int id) {
+		for (ScriptInfo scr : InitScripts.getScripts(scriptNames)) {
 			if (scr.getScriptTaskID() == id && scr.getStartType() == type) {
 				ScriptHandler.read(scr, p);
 			}

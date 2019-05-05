@@ -32,9 +32,10 @@ import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskFetch;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
-import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
-import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestTalkType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
 
 public class QuestHandler {
 
@@ -396,13 +397,13 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			tasks.add(new QuestTaskFetch(new ItemStack(Material.BONE), 3, new String[] {
 					"Get 3 Bones"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			
 			q = new Quest(0, "Debug Fetch!", new String[] {
 					"Description Fetch"
@@ -425,15 +426,13 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {
-					new ScriptInfo(0, "TestScript", ScriptInfo.ScriptStartType.start)
-			}));
+			}, new String[] {}));
 			tasks.add(new QuestTaskKill(EntityType.SKELETON, 3, new String[] {
 					"Kill 3 Skeletons"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			
 			q = new Quest(1, "Debug Kill!", new String[] {
 					"Description Kill"
@@ -456,13 +455,13 @@ public class QuestHandler {
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getWorlds().get(0)), 10, 10, 10), new String[] {
 					"Now walk to (10, 10, 10)"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			
 			q = new Quest(2, "Debug Walk!", new String[] {
 					"Description Walk"
@@ -489,7 +488,7 @@ public class QuestHandler {
 					"Message 1-1",
 					"Message 1-2",
 					"Message 1-3"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			tasks.add(new QuestTaskTalk(new String[] {
 					"Talk to Shopkeeper 3"
 			}, new String[] {
@@ -499,7 +498,7 @@ public class QuestHandler {
 					"Message 2-1",
 					"Message 2-2",
 					"Message 2-3"
-			}, new ScriptInfo[] {}));
+			}, new String[] {}));
 			
 			q = new Quest(3, "Debug Talk!", new String[] {
 					"Description Talk"
@@ -623,34 +622,27 @@ public class QuestHandler {
 	 * @param shop Shopkeeper to check
 	 * @return A QuestTalkType based off the given Player's Quests & Shop
 	 */
-	public QuestTalkType getQuestShopTalkType(Player p, Shopkeeper shop) {
+	public EnumQuestTalkType getQuestShopTalkType(Player p, Shopkeeper shop) {
 		QuestPlayerData data = getQuestPlayersData(p);
 		
 		for (Quest q : data.getQuestsThatHaveState(EnumQuestState.unknown)) {
 			if (q.getStartID() == shop.getId()) {
-				return QuestTalkType.start;
+				return EnumQuestTalkType.start;
 			}
 		}
 		
 		for (Quest q : data.getQuestsThatHaveState(EnumQuestState.accepted)) {
 			if (q.getFinishID() == shop.getId()) {
-				return QuestTalkType.finish;
+				return EnumQuestTalkType.finish;
 			}
 			
 			for (QuestTask t : q.getTasks()) {
 				if (t.getTaskCheckType() == EnumTaskCheckType.shopTalk) {
-					return QuestTalkType.talkTask;
+					return EnumQuestTalkType.talkTask;
 				}
 			}
 		}
 		
-		return QuestTalkType.none;
-	}
-	
-	public enum QuestTalkType {
-		none,
-		start,
-		finish,
-		talkTask;
+		return EnumQuestTalkType.none;
 	}
 }

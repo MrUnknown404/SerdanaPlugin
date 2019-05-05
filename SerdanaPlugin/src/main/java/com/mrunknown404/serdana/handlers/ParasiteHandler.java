@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -108,7 +109,7 @@ public class ParasiteHandler {
 	 */
 	private void spread(Player source, int amount) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			if (p.getWorld() == source.getWorld()) {
+			if (p.getWorld() == source.getWorld() && p.getGameMode() != GameMode.SPECTATOR) {
 				if (p.getLocation().distance(source.getLocation()) <= main.getRandomConfig().getParasiteSpreadDistance()) {
 					if (new Random().nextInt(100) <= main.getRandomConfig().getParasiteSpreadChance() * Math.floor(1 + amount / 128)) {
 						giveParasite(p, 1);
@@ -142,8 +143,7 @@ public class ParasiteHandler {
 			
 			if (item != null) {
 				if (new NBTItem(item).hasKey("isParasite")) {
-					p.getInventory().remove(item);
-					item = null;
+					p.getInventory().removeItem(item);
 				}
 			}
 		}
