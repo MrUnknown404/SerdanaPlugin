@@ -8,19 +8,25 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 
+import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
+
+import main.java.com.mrunknown404.serdana.scripts.ScriptHandler;
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo.ScriptStartType;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 
 public abstract class QuestTask implements ConfigurationSerializable {
 	protected EnumTaskCheckType type;
-	protected String[] description;
-	protected String[] completionMessage;
+	protected String[] description, completionMessage;
+	protected ScriptInfo[] scripts;
 	protected int amount = 0, amountNeeded;
 	
-	public QuestTask(EnumTaskCheckType type, int amountNeeded, String[] description, String[] completionMessage) {
+	public QuestTask(EnumTaskCheckType type, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] scripts) {
 		this.type = type;
 		this.description = description;
 		this.completionMessage = completionMessage;
 		this.amountNeeded = amountNeeded;
+		this.scripts = scripts;
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -30,6 +36,7 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		amountNeeded = (int) map.get("amountNeeded");
 		description = ((List<String>) map.get("description")).toArray(new String[0]);
 		completionMessage = ((List<String>) map.get("completionMessage")).toArray(new String[0]);
+		scripts = ((List<ScriptInfo>) map.get("scripts")).toArray(new ScriptInfo[0]);
 	}
 	
 	@Override
@@ -40,7 +47,21 @@ public abstract class QuestTask implements ConfigurationSerializable {
 		result.put("amountNeeded", amountNeeded);
 		result.put("description", description);
 		result.put("completionMessage", completionMessage);
+		result.put("scripts", scripts);
 		return result;
+	}
+	
+	/** Runs a Script found using the given variables
+	 * @param p Player thats running the Script
+	 * @param type Script start Type
+	 * @param id Script Task ID to run
+	 */
+	public void doScript(Player p, ScriptStartType type, int id) {
+		for (ScriptInfo scr : scripts) {
+			if (scr.getScriptTaskID() == id && scr.getStartType() == type) {
+				ScriptHandler.read(scr, p);
+			}
+		}
 	}
 	
 	/** Checks if the {@link QuestTask} was successful
@@ -74,9 +95,17 @@ public abstract class QuestTask implements ConfigurationSerializable {
 				if (obj instanceof Player) {
 					return true;
 				}
+			case shopTalk:
+				if (obj instanceof Shopkeeper) {
+					return true;
+				}
 		}
 		
 		return false;
+	}
+	
+	public void increaseAmmount() {
+		amount++;
 	}
 	
 	public int getAmount() {

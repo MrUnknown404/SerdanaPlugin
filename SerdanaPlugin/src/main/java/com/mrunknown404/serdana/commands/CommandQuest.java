@@ -24,31 +24,22 @@ public class CommandQuest implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (args.length == 3) {
+		if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("show")) {
-				if (!EnumQuestState.contains(args[1])) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown quest type " + args[1] + "!"));
-					return false;
-				}
-				
-				List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(args[1]));
-				
 				try {
-					Integer.parseInt(args[2]);
+					return show(sender, args[1], 0);
 				} catch (NumberFormatException e) {
 					return false;
 				}
-				
-				if (invs.size() == 0) {
-					sender.sendMessage(ColorHelper.setColors("&cYou don't have any quests in that category!"));
-					return false;
-				} else if (Integer.parseInt(args[2]) >= invs.size()) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown page!"));
+			}
+		} else if (args.length == 3) {
+			if (args[0].equalsIgnoreCase("show")) {
+				try {
+					int page = Integer.parseInt(args[2]);
+					return show(sender, args[1], page);
+				} catch (NumberFormatException e) {
 					return false;
 				}
-				
-				((Player) sender).openInventory(main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(args[1])).get(Integer.parseInt(args[2])));
-				return true;
 			}
 			
 			if (sender.hasPermission("serdana.quest.admin")) {
@@ -84,6 +75,11 @@ public class CommandQuest implements CommandExecutor {
 							sender.sendMessage(ColorHelper.setColors("&cPlayer does not have that quest!"));
 						}
 					} else if (args[0].equalsIgnoreCase("finish")) {
+						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasFinishedQuest(InitQuests.getQuest(quest))) {
+							sender.sendMessage(ColorHelper.setColors("&cPlayer has already finished that quest!"));
+							return false;
+						}
+						
 						sender.sendMessage(ColorHelper.setColors("&cYou have finished " + quest + " for " + args[1] + "!"));
 						main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.finished);
 						return true;
@@ -93,5 +89,25 @@ public class CommandQuest implements CommandExecutor {
 		}
 		
 		return false;
+	}
+	
+	private boolean show(CommandSender sender, String questState, int page) {
+		if (!EnumQuestState.contains(questState)) {
+			sender.sendMessage(ColorHelper.setColors("&cUnknown quest type " + questState + "!"));
+			return false;
+		}
+		
+		List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(questState));
+		
+		if (invs.size() == 0) {
+			sender.sendMessage(ColorHelper.setColors("&cYou don't have any quests in that category!"));
+			return false;
+		} else if (page >= invs.size()) {
+			sender.sendMessage(ColorHelper.setColors("&cUnknown page!"));
+			return false;
+		}
+		
+		((Player) sender).openInventory(main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(questState)).get(page));
+		return true;
 	}
 }

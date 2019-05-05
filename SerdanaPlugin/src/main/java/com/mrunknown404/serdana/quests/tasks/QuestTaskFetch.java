@@ -7,6 +7,7 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 import main.java.com.mrunknown404.serdana.util.math.MathHelper;
 
@@ -14,8 +15,8 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 
 	protected ItemStack item;
 	
-	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description, String[] completionMessage) {
-		super(EnumTaskCheckType.playerTick, amountNeeded, description, completionMessage);
+	public QuestTaskFetch(ItemStack item, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] info) {
+		super(EnumTaskCheckType.playerTick, amountNeeded, description, completionMessage, info);
 		this.item = item;
 		this.amountNeeded = amountNeeded;
 	}
@@ -23,14 +24,12 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 	public QuestTaskFetch(Map<String, Object> map) {
 		super(map);
 		
-		amountNeeded = (int) map.get("amountNeeded");
 		item = (ItemStack) map.get("item");
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = (LinkedHashMap<String, Object>) super.serialize();
-		result.put("amountNeeded", amountNeeded);
 		result.put("item", item);
 		return result;
 	}

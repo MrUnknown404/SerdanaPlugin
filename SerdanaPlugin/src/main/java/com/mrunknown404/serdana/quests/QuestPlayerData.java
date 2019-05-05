@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Player;
 
 public class QuestPlayerData implements ConfigurationSerializable {
 
@@ -48,11 +49,28 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		return list;
 	}
 	
+	/** Gets all {@link Quest}s that are not the given {@link EnumQuestState}
+	 * @param type Type to check for
+	 * @return All Quests that do not have the given EnumQuestState
+	 */
+	public List<Quest> getQuestsThatAreNotState(EnumQuestState type) {
+		List<Quest> list = new ArrayList<Quest>();
+		
+		for (Quest q : quests) {
+			if (!q.getState().equals(type)) {
+				list.add(q);
+			}
+		}
+		
+		return list;
+	}
+	
 	/** Sets the given {@link Quest}'s state to the given {@link EnumQuestState}
+	 * @param p Player to potentially start Script for
 	 * @param quest Quest who's state will be edited
 	 * @param state New EnumQuestState
 	 */
-	public void setQuestState(Quest quest, EnumQuestState state) {
+	public void setQuestState(Player p, Quest quest, EnumQuestState state) {
 		for (int i = 0; i < quests.size(); i++) {
 			Quest q = quests.get(i);
 			
@@ -61,7 +79,7 @@ public class QuestPlayerData implements ConfigurationSerializable {
 					removeQuest(q);
 					addQuest(InitQuests.getQuest(quest.getName()));
 				} else {
-					q.setState(state);
+					q.setState(p, state);
 				}
 			}
 		}
@@ -109,6 +127,20 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	public boolean hasAcceptedQuest(Quest q) {
 		for (Quest qs : quests) {
 			if (qs.equals(q) && qs.getState() == EnumQuestState.accepted) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	/** Checks if the given {@link Quest} is finished
+	 * @param q Quest to check if finished
+	 * @return true of the given Quest is finished, otherwise false
+	 */
+	public boolean hasFinishedQuest(Quest q) {
+		for (Quest qs : quests) {
+			if (qs.equals(q) && qs.getState() == EnumQuestState.finished) {
 				return true;
 			}
 		}

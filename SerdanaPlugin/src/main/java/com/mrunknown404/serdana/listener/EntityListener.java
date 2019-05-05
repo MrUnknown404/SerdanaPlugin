@@ -19,7 +19,7 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void entityDeath(EntityDeathEvent e) {
-		if (main.getComponent(Main.Components.Quests)) {
+		if (main.isComponentEnabled(Main.Components.Quests)) {
 			if (e.getEntity().getKiller() instanceof Player) {
 				main.getQuestHandler().checkEntityDeathTask(e.getEntity().getKiller(), e.getEntity());
 			}
@@ -28,13 +28,13 @@ public class EntityListener implements Listener {
 	
 	@EventHandler
 	public void entityDamage(EntityDamageByEntityEvent e) {
-		if (main.getComponent(Main.Components.Tiers)) {
+		if (main.isComponentEnabled(Main.Components.Tiers)) {
 			if (e.getEntity() instanceof Player) {
 				e.setDamage(e.getDamage() * (1 + main.getTierHandler().getTiersOnPlayer((Player) e.getEntity()) / 10));
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Parties)) {
+		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (e.getDamager() instanceof Player && e.getEntity() instanceof Player) {
 				if (main.getPartyHandler().arePlayersInSameParty(e.getEntity().getUniqueId(), e.getDamager().getUniqueId())) {
 					e.setCancelled(true);

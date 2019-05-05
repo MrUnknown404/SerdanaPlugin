@@ -68,8 +68,8 @@ public class HealthBarHandler {
 			name = ChatColor.stripColor(entity.getCustomName());
 		}
 		
-		double health = entity.getHealth();
-		if (health < 0 || entity.isDead()) {
+		double health = MathHelper.clamp((float) entity.getHealth(), 0, Integer.MAX_VALUE);
+		if (entity.isDead()) {
 			health = 0;
 		}
 		

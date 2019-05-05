@@ -1,0 +1,12 @@
+force:cmd: ("teleport {player} ~ ~1 ~")
+#force:wait: (2)
+
+//this is a comment
+# this is also a comment
+
+print: ("test1")
+wait: (20)
+print: ("test2")
+wait: (50)
+print: ("test3")
+cmd: ("teleport {player} ~ ~10 ~")

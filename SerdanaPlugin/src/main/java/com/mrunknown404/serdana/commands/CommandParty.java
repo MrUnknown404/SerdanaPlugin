@@ -47,7 +47,7 @@ public class CommandParty implements CommandExecutor {
 			} else if (main.getPartyHandler().doesPlayerHaveInvite(pl.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId())) {
 				pl.sendMessage(ColorHelper.setColors("&cPlayer already has an invite!"));
 				return false;
-			} else if (main.getPartyHandler().isPartyLeader(Bukkit.getPlayer(args[1]).getUniqueId())) {
+			} else if (Bukkit.getPlayer(args[1]).getUniqueId() == ((Player) sender).getUniqueId()) {
 				pl.sendMessage(ColorHelper.setColors("&cYou cannot invite yourself!"));
 				return false;
 			}

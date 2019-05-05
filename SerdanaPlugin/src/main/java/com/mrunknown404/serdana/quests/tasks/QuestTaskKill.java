@@ -7,14 +7,15 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
+import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
 
 public class QuestTaskKill extends QuestTask implements ConfigurationSerializable {
 
 	protected EntityType entityType;
 	
-	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description, String[] completionMessage) {
-		super(EnumTaskCheckType.entityDeath, amountNeeded, description, completionMessage);
+	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] info) {
+		super(EnumTaskCheckType.entityDeath, amountNeeded, description, completionMessage, info);
 		this.amountNeeded = amountNeeded;
 		this.entityType = entityType;
 	}
@@ -23,14 +24,12 @@ public class QuestTaskKill extends QuestTask implements ConfigurationSerializabl
 		super(map);
 		
 		entityType = EntityType.valueOf((String) map.get("entityType"));
-		amountNeeded = (int) map.get("amountNeeded");
 	}
 	
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = (LinkedHashMap<String, Object>) super.serialize();
 		result.put("entityType", entityType.toString());
-		result.put("amountNeeded", amountNeeded);
 		return result;
 	}
 	

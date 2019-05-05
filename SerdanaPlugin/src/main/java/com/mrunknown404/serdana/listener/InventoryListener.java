@@ -29,7 +29,7 @@ public class InventoryListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (e.getCurrentItem() != null) {
-			if (main.getComponent(Main.Components.StopNamedItemUse)) {
+			if (main.isComponentEnabled(Main.Components.StopNamedItemUse) && main.isComponentEnabled(Main.Components.Tiers)) {
 				if (e.getInventory() instanceof AnvilInventory || e.getInventory() instanceof EnchantingInventory) {
 					if (main.getTierHandler().isItemTiered(e.getCurrentItem())) {
 						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot put that in an anvil!"));
@@ -39,7 +39,7 @@ public class InventoryListener implements Listener {
 				}
 			}
 			
-			if (main.getComponent(Main.Components.Parasite)) {
+			if (main.isComponentEnabled(Main.Components.Parasite)) {
 				if (e.getWhoClicked().getGameMode() != GameMode.CREATIVE) {
 					NBTItem n = new NBTItem(e.getCurrentItem());
 					
@@ -51,7 +51,7 @@ public class InventoryListener implements Listener {
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Prayers)) {
+		if (main.isComponentEnabled(Main.Components.Prayers)) {
 			for (Inventory inv : main.getPrayerHandler().getUnsetInventories()) {
 				if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {
 					if (e.getAction() != InventoryAction.CLONE_STACK && e.getAction() != InventoryAction.PLACE_ALL &&
@@ -63,7 +63,7 @@ public class InventoryListener implements Listener {
 			}
 		}
 		
-		if (main.getComponent(Main.Components.Quests)) {
+		if (main.isComponentEnabled(Main.Components.Quests)) {
 			for (EnumQuestState state : EnumQuestState.values()) {
 				for (Inventory inv : main.getQuestHandler().getPlayersQuestGUIs((Player) e.getWhoClicked(), state)) {
 					if (e.getInventory().getName().equalsIgnoreCase(inv.getName())) {

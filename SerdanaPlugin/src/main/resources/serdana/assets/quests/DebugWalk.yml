@@ -10,8 +10,8 @@ Quest:
   turnInMessage:
   - Turn in Message 1
   - Turn in Message 2
-  startID: 0
-  finishID: 0
+  startID: -1
+  finishID: -1
   currentTaskID: 0
   readyToTurnIn: false
   requirements: []
@@ -31,6 +31,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
+    scripts: []
     whereTo:
       ==: org.bukkit.Location
       world: world
@@ -48,6 +49,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
+    scripts: []
     whereTo:
       ==: org.bukkit.Location
       world: world

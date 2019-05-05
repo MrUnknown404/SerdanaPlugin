@@ -25,7 +25,7 @@ public class HealthListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onDamage(EntityDamageEvent e) {
-		if (main.getComponent(Main.Components.Parties)) {
+		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (e.getEntity() instanceof Player) {
 				Player p = (Player) e.getEntity();
 				if (main.getPartyHandler().isPlayerInAnyParty(p.getUniqueId())) {
@@ -38,7 +38,7 @@ public class HealthListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onHeal(EntityRegainHealthEvent e) {
-		if (main.getComponent(Main.Components.Parties)) {
+		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (e.getEntity() instanceof Player) {
 				Player p = (Player) e.getEntity();
 				if (main.getPartyHandler().isPlayerInAnyParty(p.getUniqueId())) {
@@ -51,7 +51,7 @@ public class HealthListener implements Listener {
 	
 	@EventHandler(priority = EventPriority.MONITOR)
 	public void onEntityDamage(EntityDamageByEntityEvent e) {
-		if (main.getComponent(Main.Components.HealthBar)) {
+		if (main.isComponentEnabled(Main.Components.HealthBar)) {
 			Entity damaged = e.getEntity();
 			if (damaged.getType() == EntityType.ARMOR_STAND || damaged.hasMetadata("shopkeeper")) {
 				return;

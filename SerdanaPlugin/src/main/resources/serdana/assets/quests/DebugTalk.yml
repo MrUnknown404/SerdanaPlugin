@@ -1,9 +1,9 @@
 Quest:
   ==: main.java.com.mrunknown404.serdana.quests.Quest
-  questID: 1
-  name: Debug Kill!
+  questID: 3
+  name: Debug Talk!
   description:
-  - Description Kill
+  - Description Talk
   completionMessage:
   - Complete Quest Message 1
   - Complete Quest Message 2
@@ -19,32 +19,36 @@ Quest:
   rewards:
   - ==: org.bukkit.inventory.ItemStack
     v: 1631
-    type: BONE
-    amount: 5
+    type: CLAY
+    amount: 23
   tasks:
-  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill
-    type: entityDeath
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk
+    type: shopTalk
     amount: 0
     amountNeeded: 3
     description:
-    - Kill 3 Zombies
-    completionMessage:
-    - Complete Task Message 1
-    - Complete Task Message 2
-    scripts:
-    - ==: main.java.com.mrunknown404.serdana.scripts.ScriptInfo
-      scriptTaskID: 0
-      scriptName: TestScript
-      type: start
-    entityType: ZOMBIE
-  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill
-    type: entityDeath
-    amount: 0
-    amountNeeded: 3
-    description:
-    - Kill 3 Skeletons
+    - Talk to Shopkeeper 1
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
     scripts: []
-    entityType: SKELETON
+    talkID: 1
+    messages:
+    - Message 1-1
+    - Message 1-2
+    - Message 1-3
+  - ==: main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk
+    type: shopTalk
+    amount: 0
+    amountNeeded: 3
+    description:
+    - Talk to Shopkeeper 3
+    completionMessage:
+    - Complete Task Message 1
+    - Complete Task Message 2
+    scripts: []
+    talkID: 3
+    messages:
+    - Message 2-1
+    - Message 2-2
+    - Message 2-3
