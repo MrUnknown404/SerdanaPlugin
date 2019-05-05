@@ -37,6 +37,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandPray;
 import main.java.com.mrunknown404.serdana.commands.CommandQuest;
 import main.java.com.mrunknown404.serdana.commands.CommandRainbow;
 import main.java.com.mrunknown404.serdana.commands.CommandRemoveAWarp;
+import main.java.com.mrunknown404.serdana.commands.CommandRepeat;
 import main.java.com.mrunknown404.serdana.commands.CommandSayAs;
 import main.java.com.mrunknown404.serdana.commands.CommandSerdana;
 import main.java.com.mrunknown404.serdana.commands.CommandSetBan;
@@ -349,6 +350,7 @@ public final class Main extends JavaPlugin {
 						getCommand("unbreakable").setExecutor(new CommandUnbreakable());
 						getCommand("rainbow").setExecutor(new CommandRainbow());
 						getCommand("timer").setExecutor(commandTimer);
+						getCommand("repeat").setExecutor(new CommandRepeat());
 						
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());

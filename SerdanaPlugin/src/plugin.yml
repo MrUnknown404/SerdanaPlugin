@@ -1,7 +1,7 @@
 main: main.java.com.mrunknown404.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.4.2.2-Beta
+version: 0.4.3.0-Beta
 author: [-Unknown-, RetroSpaceMan123]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -102,6 +102,10 @@ commands:
     description: Toggles admin chat
     usage: "Usage: '/adminChatToggle'"
     permission: serdana.adminChat
+  repeat:
+    description: Repeats Command
+    usage: "Usage: '/repeat' [Command]"
+    permission: serdana.repeat
 
 permissions:
   serdana.setTier:
@@ -151,4 +155,6 @@ permissions:
   serdana.adminWarp:
     default: op
   serdana.adminChat:
+    default: op
+  serdana.repeat:
     default: op
