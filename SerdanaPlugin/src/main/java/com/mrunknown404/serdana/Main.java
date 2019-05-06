@@ -94,8 +94,9 @@ import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 public final class Main extends JavaPlugin {
 	
 	public static final String TYPE = ".json";
-	public static final String BASE_LOCATION_QUESTS = "/main/resources/serdana/assets/quests/";
-	public static final String BASE_LOCATION_SCRIPTS = "/main/resources/serdana/assets/scripts/";
+	public static final String BASE_LOCATION = "/main/resources/serdana/assets/";
+	public static final String BASE_LOCATION_QUESTS = BASE_LOCATION + "quests/";
+	public static final String BASE_LOCATION_SCRIPTS = BASE_LOCATION + "scripts/";
 	private final File file_randomConfig = new File("RandomConfig");
 	private final File file_components = new File("Components");
 	

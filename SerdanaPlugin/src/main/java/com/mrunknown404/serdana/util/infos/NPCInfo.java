@@ -15,13 +15,14 @@ import main.java.com.mrunknown404.serdana.util.enums.EnumTalkType;
 public class NPCInfo implements ConfigurationSerializable {
 
 	protected int NPCID;
-	protected boolean ignoresBannedItems;
+	protected boolean ignoresBannedItems, isShop;
 	protected String name;
 	protected String[] openMessages, bannedItemMessages, tradeMessages;
 	
-	public NPCInfo(int NPCID, boolean ignoresBannedItems, String name, String[] openMessages, String[] bannedItemMessages, String[] tradeMessages) {
+	public NPCInfo(int NPCID, boolean ignoresBannedItems, boolean isShop, String name, String[] openMessages, String[] bannedItemMessages, String[] tradeMessages) {
 		this.NPCID = NPCID;
 		this.ignoresBannedItems = ignoresBannedItems;
+		this.isShop = isShop;
 		this.name = name;
 		this.openMessages = openMessages;
 		this.bannedItemMessages = bannedItemMessages;
@@ -32,6 +33,7 @@ public class NPCInfo implements ConfigurationSerializable {
 	public NPCInfo(Map<String, Object> map) {
 		NPCID = (int) map.get("NPCID");
 		ignoresBannedItems = (boolean) map.get("ignoresBannedItems");
+		isShop = (boolean) map.get("isShop");
 		name = (String) map.get("name");
 		openMessages = ((List<String>) map.get("openMessages")).toArray(new String[0]);
 		bannedItemMessages = ((List<String>) map.get("bannedItemMessages")).toArray(new String[0]);
@@ -43,6 +45,7 @@ public class NPCInfo implements ConfigurationSerializable {
 		LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>();
 		result.put("NPCID", NPCID);
 		result.put("ignoresBannedItems", ignoresBannedItems);
+		result.put("isShop", isShop);
 		result.put("name", name);
 		result.put("openMessages", openMessages);
 		result.put("bannedItemMessages", bannedItemMessages);
@@ -50,6 +53,11 @@ public class NPCInfo implements ConfigurationSerializable {
 		return result;
 	}
 	
+	/** Makes a NPC talk using the possible messages written here
+	 * @param p Player to check
+	 * @param type EnumTalkType to check
+	 * @return true if should be canceled, otherwise false
+	 */
 	public boolean talk(Player p, EnumTalkType type) {
 		String[] list = new String[0];
 		
@@ -70,7 +78,11 @@ public class NPCInfo implements ConfigurationSerializable {
 		
 		p.sendMessage(ColorHelper.setColors("[" + name + "&f] " + msg));
 		
-		return !ignoresBannedItems;
+		if (!isShop || !ignoresBannedItems) {
+			return true;
+		}
+		
+		return false;
 	}
 	
 	public int getNPCID() {

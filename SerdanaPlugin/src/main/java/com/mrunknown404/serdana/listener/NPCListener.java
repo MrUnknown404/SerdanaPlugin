@@ -47,7 +47,7 @@ public class NPCListener implements Listener {
 				}
 			}
 			
-			main.getNPCHandler().talk(e.getShopkeeper(), e.getPlayer(), EnumTalkType.open);
+			e.setCancelled(main.getNPCHandler().talk(e.getShopkeeper(), e.getPlayer(), EnumTalkType.open));
 		}
 	}
 }

@@ -2,6 +2,8 @@ package main.java.com.mrunknown404.serdana.handlers;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,19 +36,8 @@ public class NPCHandler {
 	public void reload() {
 		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
 		
-		if (!new File(path + "/" + file_NPCInfos + ".yml").exists()) {
-			System.out.println("Could not find file: " + file_NPCInfos + ".yml" + "! (Will be created)");
-			
-			NPCInfos = new ArrayList<NPCInfo>();
-			NPCInfos.add(new NPCInfo(1, true, "Steve",
-					new String[] {"Test 1", "Test 2"},
-					new String[] {"Banned 1", "Banned 2"},
-					new String[] {"Trade 1", "Trade 2"}));
-			
-			write(file_NPCInfos, NPCInfos);
-		}
-		
-		read();
+		write();
+		NPCInfos = read();
 		
 		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
@@ -55,14 +46,14 @@ public class NPCHandler {
 	 * @param shop The Shopkeeper that will talk
 	 * @param p The Player the Shopkeeper that will talk to
 	 * @param type The Shopkeeper's talk type
-	 * @return false if the Shopkeeper ignores banned items, otherwise true
+	 * @return true if should be canceled, otherwise false
 	 */
 	public boolean talk(Shopkeeper shop, Player p, EnumTalkType type) {
 		for (NPCInfo info : NPCInfos) {
 			if (info.getNPCID() == shop.getId()) {
 				boolean b = info.talk(p, type);
 				
-				if (b) {
+				if (b && type == EnumTalkType.banned) {
 					main.getBannedItemHandler().performBannedAction(p, main.getBannedItemHandler().getPlayersBannedItems(p).size());
 				}
 				
@@ -99,11 +90,11 @@ public class NPCHandler {
 	/** Writes a new {@link List} for the given {@link File}
 	 * @param f The File that will be written to
 	 */
-	private void write(File file, Object toWrite) {
-		File f = new File(path + "/" + file + ".yml");
+	private void write() {
+		File f = new File(path + "/" + file_NPCInfos + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("NPCInfo", toWrite);
+		write.set("NPCInfo", NPCInfos);
 		
 		try {
 			write.save(f);
@@ -112,12 +103,32 @@ public class NPCHandler {
 		}
 	}
 	
-	/** Writes a new {@link List} for the given {@link File}
-	 * @param f The File that will be read from
+	/** Returns a new {@link List} for the given {@link File}
 	 * @return A List containing the contents of the read File
 	 */
 	@SuppressWarnings("unchecked")
-	private void read() {
-		NPCInfos = (List<NPCInfo>) YamlConfiguration.loadConfiguration(new File(path + "/" + file_NPCInfos + ".yml")).getList("NPCInfo");
+	private List<NPCInfo> read() {
+		if (getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml") == null) {
+			System.out.println("Could not find file inside jar: " + file_NPCInfos + ".yml!");
+			
+			List<?> list = YamlConfiguration.loadConfiguration(new File(path + "/" + file_NPCInfos + ".yml")).getList("NPCInfo");
+			
+			if (list == null) {
+				System.out.println("Could not find file in config: " + file_NPCInfos + ".yml! (Will be created)");
+				
+				NPCInfos = new ArrayList<NPCInfo>();
+				NPCInfos.add(new NPCInfo(1, true, true, "Steve",
+						new String[] {"Test 1", "Test 2"},
+						new String[] {"Banned 1", "Banned 2"},
+						new String[] {"Trade 1", "Trade 2"}));
+				
+				write();
+			}
+			
+			return (List<NPCInfo>) list;
+		} else {
+			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml");
+			return (List<NPCInfo>) YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getList("NPCInfo");
+		}
 	}
 }
