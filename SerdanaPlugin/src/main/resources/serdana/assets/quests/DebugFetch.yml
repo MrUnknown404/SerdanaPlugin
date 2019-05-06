@@ -31,7 +31,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     item:
       ==: org.bukkit.inventory.ItemStack
       v: 1631
@@ -45,7 +45,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     item:
       ==: org.bukkit.inventory.ItemStack
       v: 1631

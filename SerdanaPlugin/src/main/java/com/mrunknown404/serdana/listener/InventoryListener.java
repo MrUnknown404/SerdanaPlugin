@@ -14,8 +14,8 @@ import org.bukkit.inventory.Inventory;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
 
 public class InventoryListener implements Listener {
 	

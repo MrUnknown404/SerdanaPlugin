@@ -31,7 +31,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     talkID: 1
     messages:
     - Message 1-1
@@ -46,7 +46,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     talkID: 3
     messages:
     - Message 2-1

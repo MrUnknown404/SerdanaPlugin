@@ -10,8 +10,8 @@ import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 import main.java.com.mrunknown404.serdana.quests.Quest;
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
 
 public class TabQuest implements TabCompleter {
 	

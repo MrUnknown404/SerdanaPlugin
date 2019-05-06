@@ -9,6 +9,8 @@ import java.util.UUID;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
+
 public class QuestPlayerData implements ConfigurationSerializable {
 
 	private final UUID playerID;

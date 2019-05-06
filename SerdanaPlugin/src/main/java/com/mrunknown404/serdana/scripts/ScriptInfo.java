@@ -5,13 +5,15 @@ import java.util.Map;
 
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
+import main.java.com.mrunknown404.serdana.util.enums.EnumScriptStartType;
+
 public class ScriptInfo implements ConfigurationSerializable {
 
-	private int scriptTaskID;
-	private String scriptName;
-	private ScriptStartType type;
+	private final int scriptTaskID;
+	private final String scriptName;
+	private final EnumScriptStartType type;
 	
-	public ScriptInfo(int scriptTaskID, String scriptName, ScriptStartType type) {
+	ScriptInfo(int scriptTaskID, String scriptName, EnumScriptStartType type) {
 		this.scriptTaskID = scriptTaskID;
 		this.scriptName = scriptName;
 		this.type = type;
@@ -20,7 +22,7 @@ public class ScriptInfo implements ConfigurationSerializable {
 	public ScriptInfo(Map<String, Object> map) {
 		scriptTaskID = (int) map.get("scriptTaskID");
 		scriptName = (String) map.get("scriptName");
-		type = ScriptStartType.valueOf((String) map.get("type"));
+		type = EnumScriptStartType.valueOf((String) map.get("type"));
 	}
 	
 	@Override
@@ -40,12 +42,7 @@ public class ScriptInfo implements ConfigurationSerializable {
 		return scriptName;
 	}
 	
-	public ScriptStartType getStartType() {
+	public EnumScriptStartType getStartType() {
 		return type;
-	}
-	
-	public enum ScriptStartType {
-		start,
-		finish;
 	}
 }

@@ -10,9 +10,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 
 import main.java.com.mrunknown404.serdana.Main;
-import main.java.com.mrunknown404.serdana.quests.EnumQuestState;
 import main.java.com.mrunknown404.serdana.quests.InitQuests;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
 
 public class CommandQuest implements CommandExecutor {
 

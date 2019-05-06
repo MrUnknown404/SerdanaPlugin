@@ -7,15 +7,14 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 
-import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
-import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
 
 public class QuestTaskKill extends QuestTask implements ConfigurationSerializable {
 
 	protected EntityType entityType;
 	
-	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description, String[] completionMessage, ScriptInfo[] info) {
-		super(EnumTaskCheckType.entityDeath, amountNeeded, description, completionMessage, info);
+	public QuestTaskKill(EntityType entityType, int amountNeeded, String[] description, String[] completionMessage, String[] scriptNames) {
+		super(EnumTaskCheckType.entityDeath, amountNeeded, description, completionMessage, scriptNames);
 		this.amountNeeded = amountNeeded;
 		this.entityType = entityType;
 	}

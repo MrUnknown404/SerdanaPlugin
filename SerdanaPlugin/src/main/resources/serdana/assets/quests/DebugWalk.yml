@@ -31,7 +31,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     whereTo:
       ==: org.bukkit.Location
       world: world
@@ -49,7 +49,7 @@ Quest:
     completionMessage:
     - Complete Task Message 1
     - Complete Task Message 2
-    scripts: []
+    scriptNames: []
     whereTo:
       ==: org.bukkit.Location
       world: world

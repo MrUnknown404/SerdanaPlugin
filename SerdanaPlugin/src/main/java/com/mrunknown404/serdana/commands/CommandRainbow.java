@@ -29,7 +29,7 @@ public class CommandRainbow implements CommandExecutor {
 				ti++;
 			}
 			
-			sb.insert(i + (i * 2), "&" + ColorHelper.RAINBOW_COLOR_CODES.charAt((i - ti) % ColorHelper.RAINBOW_COLOR_CODES.length()));
+			sb.insert(i + (i * 2), "&" + ColorHelper.getRainbowCodes().charAt((i - ti) % ColorHelper.getRainbowCodes().length()));
 		}
 		
 		for (Player player : Bukkit.getOnlinePlayers()) {

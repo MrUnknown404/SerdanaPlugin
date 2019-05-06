@@ -36,8 +36,8 @@ public class ScriptHandler {
 	 * @param p Player to run off of
 	 */
 	public static void read(ScriptInfo info, Player p) {
-		if (getScriptFile(info.getScriptName()) != null) {
-			BufferedReader br = new BufferedReader(new InputStreamReader(getScriptFile(info.getScriptName())));
+		if (getScriptFile(info) != null) {
+			BufferedReader br = new BufferedReader(new InputStreamReader(getScriptFile(info)));
 			
 			String st;
 			List<String> strs = new ArrayList<String>();
@@ -256,15 +256,15 @@ public class ScriptHandler {
 	 * @param file File name to find
 	 * @return An InputStream based around the given File name
 	 */
-	private static InputStream getScriptFile(String file) {
-		if (ScriptHandler.class.getResourceAsStream(Main.BASE_LOCATION_SCRIPTS + file + SCRIPT_FILE_TYPE) == null) {
-			System.out.println("Could not find file inside jar: " + file + SCRIPT_FILE_TYPE + "!");
-			File f = new File(path + "/Scripts/" + file + SCRIPT_FILE_TYPE);
+	public static InputStream getScriptFile(ScriptInfo info) {
+		if (ScriptHandler.class.getResourceAsStream(Main.BASE_LOCATION_SCRIPTS + info.getScriptName() + SCRIPT_FILE_TYPE) == null) {
+			System.out.println("Could not find file inside jar: " + info.getScriptName() + SCRIPT_FILE_TYPE + "!");
+			File f = new File(path + "/Scripts/" + info.getScriptName() + SCRIPT_FILE_TYPE);
 			
 			try {
 				return new FileInputStream(f);
 			} catch (FileNotFoundException e) {
-				System.out.println("Could not find file in config: " + file + SCRIPT_FILE_TYPE + "! (Will be created)");
+				System.out.println("Could not find file in config: " + info.getScriptName() + SCRIPT_FILE_TYPE + "! (Will be created)");
 				
 				try {
 					f.createNewFile();
@@ -273,7 +273,7 @@ public class ScriptHandler {
 				}
 			}
 		} else {
-			return ScriptHandler.class.getResourceAsStream(Main.BASE_LOCATION_SCRIPTS + file + SCRIPT_FILE_TYPE);
+			return ScriptHandler.class.getResourceAsStream(Main.BASE_LOCATION_SCRIPTS + info.getScriptName() + SCRIPT_FILE_TYPE);
 		}
 		
 		return null;

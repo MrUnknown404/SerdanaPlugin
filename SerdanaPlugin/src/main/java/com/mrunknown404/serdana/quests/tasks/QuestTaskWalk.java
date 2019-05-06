@@ -7,15 +7,14 @@ import org.bukkit.Location;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
-import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
-import main.java.com.mrunknown404.serdana.util.EnumTaskCheckType;
+import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
 
 public class QuestTaskWalk extends QuestTask implements ConfigurationSerializable {
 
 	protected Location whereTo;
 	
-	public QuestTaskWalk(Location whereTo, String[] description, String[] completionMessage, ScriptInfo[] info) {
-		super(EnumTaskCheckType.playerTick, 1, description, completionMessage, info);
+	public QuestTaskWalk(Location whereTo, String[] description, String[] completionMessage, String[] scriptNames) {
+		super(EnumTaskCheckType.playerTick, 1, description, completionMessage, scriptNames);
 		this.whereTo = whereTo;
 	}
 	
