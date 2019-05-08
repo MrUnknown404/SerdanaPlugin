@@ -11,13 +11,21 @@ public class TabSerdana implements TabCompleter {
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-		List<String> results = new ArrayList<String>();
+		List<String> r = new ArrayList<String>();
 		
 		if (args.length == 1) {
-			results.add("reload");
-			results.add("components");
+			r.add("reload");
+			r.add("components");
+			r.add("test");
 		}
 		
-		return results;
+		List<String> finalResults = new ArrayList<String>();
+		for (int i = 0; i < r.size(); i++) {
+			if (r.get(i).toLowerCase().contains(args[args.length - 1].toLowerCase())) {
+				finalResults.add(r.get(i));
+			}
+		}
+		
+		return finalResults;
 	}
 }

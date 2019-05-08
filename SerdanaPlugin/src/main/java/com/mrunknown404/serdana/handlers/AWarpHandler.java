@@ -10,13 +10,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 
-public class AWarpHandler {
+public class AWarpHandler extends Reloadable {
 	
 	private final File path;
 	private final File file_warps = new File("AdminWarps");
@@ -27,10 +27,8 @@ public class AWarpHandler {
 		this.path = main.getDataFolder();
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		if (!new File(path + "/" + file_warps + ".yml").exists()) {
 			System.out.println("Could not find file: " + file_warps + ".yml" + "! (Will be created)");
 			warps = new HashMap<String, Location>();
@@ -39,8 +37,6 @@ public class AWarpHandler {
 		}
 		
 		readWarps();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	/** Sets a warp at the give {@link Location} with the given name

@@ -1,5 +1,6 @@
 package main.java.com.mrunknown404.serdana.quests.tasks;
 
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -126,5 +127,34 @@ public abstract class QuestTask implements ConfigurationSerializable {
 	
 	public EnumTaskCheckType getTaskCheckType() {
 		return type;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof QuestTask) {
+			QuestTask task = (QuestTask) obj;
+			
+			return task.type == type && areEqual(task.description, description) && areEqual(task.completionMessage, completionMessage) &&
+					areEqual(task.scriptNames, scriptNames) && task.amountNeeded == amountNeeded ? true : false;
+		}
+		
+		return false;
+	}
+	
+	private boolean areEqual(Object[] arr1, Object[] arr2) {
+		if (arr1.length != arr2.length) {
+			return false;
+		}
+		
+		Arrays.sort(arr1);
+		Arrays.sort(arr2);
+		
+		for (int i = 0; i < arr1.length; i++) {
+			if (!arr1[i].equals(arr2[i])) {
+				System.out.println("These are out of date : " + arr1[i] + ":" + arr2[i]);
+				return false;
+			}
+		}
+		return true;
 	}
 }

@@ -67,7 +67,8 @@ public class CommandQuest implements CommandExecutor {
 							sender.sendMessage(ColorHelper.setColors("&cPlayer already has that quest!"));
 						}
 					} else if (args[0].equalsIgnoreCase("remove")) {
-						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasAcceptedQuest(InitQuests.getQuest(quest))) {
+						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasAcceptedQuest(InitQuests.getQuest(quest)) ||
+								main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasFinishedQuest(InitQuests.getQuest(quest))) {
 							sender.sendMessage(ColorHelper.setColors("&cYou have removed " + quest + " from " + args[1] + "!"));
 							main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.unknown);
 							return true;

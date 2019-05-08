@@ -21,8 +21,9 @@ import com.google.gson.reflect.TypeToken;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 
-public class BannedItemHandler {
+public class BannedItemHandler extends Reloadable {
 	
 	private final Main main;
 	private final File path;
@@ -89,10 +90,8 @@ public class BannedItemHandler {
 		Bukkit.getServer().dispatchCommand(Bukkit.getConsoleSender(), "jail " + p.getName() + " " + jailName + " " + totalTime + "m");
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
 		FileReader fr = null;
@@ -123,7 +122,5 @@ public class BannedItemHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 }

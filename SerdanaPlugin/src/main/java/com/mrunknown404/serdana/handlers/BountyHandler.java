@@ -20,9 +20,10 @@ import com.google.gson.reflect.TypeToken;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 
-public class BountyHandler {
+public class BountyHandler extends Reloadable {
 	
 	private final File path;
 	private final File file_bounties = new File("Bounties");
@@ -83,10 +84,8 @@ public class BountyHandler {
 		}
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		if (!new File(path + "/" + file_bounties + Main.TYPE).exists()) {
 			System.out.println("Could not find file: " + file_bounties + Main.TYPE + "! (Will be created)");
 			bounties = new ArrayList<BountyInfo>();
@@ -95,8 +94,6 @@ public class BountyHandler {
 		}
 		
 		readBounties();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	/** Writes all bounties to file  */

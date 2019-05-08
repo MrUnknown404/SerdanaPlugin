@@ -8,13 +8,13 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.UUID;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 
-public class AChatHandler {
+public class AChatHandler extends Reloadable {
 
 	private final File path;
 	private final File file_chatStates = new File("AdminChatStates");
@@ -25,10 +25,8 @@ public class AChatHandler {
 		this.path = main.getDataFolder();
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		if (!new File(path + "/" + file_chatStates + ".yml").exists()) {
 			System.out.println("Could not find file: " + file_chatStates + ".yml" + "! (Will be created)");
 			chatStates = new HashMap<UUID, Boolean>();
@@ -37,8 +35,6 @@ public class AChatHandler {
 		}
 		
 		read();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	/** Toggles the given {@link Player}'s admin chat state

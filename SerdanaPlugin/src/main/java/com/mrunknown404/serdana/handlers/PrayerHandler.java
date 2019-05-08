@@ -11,10 +11,11 @@ import org.bukkit.inventory.Inventory;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 import main.java.com.mrunknown404.serdana.util.enums.EnumPrayerType;
 import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
-public class PrayerHandler {
+public class PrayerHandler extends Reloadable {
 	
 	private final File path;
 	private final File file_unsetPrayers = new File("UnsetPrayers");
@@ -79,16 +80,12 @@ public class PrayerHandler {
 		}
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		writeAllPrayers();
 		readAllPrayers();
 		createInventories();
 		addPrayerstoInventories();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	/** Adds the given {@link PrayInfo} to the given {@link EnumPrayerType}'s {@link Inventory}

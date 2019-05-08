@@ -1,11 +1,13 @@
 package main.java.com.mrunknown404.serdana.quests;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
 
@@ -91,8 +93,9 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	 * @param quest Quest to add
 	 */
 	public void addQuest(Quest quest) {
-		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getDescription(), quest.getCompletionMessage(), quest.getTurnInMessage(),
-				quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards(), quest.getRequirements()));
+		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getStartMessages(), quest.getFinishMessages(), quest.getDescription(),
+				quest.getCompletionMessages(), quest.getTurnInMessages(), quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards(),
+				quest.getRequirements()));
 	}
 	
 	/** Removes the given {@link Quest}
@@ -148,6 +151,49 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		}
 		
 		return false;
+	}
+	
+	/** Checks if this QuestPlayerData has an old Quest
+	 * @param q Quest to check
+	 * @return true if this QuestPlayerData has an old Quest, otherwise false
+	 */
+	public boolean isOldQuest(Quest q) {
+		for (Quest oldQ : quests) {
+			if (oldQ.getQuestID() == q.getQuestID()) {
+				return oldQ.getName().equals(q.getName()) && areEqual(oldQ.getDescription(), q.getDescription()) &&
+						areEqual(oldQ.getCompletionMessages(), q.getCompletionMessages()) && areEqual(oldQ.getTurnInMessages(), q.getTurnInMessages()) &&
+						areEqual(oldQ.getStartMessages(), q.getStartMessages()) && areEqual(oldQ.getFinishMessages(), q.getFinishMessages()) &&
+						oldQ.getStartID() == q.getStartID() && oldQ.getFinishID() == q.getFinishID() && areEqual(oldQ.getRewards(), q.getRewards()) &&
+						areEqual(ArrayUtils.toObject(oldQ.getRequirements()), ArrayUtils.toObject(q.getRequirements())) && oldQ.getTasks().equals(q.getTasks())
+						? false : true;
+			}
+		}
+		
+		return true;
+	}
+	
+	private boolean areEqual(Object[] arr1, Object[] arr2) {
+		if (arr1.length != arr2.length) {
+			return false;
+		}
+		
+		Arrays.sort(arr1);
+		Arrays.sort(arr2);
+		
+		for (int i = 0; i < arr1.length; i++) {
+			if (arr1[0].getClass().isPrimitive()) {
+				if (arr1[i] != arr2[i]) {
+					System.out.println("These are out of date : " + arr1[i] + ":" + arr2[i]);
+					return false;
+				}
+			}
+			
+			if (!arr1[i].equals(arr2[i])) {
+				System.out.println("These are out of date : " + arr1[i] + ":" + arr2[i]);
+				return false;
+			}
+		}
+		return true;
 	}
 	
 	public UUID getPlayerUUID() {

@@ -7,18 +7,18 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import io.lumine.utils.config.file.YamlConfiguration;
 import main.java.com.mrunknown404.serdana.Main;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 import main.java.com.mrunknown404.serdana.util.enums.EnumQuestTalkType;
 import main.java.com.mrunknown404.serdana.util.enums.EnumTalkType;
 import main.java.com.mrunknown404.serdana.util.infos.NPCInfo;
 
-public class NPCHandler {
+public class NPCHandler extends Reloadable {
 
 	private final Main main;
 	private final File path;
@@ -32,14 +32,9 @@ public class NPCHandler {
 		this.path = main.getDataFolder();
 	}
 	
-	/** Reloads this class's Configs */
-	public void reload() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
-		write();
+	@Override
+	protected void reload() {
 		NPCInfos = read();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	/** Makes given {@link Shopkeeper} talk to the specified {@link Player}
@@ -68,16 +63,14 @@ public class NPCHandler {
 	 * @param shop The Shopkeeper that will talk
 	 * @param p The Player the Shopkeeper that will talk to
 	 * @param type The talk type
-	 * @return true if the task was successful, otherwise false
+	 * @return true if successful, otherwise false
 	 */
 	public boolean talk(Shopkeeper shop, Player p, EnumQuestTalkType type) {
 		switch (type) {
 			case start:
-				//start quest
-				return true;
+				return main.getQuestHandler().checkStartQuest(p, shop);
 			case finish:
-				//finish quest
-				return true;
+				return main.getQuestHandler().checkFinishQuest(p, shop);
 			case talkTask:
 				return main.getQuestHandler().checkTalkTask(p, shop);
 			default:

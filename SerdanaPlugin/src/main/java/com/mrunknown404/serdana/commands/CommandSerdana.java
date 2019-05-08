@@ -6,9 +6,11 @@ import java.util.Map.Entry;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.Main.Components;
+import main.java.com.mrunknown404.serdana.entities.util.EnumCustomEntities;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 
 public class CommandSerdana implements CommandExecutor {
@@ -40,6 +42,10 @@ public class CommandSerdana implements CommandExecutor {
 				}
 				
 				return true;
+			} else if (args[0].equalsIgnoreCase("test")) {
+				if (main.isComponentEnabled(Main.Components.CustomEntities)) {
+					main.getEntityHandler().spawnEntity(EnumCustomEntities.TEST_ZOMBIE.getType(), ((Player) sender).getLocation());
+				}
 			}
 		}
 		
