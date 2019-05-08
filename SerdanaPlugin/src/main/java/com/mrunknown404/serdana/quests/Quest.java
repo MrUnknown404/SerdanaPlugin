@@ -20,7 +20,7 @@ import main.java.com.mrunknown404.serdana.util.enums.EnumScriptStartType;
 public class Quest implements ConfigurationSerializable {
 
 	private String name;
-	private String[] description, completionMessage, turnInMessage;
+	private String[] description, completionMessages, turnInMessages, startMessages, finishMessages;
 	private int questID, startID = -1, finishID = -1, currentTaskID = 0;
 	private boolean readyToTurnIn = false;
 	private EnumQuestState state = EnumQuestState.unknown;
@@ -29,17 +29,19 @@ public class Quest implements ConfigurationSerializable {
 	
 	private List<QuestTask> tasks = new ArrayList<QuestTask>();
 	
-	Quest(int questID, String name, String[] description, String[] completionMessage, String[] turnInMessage, List<QuestTask> tasks, int startID, int finishID,
-			ItemStack[] rewards, int[] requirements) {
+	Quest(int questID, String name, String[] startMessages, String finishMessages[], String[] description, String[] completionMessages, String[] turnInMessages,
+			List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards, int[] requirements) {
 		this.questID = questID;
 		this.name = name;
+		this.startMessages = startMessages;
+		this.finishMessages = finishMessages;
 		this.tasks = tasks;
 		this.startID = startID;
 		this.finishID = finishID;
 		this.rewards = rewards;
 		this.description = description;
-		this.completionMessage = completionMessage;
-		this.turnInMessage = turnInMessage;
+		this.completionMessages = completionMessages;
+		this.turnInMessages = turnInMessages;
 		this.requirements = requirements;
 	}
 	
@@ -47,14 +49,17 @@ public class Quest implements ConfigurationSerializable {
 	public Quest(Map<String, Object> map) {
 		questID = (int) map.get("questID");
 		name = (String) map.get("name");
+		
 		startID = (int) map.get("startID");
 		finishID = (int) map.get("finishID");
 		currentTaskID = (int) map.get("currentTaskID");
 		state = EnumQuestState.valueOf((String) map.get("state"));
 		tasks = (List<QuestTask>) map.get("tasks");
 		description = ((List<String>) map.get("description")).toArray(new String[0]);
-		completionMessage = ((List<String>) map.get("completionMessage")).toArray(new String[0]);
-		turnInMessage = ((List<String>) map.get("turnInMessage")).toArray(new String[0]);
+		startMessages = ((List<String>) map.get("startMessages")).toArray(new String[0]);
+		finishMessages = ((List<String>) map.get("finishMessages")).toArray(new String[0]);
+		completionMessages = ((List<String>) map.get("completionMessages")).toArray(new String[0]);
+		turnInMessages = ((List<String>) map.get("turnInMessages")).toArray(new String[0]);
 		rewards = ((List<ItemStack>) map.get("rewards")).toArray(new ItemStack[0]);
 		readyToTurnIn = (boolean) map.get("readyToTurnIn");
 		requirements = ((List<Integer>) map.get("requirements")).stream().mapToInt(i -> i).toArray();
@@ -66,8 +71,10 @@ public class Quest implements ConfigurationSerializable {
 		result.put("questID", questID);
 		result.put("name", name);
 		result.put("description", description);
-		result.put("completionMessage", completionMessage);
-		result.put("turnInMessage", turnInMessage);
+		result.put("startMessages", startMessages);
+		result.put("finishMessages", finishMessages);
+		result.put("completionMessages", completionMessages);
+		result.put("turnInMessages", turnInMessages);
 		result.put("startID", startID);
 		result.put("finishID", finishID);
 		result.put("currentTaskID", currentTaskID);
@@ -127,10 +134,6 @@ public class Quest implements ConfigurationSerializable {
 	public void checkFinishedTask(Player p) {
 		if (state == EnumQuestState.accepted) {
 			if (getCurrentTask().checkForFinishedTask()) {
-				for (String s : getCurrentTask().getCompletionMessage()) {
-					p.sendMessage(ColorHelper.setColors(s));
-				}
-				
 				increaseTask(p);
 			}
 		}
@@ -142,14 +145,19 @@ public class Quest implements ConfigurationSerializable {
 	public void increaseTask(Player p) {
 		getCurrentTask().doScript(p, EnumScriptStartType.finish, currentTaskID);
 		currentTaskID++;
-		getCurrentTask().doScript(p, EnumScriptStartType.start, currentTaskID);
 		
 		if (currentTaskID == tasks.size()) {
 			readyToTurnIn = true;
 			
-			for (String s : completionMessage) {
+			for (String s : completionMessages) {
 				p.sendMessage(ColorHelper.setColors(s));
 			}
+		} else {
+			for (String s : getCurrentTask().getCompletionMessage()) {
+				p.sendMessage(ColorHelper.setColors(s));
+			}
+			
+			getCurrentTask().doScript(p, EnumScriptStartType.start, currentTaskID);
 		}
 	}
 	
@@ -173,16 +181,24 @@ public class Quest implements ConfigurationSerializable {
 		return name;
 	}
 	
+	public String[] getStartMessages() {
+		return startMessages;
+	}
+	
+	public String[] getFinishMessages() {
+		return finishMessages;
+	}
+	
 	public String[] getDescription() {
 		return description;
 	}
 	
-	public String[] getCompletionMessage() {
-		return completionMessage;
+	public String[] getCompletionMessages() {
+		return completionMessages;
 	}
 	
-	public String[] getTurnInMessage() {
-		return turnInMessage;
+	public String[] getTurnInMessages() {
+		return turnInMessages;
 	}
 	
 	public int getStartID() {

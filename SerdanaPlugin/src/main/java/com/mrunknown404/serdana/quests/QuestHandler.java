@@ -33,11 +33,12 @@ import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskKill;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskTalk;
 import main.java.com.mrunknown404.serdana.quests.tasks.QuestTaskWalk;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.Reloadable;
 import main.java.com.mrunknown404.serdana.util.enums.EnumQuestState;
 import main.java.com.mrunknown404.serdana.util.enums.EnumQuestTalkType;
 import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
 
-public class QuestHandler {
+public class QuestHandler extends Reloadable {
 
 	private final Main main;
 	private final File path;
@@ -63,17 +64,13 @@ public class QuestHandler {
 		setupPlayer(p);
 	}
 	
-	/** Reloads this class's Configs/{@link QuestPlayerData} */
-	public void reloadAll() {
-		Bukkit.getConsoleSender().sendMessage("Reloading " + getClass().getSimpleName() + "'s Configs!");
-		
+	@Override
+	protected void reload() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			setupPlayer(p);
 		}
 		
 		checkTickTask();
-		
-		Bukkit.getConsoleSender().sendMessage("Finished " + getClass().getSimpleName() + "'s Configs!");
 	}
 	
 	private BukkitScheduler scheduler;
@@ -177,6 +174,12 @@ public class QuestHandler {
 						System.out.println(p.getDisplayName() + " does not have the quest " + q.getName() + "! (adding now)");
 						addQuestToPlayer(p, q);
 					}
+					
+					if (getQuestPlayersData(p).isOldQuest(q)) {
+						System.out.println(p.getDisplayName() + " has an out of date quest " + q.getName() + "! (fixing now)");
+						removeQuestFromPlayer(p, q);
+						addQuestToPlayer(p, q);
+					}
 				}
 			} else {
 				for (Quest q : pair.getValue()) {
@@ -248,6 +251,66 @@ public class QuestHandler {
 		}
 	}
 	
+	/** Checks the given {@link Shopkeeper} is a starts a {@link Quest} then gives the given {@link Player} the Quest
+	 * @param p Player to check
+	 * @param shop Shopkeeper to check
+	 * @return true if the check was successful, otherwise false
+	 */
+	public boolean checkStartQuest(Player p, Shopkeeper shop) {
+		String shopName = shop.getName();
+		
+		if (shopName.isEmpty()) {
+			shopName = "null";
+		}
+		
+		for (Quest q : getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.unknown)) {
+			if (q.getStartID() == shop.getId() && checkRequirements(p, q)) {
+				setPlayersQuestState(p, q, EnumQuestState.accepted);
+				
+				writeQuestPlayerData(p);
+				setupQuestChestGUI(p);
+				
+				for (String s : q.getStartMessages()) {
+					p.sendMessage(ColorHelper.setColors(s));
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	/** Checks the given {@link Shopkeeper} is a finishes a {@link Quest} then finishes the given {@link Player}'s Quest
+	 * @param p Player to check
+	 * @param shop Shopkeeper to check
+	 * @return true if the check was successful, otherwise false
+	 */
+	public boolean checkFinishQuest(Player p, Shopkeeper shop) {
+		String shopName = shop.getName();
+		
+		if (shopName.isEmpty()) {
+			shopName = "null";
+		}
+		
+		for (Quest q : getQuestPlayersData(p).getQuestsThatHaveState(EnumQuestState.accepted)) {
+			if (q.getFinishID() == shop.getId() && q.isReadyToTurnIn()) {
+				setPlayersQuestState(p, q, EnumQuestState.finished);
+				
+				writeQuestPlayerData(p);
+				setupQuestChestGUI(p);
+				
+				for (String s : q.getFinishMessages()) {
+					p.sendMessage(ColorHelper.setColors(s));
+				}
+				
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
 	/** Sets up the {@link Quest} chest GUI
 	 * @param p Player to setup a chest GUI for
 	 */
@@ -316,7 +379,7 @@ public class QuestHandler {
 					newLore.add(ColorHelper.setColors("&a---"));
 					newLore.add(ColorHelper.setColors("&a" + q.getCurrentTask().getAmount() + "/" + q.getCurrentTask().getAmountNeeded()));
 				} else {
-					for (String s : q.getTurnInMessage()) {
+					for (String s : q.getTurnInMessages()) {
 						newLore.add(ColorHelper.setColors("&a" + s));
 					}
 				}
@@ -406,6 +469,12 @@ public class QuestHandler {
 			}, new String[] {}));
 			
 			q = new Quest(0, "Debug Fetch!", new String[] {
+					"Start Message 1",
+					"Start Message 2"
+			}, new String[] {
+					"Finish Message 1",
+					"Finish Message 2"
+			}, new String[] {
 					"Description Fetch"
 			}, new String[] {
 					"Complete Quest Message 1",
@@ -435,6 +504,12 @@ public class QuestHandler {
 			}, new String[] {}));
 			
 			q = new Quest(1, "Debug Kill!", new String[] {
+					"Start Message 1",
+					"Start Message 2"
+			}, new String[] {
+					"Finish Message 1",
+					"Finish Message 2"
+			}, new String[] {
 					"Description Kill"
 			}, new String[] {
 					"Complete Quest Message 1",
@@ -464,6 +539,12 @@ public class QuestHandler {
 			}, new String[] {}));
 			
 			q = new Quest(2, "Debug Walk!", new String[] {
+					"Start Message 1",
+					"Start Message 2"
+			}, new String[] {
+					"Finish Message 1",
+					"Finish Message 2"
+			}, new String[] {
 					"Description Walk"
 			}, new String[] {
 					"Complete Quest Message 1",
@@ -501,6 +582,12 @@ public class QuestHandler {
 			}, new String[] {}));
 			
 			q = new Quest(3, "Debug Talk!", new String[] {
+					"Start Message 1",
+					"Start Message 2"
+			}, new String[] {
+					"Finish Message 1",
+					"Finish Message 2"
+			}, new String[] {
 					"Description Talk"
 			}, new String[] {
 					"Complete Quest Message 1",
@@ -515,6 +602,12 @@ public class QuestHandler {
 			write.set("Quest", q);
 		} else {
 			q = new Quest(3, "Unfinished Quest!", new String[] {
+					"Start Message 1",
+					"Start Message 2"
+			}, new String[] {
+					"Finish Message 1",
+					"Finish Message 2"
+			}, new String[] {
 					"Unfinished description 1",
 					"Unfinished description 2"
 			}, new String[] {
@@ -615,6 +708,37 @@ public class QuestHandler {
 		}
 		
 		return null;
+	}
+	
+	/** Checks if the given {@link Player} can accept the given {@link Quest}
+	 * @param p Player to check
+	 * @param q Quest to check
+	 * @return true if the given Player can accept the given Quest
+	 */
+	private boolean checkRequirements(Player p, Quest q) {
+		if (q.getRequirements().length == 0) {
+			return true;
+		}
+		
+		QuestPlayerData data = getQuestPlayersData(p);
+		List<Integer> finishedIDs = new ArrayList<Integer>();
+		
+		for (Quest quest : data.getQuestsThatHaveState(EnumQuestState.finished)) {
+			finishedIDs.add(quest.getQuestID());
+		}
+		
+		if (finishedIDs.isEmpty()) {
+			return false;
+		}
+		
+		for (int req : q.getRequirements()) {
+			if (!finishedIDs.contains(req)) {
+				return false;
+			}
+		}
+		
+		
+		return true;
 	}
 	
 	/** Searches the {@link Player}'s {@link Quest}s for {@link QuestTalkType}

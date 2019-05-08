@@ -56,6 +56,7 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabRemoveAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTestScript;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
+import main.java.com.mrunknown404.serdana.entities.util.EntityHandler;
 import main.java.com.mrunknown404.serdana.handlers.AChatHandler;
 import main.java.com.mrunknown404.serdana.handlers.AWarpHandler;
 import main.java.com.mrunknown404.serdana.handlers.BannedItemHandler;
@@ -74,6 +75,7 @@ import main.java.com.mrunknown404.serdana.listener.HealthListener;
 import main.java.com.mrunknown404.serdana.listener.InventoryListener;
 import main.java.com.mrunknown404.serdana.listener.NPCListener;
 import main.java.com.mrunknown404.serdana.listener.PlayerListener;
+import main.java.com.mrunknown404.serdana.listener.WorldListener;
 import main.java.com.mrunknown404.serdana.quests.InitQuests;
 import main.java.com.mrunknown404.serdana.quests.Quest;
 import main.java.com.mrunknown404.serdana.quests.QuestHandler;
@@ -112,13 +114,14 @@ public final class Main extends JavaPlugin {
 	private AWarpHandler aWarpHandler;
 	private AChatHandler aChatHandler;
 	private NPCHandler NPCHandler;
+	private EntityHandler entityHandler;
 	
 	private CommandTimer commandTimer;
 	
 	private Map<Components, Boolean> components = new HashMap<Components, Boolean>();
 	
 	@Override
-	public void onEnable() {
+	public void onLoad() {
 		File f = new File(getDataFolder() + "/Quests/");
 		if(!f.exists()) {
 			f.mkdirs();
@@ -140,8 +143,6 @@ public final class Main extends JavaPlugin {
 			f.mkdirs();
 		}
 		
-		setupEnabledComponents();
-		
 		ConfigurationSerialization.registerClass(PrayInfo.class, "PrayerInfo");
 		ConfigurationSerialization.registerClass(QuestPlayerData.class, "QuestInfo");
 		ConfigurationSerialization.registerClass(Quest.class, "Quest");
@@ -153,6 +154,11 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(ScriptInfo.class, "ScriptInfo");
 		ConfigurationSerialization.registerClass(NPCInfo.class, "NPCInfo");
 		
+		setupComponents();
+	}
+	
+	@Override
+	public void onEnable() {
 		getServer().getPluginManager().registerEvents(new EntityListener(this), this);
 		getServer().getPluginManager().registerEvents(new PlayerListener(this), this);
 		getServer().getPluginManager().registerEvents(new CraftingListener(this), this);
@@ -161,7 +167,9 @@ public final class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BookListener(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 		getServer().getPluginManager().registerEvents(new NPCListener(this), this);
+		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
 		
+		setupEnabledComponents();
 		reload(Bukkit.getConsoleSender());
 	}
 	
@@ -212,16 +220,16 @@ public final class Main extends JavaPlugin {
 			if (pair.getValue()) {
 				switch (pair.getKey()) {
 					case CustomNPCs:
-						NPCHandler.reload();
+						NPCHandler.reloadAll();
 						break;
 					case Bounties:
-						bountyHandler.reload();
+						bountyHandler.reloadAll();
 						break;
 					case BannedItems:
-						bannedItemHandler.reload();
+						bannedItemHandler.reloadAll();
 						break;
 					case Prayers:
-						prayerHandler.reload();
+						prayerHandler.reloadAll();
 						break;
 					case Quests:
 						questHandler.reloadAll();
@@ -229,10 +237,10 @@ public final class Main extends JavaPlugin {
 						InitQuests.register(this);
 						break;
 					case AWarp:
-						aWarpHandler.reload();
+						aWarpHandler.reloadAll();
 						break;
 					case AChat:
-						aChatHandler.reload();
+						aChatHandler.reloadAll();
 						break;
 					default:
 						break;
@@ -246,8 +254,8 @@ public final class Main extends JavaPlugin {
 		}
 	}
 	
-	/** Sets up components */
-	private void setupEnabledComponents() {
+	/**  Sets up components */
+	private void setupComponents() {
 		for (Components c : Components.values()) {
 			components.put(c, c.defaultState);
 		}
@@ -279,6 +287,13 @@ public final class Main extends JavaPlugin {
 			e.printStackTrace();
 		}
 		
+		if (components.get(Components.CustomEntities)) {
+			entityHandler = new EntityHandler();
+		}
+	}
+	
+	/** Sets up enabled components */
+	private void setupEnabledComponents() {
 		Iterator<Entry<Components, Boolean>> it = components.entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Components, Boolean> pair = it.next();
@@ -340,6 +355,9 @@ public final class Main extends JavaPlugin {
 						getCommand("quest").setTabCompleter(new TabQuest(this));
 						getCommand("testScript").setTabCompleter(new TabTestScript());
 						break;
+					case CustomNPCs:
+						NPCHandler = new NPCHandler(this);
+						break;
 					case Misc:
 						ScriptHandler.run(this);
 						
@@ -360,16 +378,13 @@ public final class Main extends JavaPlugin {
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());
 						break;
-					case CustomNPCs:
-						NPCHandler = new NPCHandler(this);
-						break;
 					default:
 						break;
 				}
 			}
 		}
 	}
-	
+
 	/** Checks if the given {@link Components} is enabled or disabled
 	 * @param comp The Component to check
 	 * @return returns true if the given component is enabled, returns false if disabled
@@ -438,6 +453,10 @@ public final class Main extends JavaPlugin {
 		return NPCHandler;
 	}
 	
+	public EntityHandler getEntityHandler() {
+		return entityHandler;
+	}
+	
 	public enum Components {
 		AChat           (true),
 		AWarp           (true),
@@ -450,9 +469,12 @@ public final class Main extends JavaPlugin {
 		Tiers           (false),
 		Quests          (false),
 		CustomNPCs      (false),
+		CustomEntities  (false),
+		Misc            (true),
+		
 		StopNamedItemUse(true),
-		StopItemCrafting(false),
-		Misc            (true);
+		StopItemCrafting(false);
+		
 		
 		final boolean defaultState;
 		

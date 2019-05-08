@@ -4,10 +4,16 @@ Quest:
   name: Debug Talk!
   description:
   - Description Talk
-  completionMessage:
+  startMessages:
+  - Start Message 1
+  - Start Message 2
+  finishMessages:
+  - Finish Message 1
+  - Finish Message 2
+  completionMessages:
   - Complete Quest Message 1
   - Complete Quest Message 2
-  turnInMessage:
+  turnInMessages:
   - Turn in Message 1
   - Turn in Message 2
   startID: -1
