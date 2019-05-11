@@ -2,7 +2,7 @@ NPCInfo:
 - ==: main.java.com.mrunknown404.serdana.util.infos.NPCInfo
   NPCID: 1
   ignoresBannedItems: true
-  isShop: false
+  isShop: true
   name: Steve
   openMessages:
   - Test 1
@@ -13,17 +13,3 @@ NPCInfo:
   tradeMessages:
   - Trade 1
   - Trade 2
-- ==: main.java.com.mrunknown404.serdana.util.infos.NPCInfo
-  NPCID: 2
-  ignoresBannedItems: true
-  isShop: true
-  name: Steve 2
-  openMessages:
-  - '{player} Test 1'
-  - '{player} Test 2'
-  bannedItemMessages:
-  - '{player} Banned 1'
-  - '{player} Banned 2'
-  tradeMessages:
-  - '{player} Trade 1'
-  - '{player} Trade 2'
