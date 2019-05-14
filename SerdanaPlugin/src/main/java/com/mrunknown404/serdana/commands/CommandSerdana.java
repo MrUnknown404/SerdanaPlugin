@@ -44,7 +44,7 @@ public class CommandSerdana implements CommandExecutor {
 				return true;
 			} else if (args[0].equalsIgnoreCase("test")) {
 				if (main.isComponentEnabled(Main.Components.CustomEntities)) {
-					main.getEntityHandler().spawnEntity(EnumCustomEntities.TEST_ZOMBIE.getType(), ((Player) sender).getLocation());
+					main.getEntityHandler().spawnEntity(EnumCustomEntities.TEST_ZOMBIE, ((Player) sender).getLocation());
 				}
 			}
 		}

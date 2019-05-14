@@ -1,4 +1,4 @@
-NPCInfo:
+NPCInfos:
 - ==: main.java.com.mrunknown404.serdana.util.infos.NPCInfo
   NPCID: 1
   ignoresBannedItems: true

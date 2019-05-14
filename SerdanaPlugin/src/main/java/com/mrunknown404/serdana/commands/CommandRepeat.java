@@ -18,6 +18,11 @@ public class CommandRepeat implements CommandExecutor {
 		
 		try {
 			Integer.parseInt(args[0]);
+			
+			if (Integer.parseInt(args[0]) > 1000) {
+				sender.sendMessage(ColorHelper.setColors("&cThat number is too high!"));
+				return false;
+			}
 		} catch (Exception e) {
 			sender.sendMessage(ColorHelper.setColors("&cWhat you wrote isn't a number"));
 			return false;
