@@ -7,11 +7,11 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
-import io.lumine.utils.config.file.YamlConfiguration;
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.Reloadable;
 import main.java.com.mrunknown404.serdana.util.enums.EnumQuestTalkType;
@@ -87,7 +87,7 @@ public class NPCHandler extends Reloadable {
 		File f = new File(path + "/" + file_NPCInfos + ".yml");
 		
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("NPCInfo", NPCInfos);
+		write.set("NPCInfos", NPCInfos);
 		
 		try {
 			write.save(f);
@@ -104,7 +104,7 @@ public class NPCHandler extends Reloadable {
 		if (getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml") == null) {
 			System.out.println("Could not find file inside jar: " + file_NPCInfos + ".yml!");
 			
-			List<?> list = YamlConfiguration.loadConfiguration(new File(path + "/" + file_NPCInfos + ".yml")).getList("NPCInfo");
+			List<?> list = YamlConfiguration.loadConfiguration(new File(path + "/" + file_NPCInfos + ".yml")).getList("NPCInfos");
 			
 			if (list == null) {
 				System.out.println("Could not find file in config: " + file_NPCInfos + ".yml! (Will be created)");
@@ -121,7 +121,7 @@ public class NPCHandler extends Reloadable {
 			return (List<NPCInfo>) list;
 		} else {
 			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml");
-			return (List<NPCInfo>) YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getList("NPCInfo");
+			return (List<NPCInfo>) YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getList("NPCInfos");
 		}
 	}
 }

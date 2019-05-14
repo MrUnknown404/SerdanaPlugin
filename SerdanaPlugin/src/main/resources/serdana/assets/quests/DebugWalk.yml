@@ -40,7 +40,7 @@ Quest:
     scriptNames: []
     whereTo:
       ==: org.bukkit.Location
-      world: world
+      world: Max
       x: 0.0
       y: 0.0
       z: 0.0
@@ -58,7 +58,7 @@ Quest:
     scriptNames: []
     whereTo:
       ==: org.bukkit.Location
-      world: world
+      world: Max
       x: 10.0
       y: 10.0
       z: 10.0

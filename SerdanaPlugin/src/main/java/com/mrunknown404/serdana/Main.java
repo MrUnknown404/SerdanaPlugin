@@ -53,6 +53,7 @@ import main.java.com.mrunknown404.serdana.commands.tabs.TabParty;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabPray;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabQuest;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabRemoveAWarp;
+import main.java.com.mrunknown404.serdana.commands.tabs.TabRepeat;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabSerdana;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTestScript;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabTimer;
@@ -130,10 +131,6 @@ public final class Main extends JavaPlugin {
 		if(!f.exists()) {
 			f.mkdirs();
 		}
-		f = new File(getDataFolder() + "/NPCMessages/");
-		if(!f.exists()) {
-			f.mkdirs();
-		}
 		f = new File(getDataFolder() + "/Prayers/");
 		if(!f.exists()) {
 			f.mkdirs();
@@ -167,7 +164,7 @@ public final class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new BookListener(this), this);
 		getServer().getPluginManager().registerEvents(new InventoryListener(this), this);
 		getServer().getPluginManager().registerEvents(new NPCListener(this), this);
-		getServer().getPluginManager().registerEvents(new WorldListener(this), this);
+		getServer().getPluginManager().registerEvents(new WorldListener(), this);
 		
 		setupEnabledComponents();
 		reload(Bukkit.getConsoleSender());
@@ -377,6 +374,7 @@ public final class Main extends JavaPlugin {
 						
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());
+						getCommand("repeat").setTabCompleter(new TabRepeat());
 						break;
 					default:
 						break;

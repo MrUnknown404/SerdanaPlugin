@@ -1,33 +1,27 @@
 package main.java.com.mrunknown404.serdana.entities;
 
-import net.minecraft.server.v1_13_R2.DifficultyDamageScaler;
-import net.minecraft.server.v1_13_R2.EntityZombie;
-import net.minecraft.server.v1_13_R2.GroupDataEntity;
-import net.minecraft.server.v1_13_R2.NBTTagCompound;
+import main.java.com.mrunknown404.serdana.entities.abilities.AbilityJump;
+import main.java.com.mrunknown404.serdana.entities.util.EntityMonsterBase;
+import main.java.com.mrunknown404.serdana.entities.util.EnumCustomEntities;
 import net.minecraft.server.v1_13_R2.World;
 
-public class EntityTestZombie extends EntityZombie {
+public class EntityTestZombie extends EntityMonsterBase {
 
 	public EntityTestZombie(World world) {
-		super(world);
+		super(world, EnumCustomEntities.TEST_ZOMBIE, 10, 20, 30);
 	}
 	
 	@Override
-	public void tick() {
-		super.tick();
-		System.out.println("Zombie Tick");
-	}
-	
-	@Override
-	public GroupDataEntity prepare(DifficultyDamageScaler scale, GroupDataEntity gde, NBTTagCompound nbt) {
-		gde = super.prepare(scale, gde, nbt);
+	protected void setup() {
+		setMaxHealth(100);
+		setMoveSpeed(0.7);
+		setAttackDamage(2);
+		setFollowRange(32);
+		setKnockbackResistance(0);
+		setArmor(0);
+		setArmorToughness(0);
 		
-		return gde;
-	}
-	
-	@Override
-	protected void initAttributes() {
-		super.initAttributes();
-		
+		abilities.add(10, new AbilityJump());
+		abilities.add(50, new AbilityJump());
 	}
 }
