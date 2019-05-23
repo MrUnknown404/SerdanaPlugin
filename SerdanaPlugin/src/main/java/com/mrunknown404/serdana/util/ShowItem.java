@@ -14,6 +14,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
 public class ShowItem {
 	
@@ -32,6 +33,7 @@ public class ShowItem {
 		String itemEnchants = "";
 		String itemStoredEnchants = "";
 		String itemBookInfo = "";
+		String itemPotionInfo = "";
 		
 		if (item.getItemMeta().hasDisplayName()) {
 			itemDisplayName = item.getItemMeta().getDisplayName();
@@ -97,6 +99,33 @@ public class ShowItem {
 			
 			itemDisplayName = bookMeta.getTitle();
 			itemBookInfo = metaBuilder.toString();
+		} else if (item.getType() == Material.POTION) {
+			PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
+			
+			for(int i =0; i< potionMeta.getCustomEffects().size(); i++) {
+				Object potionEffect = potionMeta.getCustomEffects().get(i);
+				append(potionEffect);
+			};
+			
+			itemPotionInfo = metaBuilder.toString();
+		} else if (item.getType() == Material.LINGERING_POTION) {
+			PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
+			
+			for(int i =0; i< potionMeta.getCustomEffects().size(); i++) {
+				Object potionEffect = potionMeta.getCustomEffects().get(i);
+				append(potionEffect);
+			};
+			
+			itemPotionInfo = metaBuilder.toString();
+		} else if (item.getType() == Material.SPLASH_POTION) {
+			PotionMeta potionMeta = (PotionMeta) item.getItemMeta();
+			
+			for(int i =0; i< potionMeta.getCustomEffects().size(); i++) {
+				Object potionEffect = potionMeta.getCustomEffects().get(i);
+				append(potionEffect);
+			};
+			
+			itemPotionInfo = metaBuilder.toString();
 		}
 		
 		if (itemDisplayName.contains("\"")) {
@@ -112,9 +141,15 @@ public class ShowItem {
 				+ itemEnchants
 				+ itemStoredEnchants
 				+ itemBookInfo
+				+ itemPotionInfo
 				+ "}}\"}}"
 				);
 		
 		p.getServer().dispatchCommand(Bukkit.getConsoleSender(), "tellraw @a " + msg.toString());
+	}
+
+	private void append(Object potionEffect) {
+		// TODO Auto-generated method stub
+		
 	}
 }
