@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 import main.java.com.mrunknown404.serdana.util.enums.EnumTaskCheckType;
-import main.java.com.mrunknown404.serdana.util.math.MathHelper;
+import main.java.com.mrunknown404.serdana.util.math.MathH;
 
 public class QuestTaskFetch extends QuestTask implements ConfigurationSerializable {
 
@@ -43,7 +43,7 @@ public class QuestTaskFetch extends QuestTask implements ConfigurationSerializab
 				
 				if (this.item.isSimilar(it)) {
 					if (it.getAmount() > amount) {
-						amount = (int) MathHelper.clamp(it.getAmount(), 0, amountNeeded);
+						amount = (int) MathH.clamp(it.getAmount(), 0, amountNeeded);
 						return true;
 					}
 				}

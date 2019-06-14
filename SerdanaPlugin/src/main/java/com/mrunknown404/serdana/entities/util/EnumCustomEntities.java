@@ -11,11 +11,11 @@ public enum EnumCustomEntities {
 	TEST_ZOMBIE(EntityTypes.ZOMBIE, "Test Zombie", EntityTestZombie.class, EntityTestZombie::new);
 	
 	private EntityTypes<?> type, vanillaType;
-	private Class<? extends Entity> clazz;
+	private Class<? extends EntityMonsterBase> clazz;
 	private Function<? super World, ? extends Entity> function;
 	private String name;
 	
-	private EnumCustomEntities(EntityTypes<?> vanillaType, String name, Class<? extends Entity> clazz, Function<? super World, ? extends Entity> function) {
+	private EnumCustomEntities(EntityTypes<?> vanillaType, String name, Class<? extends EntityMonsterBase> clazz, Function<? super World, ? extends Entity> function) {
 		this.vanillaType = vanillaType;
 		this.clazz = clazz;
 		this.function = function;

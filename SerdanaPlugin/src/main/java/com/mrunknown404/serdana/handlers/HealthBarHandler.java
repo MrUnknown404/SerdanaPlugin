@@ -11,7 +11,7 @@ import org.bukkit.scheduler.BukkitTask;
 
 import main.java.com.mrunknown404.serdana.Main;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
-import main.java.com.mrunknown404.serdana.util.math.MathHelper;
+import main.java.com.mrunknown404.serdana.util.math.MathH;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 
@@ -68,12 +68,12 @@ public class HealthBarHandler {
 			name = ChatColor.stripColor(entity.getCustomName());
 		}
 		
-		double health = MathHelper.clamp((float) entity.getHealth(), 0, Integer.MAX_VALUE);
+		double health = MathH.clamp((float) entity.getHealth(), 0, Integer.MAX_VALUE);
 		if (entity.isDead()) {
 			health = 0;
 		}
 		
-		return "&7&l" + name + ": &r&c" + MathHelper.roundTo((float) health, 2) + "/" + maxHealth + " &4\u2764";
+		return "&7&l" + name + ": &r&c" + MathH.roundTo((float) health, 2) + "/" + maxHealth + " &4\u2764";
 	}
 	
 	private BukkitTask b = null;
