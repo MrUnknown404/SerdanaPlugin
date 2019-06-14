@@ -1,15 +1,20 @@
 package main.java.com.mrunknown404.serdana.handlers;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import main.java.com.mrunknown404.serdana.Main;
@@ -48,7 +53,7 @@ public class NPCHandler extends Reloadable {
 			if (info.getNPCID() == shop.getId()) {
 				boolean b = info.talk(p, type);
 				
-				if (b && type == EnumTalkType.banned) {
+				if (b && type == EnumTalkType.banned && !info.isIgnoresBannedItems()) {
 					main.getBannedItemHandler().performBannedAction(p, main.getBannedItemHandler().getPlayersBannedItems(p).size());
 				}
 				
@@ -84,13 +89,16 @@ public class NPCHandler extends Reloadable {
 	 * @param f The File that will be written to
 	 */
 	private void write() {
-		File f = new File(path + "/" + file_NPCInfos + ".yml");
-		
-		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
-		write.set("NPCInfos", NPCInfos);
+		Gson g = new GsonBuilder().setPrettyPrinting().create();
+		FileWriter fw = null;
 		
 		try {
-			write.save(f);
+			fw = new FileWriter(path + "/" + file_NPCInfos + Main.TYPE);
+			
+			g.toJson(NPCInfos, fw);
+			
+			fw.flush();
+			fw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -99,15 +107,12 @@ public class NPCHandler extends Reloadable {
 	/** Returns a new {@link List} for the given {@link File}
 	 * @return A List containing the contents of the read File
 	 */
-	@SuppressWarnings("unchecked")
 	private List<NPCInfo> read() {
-		if (getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml") == null) {
-			System.out.println("Could not find file inside jar: " + file_NPCInfos + ".yml!");
+		if (getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + Main.TYPE) == null) {
+			System.out.println("Could not find file inside jar: " + file_NPCInfos + Main.TYPE + "!");
 			
-			List<?> list = YamlConfiguration.loadConfiguration(new File(path + "/" + file_NPCInfos + ".yml")).getList("NPCInfos");
-			
-			if (list == null) {
-				System.out.println("Could not find file in config: " + file_NPCInfos + ".yml! (Will be created)");
+			if (!new File(path + "/" + file_NPCInfos + Main.TYPE).exists()) {
+				System.out.println("Could not find file in config: " + file_NPCInfos + Main.TYPE + "! (Will be created)");
 				
 				NPCInfos = new ArrayList<NPCInfo>();
 				NPCInfos.add(new NPCInfo(1, true, true, "Steve",
@@ -118,10 +123,21 @@ public class NPCHandler extends Reloadable {
 				write();
 			}
 			
-			return (List<NPCInfo>) list;
+			Gson g = new GsonBuilder().setPrettyPrinting().create();
+			FileReader fr = null;
+			
+			try {
+				fr = new FileReader(path + "/" + file_NPCInfos + Main.TYPE);
+				
+				return g.fromJson(fr, new TypeToken<List<NPCInfo>>(){}.getType());
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				return null;
+			}
 		} else {
-			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + ".yml");
-			return (List<NPCInfo>) YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getList("NPCInfos");
+			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + Main.TYPE);
+			
+			return new GsonBuilder().setPrettyPrinting().create().fromJson(new InputStreamReader(s), new TypeToken<List<NPCInfo>>(){}.getType());
 		}
 	}
 }

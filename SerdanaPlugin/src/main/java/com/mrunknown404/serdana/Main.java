@@ -93,7 +93,6 @@ import main.java.com.mrunknown404.serdana.scripts.ScriptHandler;
 import main.java.com.mrunknown404.serdana.scripts.ScriptInfo;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.RandomConfig;
-import main.java.com.mrunknown404.serdana.util.infos.NPCInfo;
 import main.java.com.mrunknown404.serdana.util.infos.PrayInfo;
 
 public final class Main extends JavaPlugin {
@@ -152,7 +151,6 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
 		ConfigurationSerialization.registerClass(QuestTaskTalk.class, "QuestTaskTalk");
 		ConfigurationSerialization.registerClass(ScriptInfo.class, "ScriptInfo");
-		ConfigurationSerialization.registerClass(NPCInfo.class, "NPCInfo");
 		
 		setupComponents();
 	}
