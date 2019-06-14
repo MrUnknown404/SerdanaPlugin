@@ -13,6 +13,7 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.tr7zw.itemnbtapi.NBTItem;
@@ -21,6 +22,7 @@ import main.java.com.mrunknown404.serdana.util.ColorHelper;
 import main.java.com.mrunknown404.serdana.util.infos.BountyInfo;
 
 public class PlayerListener implements Listener {
+	
 	private final Main main;
 	
 	public PlayerListener(Main main) {
@@ -117,6 +119,17 @@ public class PlayerListener implements Listener {
 						main.getBountyHandler().removeBounty(b, false);
 						return;
 					}
+				}
+			}
+		}
+	}
+	
+	@EventHandler
+	public void onPlayerMove(PlayerMoveEvent e) {
+		if (main.isComponentEnabled(Main.Components.Misc)) {
+			if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ()) {
+				if (e.getPlayer().getName().equalsIgnoreCase("MrUnknown404") && e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+					main.getSpecialPlayerHandler().doUnknown();
 				}
 			}
 		}

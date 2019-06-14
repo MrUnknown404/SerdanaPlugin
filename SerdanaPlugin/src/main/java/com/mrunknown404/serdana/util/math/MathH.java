@@ -1,6 +1,6 @@
 package main.java.com.mrunknown404.serdana.util.math;
 
-public class MathHelper {
+public class MathH {
 	/** Clamps the given number within the specified min/max */
 	public static float clamp(float num, float min, float max) {
 		return num < min ? min : (num > max ? max : num);

@@ -45,6 +45,7 @@ import main.java.com.mrunknown404.serdana.commands.CommandSetTier;
 import main.java.com.mrunknown404.serdana.commands.CommandShowItem;
 import main.java.com.mrunknown404.serdana.commands.CommandTestScript;
 import main.java.com.mrunknown404.serdana.commands.CommandTimer;
+import main.java.com.mrunknown404.serdana.commands.CommandToggleSpecial;
 import main.java.com.mrunknown404.serdana.commands.CommandUnbreakable;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabAWarp;
 import main.java.com.mrunknown404.serdana.commands.tabs.TabBounty;
@@ -67,6 +68,7 @@ import main.java.com.mrunknown404.serdana.handlers.NPCHandler;
 import main.java.com.mrunknown404.serdana.handlers.ParasiteHandler;
 import main.java.com.mrunknown404.serdana.handlers.PartyHandler;
 import main.java.com.mrunknown404.serdana.handlers.PrayerHandler;
+import main.java.com.mrunknown404.serdana.handlers.SpecialPlayerHandler;
 import main.java.com.mrunknown404.serdana.handlers.TierHandler;
 import main.java.com.mrunknown404.serdana.listener.BlockListener;
 import main.java.com.mrunknown404.serdana.listener.BookListener;
@@ -116,6 +118,7 @@ public final class Main extends JavaPlugin {
 	private AChatHandler aChatHandler;
 	private NPCHandler NPCHandler;
 	private EntityHandler entityHandler;
+	private SpecialPlayerHandler specialPlayerHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -239,6 +242,8 @@ public final class Main extends JavaPlugin {
 					case AChat:
 						aChatHandler.reloadAll();
 						break;
+					case Misc:
+						specialPlayerHandler.reloadAll();
 					default:
 						break;
 				}
@@ -356,6 +361,8 @@ public final class Main extends JavaPlugin {
 						NPCHandler = new NPCHandler(this);
 						break;
 					case Misc:
+						specialPlayerHandler = new SpecialPlayerHandler(this);
+						
 						ScriptHandler.run(this);
 						
 						commandTimer = new CommandTimer(this);
@@ -371,6 +378,7 @@ public final class Main extends JavaPlugin {
 						getCommand("rainbow").setExecutor(new CommandRainbow());
 						getCommand("timer").setExecutor(commandTimer);
 						getCommand("repeat").setExecutor(new CommandRepeat());
+						getCommand("toggleSpecial").setExecutor(new CommandToggleSpecial(this));
 						
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());
@@ -453,6 +461,10 @@ public final class Main extends JavaPlugin {
 	
 	public EntityHandler getEntityHandler() {
 		return entityHandler;
+	}
+	
+	public SpecialPlayerHandler getSpecialPlayerHandler() {
+		return specialPlayerHandler;
 	}
 	
 	public enum Components {

@@ -19,7 +19,7 @@ public enum EnumCustomEntities {
 	UNDEAD(EntityTypes.ZOMBIE, "Undead", EntityUndead.class, EntityUndead::new);
 	
 	private EntityTypes<?> type, vanillaType;
-	private Class<? extends Entity> clazz;
+	private Class<? extends EntityMonsterBase> clazz;
 	private Function<? super World, ? extends Entity> function;
 	private String name;
 	
