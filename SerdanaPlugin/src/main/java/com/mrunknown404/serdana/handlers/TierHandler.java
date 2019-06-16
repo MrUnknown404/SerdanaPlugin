@@ -3,13 +3,13 @@ package main.java.com.mrunknown404.serdana.handlers;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.com.mrunknown404.serdana.util.ColorHelper;
+import main.java.com.mrunknown404.serdana.util.math.MathH;
 
 public class TierHandler {
 	
@@ -21,6 +21,11 @@ public class TierHandler {
 	 * @return The given ItemStack with the given tier
 	 */
 	public ItemStack addTierToItem(ItemStack item, int tier) {
+		if (new NBTItem(item).hasKey("tier")) {
+			System.out.println("Item already has a tier!");
+			return null;
+		}
+		
 		List<String> lore = new ArrayList<String>();
 		if (item.getItemMeta().hasLore()) {
 			lore = item.getItemMeta().getLore();
@@ -34,67 +39,26 @@ public class TierHandler {
 		item.setItemMeta(meta);
 		
 		NBTItem n = new NBTItem(item);
-		
-		if (n.hasKey("tier")) {
-			System.out.println("Item already has a tier!");
-			return null;
-		}
-		
 		n.setInteger("tier", tier);
 		return n.getItem();
 	}
 	
-	/** Gets the highest tier from the given {@link Player}
+	/** Gets the given {@link Player}'s average tier
 	 * @param p The Player to check
-	 * @return The highest tier from the given Player
+	 * @return returns the the given Player's tier
 	 */
-	public int getHighestTierFromPlayer(Player p) {
-		int highest = 0;
+	public float getAverageTierFromPlayer(Player p) {
+		List<Integer> tiers = new ArrayList<Integer>();
 		
 		for (ItemStack item : p.getInventory().getArmorContents()) {
-			if (item != null) {
-				int tier = getItemsTier(item);
-				if (tier > highest) {
-					highest = tier;
-				}
+			if (isItemTiered(item)) {
+				tiers.add(getItemsTier(item));
+			} else {
+				tiers.add(0);
 			}
 		}
 		
-		return highest;
-	}
-	
-	/** Gets the highest tier from all {@link Player}s
-	 * @return the highest tier from all Players
-	 */
-	public int getHighestTierFromAllPlayers() {
-		int highest = 0;
-		for (Player p : Bukkit.getOnlinePlayers()) {
-			int tier = getHighestTierFromPlayer(p);
-			
-			if (tier > highest) {
-				highest = tier;
-			}
-		}
-		
-		return highest;
-	}
-	
-	/** Gets the given {@link Player}'s total tiers
-	 * @param p The player to get tiers from
-	 * @return The given Player's total tiers
-	 */
-	public int getTiersOnPlayer(Player p) {
-		int tiers = 0;
-		
-		for (ItemStack item : p.getInventory().getArmorContents()) {
-			if (item != null) {
-				if (isItemTiered(item)) {
-					tiers += getItemsTier(item);
-				}
-			}
-		}
-		
-		return tiers;
+		return MathH.roundTo(MathH.calculateAverage(tiers), 1);
 	}
 	
 	/** Gets the given {@link ItemStack}'s tier

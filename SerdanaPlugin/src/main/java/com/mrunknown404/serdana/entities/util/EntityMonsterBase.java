@@ -16,7 +16,7 @@ import net.minecraft.server.v1_13_R2.World;
 
 public abstract class EntityMonsterBase extends EntityMonster {
 
-	protected final int abilityChance, abilityMinTime, abilityMaxTime;
+	protected final int tier, abilityChance, abilityMinTime, abilityMaxTime;
 	protected int abilityTime = 0;
 	
 	protected RandomCollection<Ability> abilities = new RandomCollection<Ability>();
@@ -24,12 +24,14 @@ public abstract class EntityMonsterBase extends EntityMonster {
 	/**
 	 * @param world
 	 * @param customEntityType
+	 * @param tier
 	 * @param abilityChance
 	 * @param abilityMinTime
 	 * @param abilityMaxTime
 	 */
-	public EntityMonsterBase(World world, EnumCustomEntities customEntityType, int abilityChance, int abilityMinTime, int abilityMaxTime) {
+	public EntityMonsterBase(World world, EnumCustomEntities customEntityType, int tier, int abilityChance, int abilityMinTime, int abilityMaxTime) {
 		super(customEntityType.getVanillaType(), world);
+		this.tier = tier;
 		this.abilityChance = abilityChance;
 		this.abilityMinTime = abilityMinTime;
 		this.abilityMaxTime = abilityMaxTime;
@@ -181,6 +183,10 @@ public abstract class EntityMonsterBase extends EntityMonster {
 	protected void setLuck(double value) {
 		getAttributeMap().b(GenericAttributes.j);
 		getAttributeInstance(GenericAttributes.j).setValue(value);
+	}
+	
+	public int getTier() {
+		return tier;
 	}
 	
 	private Object getPrivateField(String fieldName, Class<?> clazz, Object object) {
