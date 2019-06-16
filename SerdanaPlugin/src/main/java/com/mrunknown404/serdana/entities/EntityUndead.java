@@ -7,13 +7,11 @@ import net.minecraft.server.v1_13_R2.World;
 public class EntityUndead extends EntityMonsterBase {
 
 	public EntityUndead(World world) {
-		super(world, EnumCustomEntities.UNDEAD, 10, 20, 30);
-		// TODO Auto-generated constructor stub
+		super(world, EnumCustomEntities.UNDEAD, 1, 10, 20, 30);
 	}
 	
 	@Override
 	protected void setup() {
-		// TODO Auto-generated method stub
 		
 	}
 }

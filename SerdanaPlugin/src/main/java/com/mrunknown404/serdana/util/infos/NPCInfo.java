@@ -43,12 +43,12 @@ public class NPCInfo {
 		String msg = list[new Random().nextInt(list.length)];
 		
 		if (msg.contains("$player$")) {
-			msg = msg.replaceAll("$player$", p.getDisplayName());
+			msg = msg.replaceAll("\\$player\\$", p.getDisplayName());
 		}
 		
 		p.sendMessage(ColorHelper.setColors("[" + name + "&f] " + msg));
 		
-		if (!isShop || !ignoresBannedItems) {
+		if (!isShop || (!ignoresBannedItems && type == EnumTalkType.banned)) {
 			return true;
 		}
 		

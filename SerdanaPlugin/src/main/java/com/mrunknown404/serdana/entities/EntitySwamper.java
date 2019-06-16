@@ -7,13 +7,11 @@ import net.minecraft.server.v1_13_R2.World;
 public class EntitySwamper extends EntityMonsterBase {
 
 	public EntitySwamper(World world) {
-		super(world, EnumCustomEntities.SWAMPER, 10, 20, 30);
-		// TODO Auto-generated constructor stub
+		super(world, EnumCustomEntities.SWAMPER, 1, 10, 20, 30);
 	}
-
+	
 	@Override
 	protected void setup() {
-		// TODO Auto-generated method stub
 		
 	}
 }
