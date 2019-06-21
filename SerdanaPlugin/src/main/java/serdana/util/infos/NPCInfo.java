@@ -1,5 +1,7 @@
 package main.java.serdana.util.infos;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import org.bukkit.entity.Player;
@@ -9,19 +11,13 @@ import main.java.serdana.util.enums.EnumTalkType;
 
 public class NPCInfo {
 
-	protected int NPCID;
-	protected boolean ignoresBannedItems, isShop;
-	protected String name;
-	protected String[] openMessages, bannedItemMessages, tradeMessages;
+	protected final int NPCID;
+	protected boolean ignoresBannedItems = true, isShop = true;
+	protected String name = "";
+	protected List<String> openMessages = new ArrayList<String>(), bannedItemMessages = new ArrayList<String>(), tradeMessages = new ArrayList<String>();
 	
-	public NPCInfo(int NPCID, boolean ignoresBannedItems, boolean isShop, String name, String[] openMessages, String[] bannedItemMessages, String[] tradeMessages) {
+	public NPCInfo(int NPCID) {
 		this.NPCID = NPCID;
-		this.ignoresBannedItems = ignoresBannedItems;
-		this.isShop = isShop;
-		this.name = name;
-		this.openMessages = openMessages;
-		this.bannedItemMessages = bannedItemMessages;
-		this.tradeMessages = tradeMessages;
 	}
 	
 	/** Makes a NPC talk using the possible messages written here
@@ -30,7 +26,7 @@ public class NPCInfo {
 	 * @return true if should be canceled, otherwise false
 	 */
 	public boolean talk(Player p, EnumTalkType type) {
-		String[] list = new String[0];
+		List<String> list = new ArrayList<String>();
 		
 		if (type == EnumTalkType.banned && !ignoresBannedItems) {
 			list = bannedItemMessages;
@@ -40,13 +36,17 @@ public class NPCInfo {
 			list = openMessages;
 		}
 		
-		String msg = list[new Random().nextInt(list.length)];
+		if (list == null || list.isEmpty()) {
+			return false;
+		}
+		
+		String msg = list.get(new Random().nextInt(list.size()));
 		
 		if (msg.contains("$player$")) {
 			msg = msg.replaceAll("\\$player\\$", p.getDisplayName());
 		}
 		
-		p.sendMessage(ColorHelper.setColors("[" + name + "&f] " + msg));
+		p.sendMessage(ColorHelper.addColor("[" + name + "&f] " + msg));
 		
 		if (!isShop || (!ignoresBannedItems && type == EnumTalkType.banned)) {
 			return true;
@@ -55,27 +55,55 @@ public class NPCInfo {
 		return false;
 	}
 	
+	public void setIgnoresBannedItems(boolean ignoresBannedItems) {
+		this.ignoresBannedItems = ignoresBannedItems;
+	}
+	
+	public void setShop(boolean isShop) {
+		this.isShop = isShop;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void addOpenMessages(String openMessages) {
+		this.openMessages.add(openMessages);
+	}
+	
+	public void addBannedItemMessages(String bannedItemMessages) {
+		this.bannedItemMessages.add(bannedItemMessages);
+	}
+	
+	public void addTradeMessages(String tradeMessages) {
+		this.tradeMessages.add(tradeMessages);
+	}
+	
 	public int getNPCID() {
 		return NPCID;
 	}
 	
-	public boolean isIgnoresBannedItems() {
+	public boolean ignoresBannedItems() {
 		return ignoresBannedItems;
+	}
+	
+	public boolean isShop() {
+		return isShop;
 	}
 	
 	public String getName() {
 		return name;
 	}
 	
-	public String[] getOpenMessages() {
+	public List<String> getOpenMessages() {
 		return openMessages;
 	}
 	
-	public String[] getBannedItemMessages() {
+	public List<String> getBannedItemMessages() {
 		return bannedItemMessages;
 	}
 	
-	public String[] getTradeMessages() {
+	public List<String> getTradeMessages() {
 		return tradeMessages;
 	}
 }

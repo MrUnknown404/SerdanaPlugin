@@ -47,53 +47,53 @@ public class CommandPray implements CommandExecutor {
 		if (args.length == 1) {
 			if (args[0].equalsIgnoreCase("send") && sender.hasPermission("serdana.pray.send")) {
 				if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
-					p.sendMessage(ColorHelper.setColors("&cMust hold a written book!"));
+					p.sendMessage(ColorHelper.addColor("&cMust hold a written book!"));
 					return false;
 				}
 				
 				NBTItem n = new NBTItem(p.getInventory().getItemInMainHand());
 				if (!n.hasKey("isPrayerBook")) {
-					p.sendMessage(ColorHelper.setColors("&cHeld book must be a prayer book!"));
+					p.sendMessage(ColorHelper.addColor("&cHeld book must be a prayer book!"));
 					return false;
 				}
 				
 				handler.addPrayer(new PrayInfo(p.getUniqueId(), p.getInventory().getItemInMainHand()), EnumPrayerType.unset);
-				p.sendMessage(ColorHelper.setColors("&cPrayer sent!"));
+				p.sendMessage(ColorHelper.addColor("&cPrayer sent!"));
 				p.getInventory().setItemInMainHand(null);
 				return true;
 			} else if (args[0].equalsIgnoreCase("book") && sender.hasPermission("serdana.pray.book")) {
 				if (p.getInventory().firstEmpty() == -1) {
-					p.sendMessage(ColorHelper.setColors("&cInventory is full!"));
+					p.sendMessage(ColorHelper.addColor("&cInventory is full!"));
 					return false;
 				}
 				
 				ItemStack item = new ItemStack(Material.WRITABLE_BOOK, 1);
-				item.getItemMeta().setDisplayName(ColorHelper.setColors("&bPrayer Book"));
+				item.getItemMeta().setDisplayName(ColorHelper.addColor("&bPrayer Book"));
 				
 				NBTItem n = new NBTItem(item);
 				n.setBoolean("isPrayerBook", true);
 				
 				p.getInventory().addItem(n.getItem());
-				p.sendMessage(ColorHelper.setColors("&cPrayer book added!"));
+				p.sendMessage(ColorHelper.addColor("&cPrayer book added!"));
 				return true;
 			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("set") && sender.hasPermission("serdana.pray.set")) {
 				if (!EnumPrayerType.contains(args[1])) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown prayer type " + args[1] + "!"));
+					sender.sendMessage(ColorHelper.addColor("&cUnknown prayer type " + args[1] + "!"));
 					return false;
 				}
 				
 				EnumPrayerType newType = EnumPrayerType.valueOf(args[1]);
 				
 				if (p.getInventory().getItemInMainHand().getType() != Material.WRITTEN_BOOK) {
-					p.sendMessage(ColorHelper.setColors("&cMust hold a prayer book!"));
+					p.sendMessage(ColorHelper.addColor("&cMust hold a prayer book!"));
 					return false;
 				}
 				
 				PrayInfo info = search(newType, p.getInventory().getItemInMainHand());
 				if (info != null) {
-					p.sendMessage(ColorHelper.setColors("&cThat prayer is already set to that!"));
+					p.sendMessage(ColorHelper.addColor("&cThat prayer is already set to that!"));
 					return false;
 				}
 				
@@ -110,18 +110,18 @@ public class CommandPray implements CommandExecutor {
 					if (info != null) {
 						main.getPrayerHandler().removePrayer(info, oldType);
 						main.getPrayerHandler().addPrayer(info, newType);
-						p.sendMessage(ColorHelper.setColors("&cPrayer successfully moved!"));
+						p.sendMessage(ColorHelper.addColor("&cPrayer successfully moved!"));
 						return true;
 					}
 				}
 				
-				p.sendMessage(ColorHelper.setColors("&cCould not find that prayer!"));
+				p.sendMessage(ColorHelper.addColor("&cCould not find that prayer!"));
 				return false;
 			}
 		} else if (args.length == 3) {
 			if (args[0].equalsIgnoreCase("show") && sender.hasPermission("serdana.pray.show")) {
 				if (!EnumPrayerType.contains(args[1])) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown prayer type " + args[1] + "!"));
+					sender.sendMessage(ColorHelper.addColor("&cUnknown prayer type " + args[1] + "!"));
 					return false;
 				}
 				
@@ -139,10 +139,10 @@ public class CommandPray implements CommandExecutor {
 				if (inv == null) {
 					return false;
 				} else if (inv.isEmpty()) {
-					p.sendMessage(ColorHelper.setColors("&cThere are no prayers!"));
+					p.sendMessage(ColorHelper.addColor("&cThere are no prayers!"));
 					return false;
 				} else if (page >= inv.size() || inv.get(page) == null) {
-					p.sendMessage(ColorHelper.setColors("&cUnknown page!"));
+					p.sendMessage(ColorHelper.addColor("&cUnknown page!"));
 					return false;
 				}
 				

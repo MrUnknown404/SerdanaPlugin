@@ -30,7 +30,7 @@ public class CraftingListener implements Listener {
 						if (e.getInventory().getMatrix()[i].hasItemMeta() && e.getInventory().getMatrix()[i].getItemMeta().hasDisplayName()) {
 							e.setCancelled(true);
 							e.setResult(Result.DENY);
-							e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot use named items for crafting!"));
+							e.getWhoClicked().sendMessage(ColorHelper.addColor("&cYou cannot use named items for crafting!"));
 							return;
 						}
 					}
@@ -46,7 +46,7 @@ public class CraftingListener implements Listener {
 						item.getType() == Material.IRON_AXE || item.getType() == Material.GOLDEN_AXE || item.getType() == Material.DIAMOND_AXE || item.getType() == Material.BOW || item.getType() == Material.SHIELD) {
 					e.setCancelled(true);
 					e.setResult(Result.DENY);
-					e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot craft " + WordUtils.capitalize(item.getType().toString().toLowerCase()) + "!"));
+					e.getWhoClicked().sendMessage(ColorHelper.addColor("&cYou cannot craft " + WordUtils.capitalize(item.getType().toString().toLowerCase()) + "!"));
 					return;
 				}
 			}

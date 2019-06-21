@@ -28,6 +28,7 @@ import main.java.serdana.commands.CommandAWarps;
 import main.java.serdana.commands.CommandAddAWarp;
 import main.java.serdana.commands.CommandBounty;
 import main.java.serdana.commands.CommandCoo;
+import main.java.serdana.commands.CommandNPC;
 import main.java.serdana.commands.CommandDots;
 import main.java.serdana.commands.CommandJoin;
 import main.java.serdana.commands.CommandLeave;
@@ -49,6 +50,7 @@ import main.java.serdana.commands.CommandToggleSpecial;
 import main.java.serdana.commands.CommandUnbreakable;
 import main.java.serdana.commands.tabs.TabAWarp;
 import main.java.serdana.commands.tabs.TabBounty;
+import main.java.serdana.commands.tabs.TabNPC;
 import main.java.serdana.commands.tabs.TabParasite;
 import main.java.serdana.commands.tabs.TabParty;
 import main.java.serdana.commands.tabs.TabPray;
@@ -125,11 +127,7 @@ public final class Main extends JavaPlugin {
 	
 	@Override
 	public void onLoad() {
-		File f = new File(getDataFolder() + "/Quests/");
-		if(!f.exists()) {
-			f.mkdirs();
-		}
-		f = new File(getDataFolder() + "/Quests/PlayerData/");
+		File f = new File(getDataFolder() + "/Quests/PlayerData/");
 		if(!f.exists()) {
 			f.mkdirs();
 		}
@@ -173,9 +171,9 @@ public final class Main extends JavaPlugin {
 	
 	/** Reloads all Configs */
 	public void reload(CommandSender sender) {
-		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cReloading Serdana's Configs!"));
+		Bukkit.getConsoleSender().sendMessage(ColorHelper.addColor("&cReloading Serdana's Configs!"));
 		if (sender instanceof Player) {
-			sender.sendMessage(ColorHelper.setColors("&cReloading Serdana's Configs!"));
+			sender.sendMessage(ColorHelper.addColor("&cReloading Serdana's Configs!"));
 		}
 		
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
@@ -248,9 +246,9 @@ public final class Main extends JavaPlugin {
 			}
 		}
 		
-		Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
+		Bukkit.getConsoleSender().sendMessage(ColorHelper.addColor("&cFinished Serdana's Configs!"));
 		if (sender instanceof Player) {
-			sender.sendMessage(ColorHelper.setColors("&cFinished Serdana's Configs!"));
+			sender.sendMessage(ColorHelper.addColor("&cFinished Serdana's Configs!"));
 		}
 	}
 	
@@ -357,6 +355,10 @@ public final class Main extends JavaPlugin {
 						break;
 					case CustomNPCs:
 						NPCHandler = new NPCHandler(this);
+						
+						getCommand("npc").setExecutor(new CommandNPC(this));
+						
+						getCommand("npc").setTabCompleter(new TabNPC());
 						break;
 					case Misc:
 						specialPlayerHandler = new SpecialPlayerHandler(this);

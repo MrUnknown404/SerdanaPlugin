@@ -1,7 +1,7 @@
-main: main.java.com.mrunknown404.serdana.Main
+main: main.java.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.6.3.0-Beta
+version: 0.6.4.0-Beta
 authors: [-Unknown-, RetroSpaceMan123, LittleJDude]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -104,7 +104,7 @@ commands:
     permission: serdana.adminChat
   repeat:
     description: Repeats Command
-    usage: "Usage: '/repeat' [Command]"
+    usage: "Usage: '/repeat' [command]"
     permission: serdana.repeat
   testScript:
     aliases: ts
@@ -115,6 +115,10 @@ commands:
     description: Toggles your special effect
     usage: "Usage: '/toggleSpecial'"
     permission: serdana.toggleSpecial
+  npc:
+    description: Edits the given NPC's dialogue
+    usage: "Usage: '/npc' [arguments]"
+    permission: serdana.npc
 
 permissions:
   serdana.setTier:
@@ -170,4 +174,6 @@ permissions:
   serdana.testScript:
     default: op
   serdana.toggleSpecial:
+    default: op
+  serdana.npc:
     default: op

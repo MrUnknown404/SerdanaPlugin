@@ -30,8 +30,8 @@ public class ParasiteHandler {
 		ItemStack item = new ItemStack(Material.NETHER_WART, 1);
 		ItemMeta meta = item.getItemMeta();
 		
-		meta.setDisplayName(ColorHelper.setColors("&cParasite"));
-		meta.setLore(new ArrayList<String>(Arrays.asList(ColorHelper.setColors("&4It appears to be eating you"), ColorHelper.setColors("&4You're unsure if you should be worried"))));
+		meta.setDisplayName(ColorHelper.addColor("&cParasite"));
+		meta.setLore(new ArrayList<String>(Arrays.asList(ColorHelper.addColor("&4It appears to be eating you"), ColorHelper.addColor("&4You're unsure if you should be worried"))));
 		item.setItemMeta(meta);
 		
 		NBTItem nItem = new NBTItem(item);
@@ -168,8 +168,8 @@ public class ParasiteHandler {
 				item = new ItemStack(Material.BROWN_MUSHROOM);
 			}
 			
-			List<String> lore = Arrays.asList(ColorHelper.setColors("&cYou've got this weird mushroom growing out of your head."),
-					ColorHelper.setColors("&cYou're unsure if you should be worried."));
+			List<String> lore = Arrays.asList(ColorHelper.addColor("&cYou've got this weird mushroom growing out of your head."),
+					ColorHelper.addColor("&cYou're unsure if you should be worried."));
 			ItemMeta meta = item.getItemMeta();
 			meta.setLore(lore);
 			item.setItemMeta(meta);

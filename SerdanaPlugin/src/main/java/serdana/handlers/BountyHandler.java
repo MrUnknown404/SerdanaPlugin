@@ -38,7 +38,7 @@ public class BountyHandler extends Reloadable {
 	 * @param b BountyInfo to add
 	 */
 	public void addBounty(BountyInfo b) {
-		Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty created!"));
+		Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.addColor("&cBounty created!"));
 		
 		bounties.add(b);
 		writeBounties();
@@ -52,14 +52,14 @@ public class BountyHandler extends Reloadable {
 	public void removeBounty(BountyInfo b, boolean wasCanceled) {
 		if (bounties.contains(b)) {
 			if (wasCanceled) {
-				Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cBounty canceled!"));
+				Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.addColor("&cBounty canceled!"));
 			}
 			
 			bounties.remove(b);
 			writeBounties();
 			readBounties();
 		} else {
-			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.setColors("&cThat player does not have a bounty created by you!"));
+			Bukkit.getPlayer(b.getOwnerUUID()).sendMessage(ColorHelper.addColor("&cThat player does not have a bounty created by you!"));
 		}
 	}
 	
@@ -69,16 +69,16 @@ public class BountyHandler extends Reloadable {
 	 */
 	public void rewardPlayer(BountyInfo info, Player killer) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.sendMessage(ColorHelper.setColors("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
+			p.sendMessage(ColorHelper.addColor("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
 		}
 		
 		ItemStack reward = new ItemStack(Material.FLINT, 1);
 		ItemMeta meta = reward.getItemMeta();
-		meta.setDisplayName(ColorHelper.setColors("&cBounty Reward Token"));
+		meta.setDisplayName(ColorHelper.addColor("&cBounty Reward Token"));
 		reward.setItemMeta(meta);
 		
 		if (killer.getInventory().firstEmpty() == -1) {
-			killer.sendMessage(ColorHelper.setColors("&cInventory is full!"));
+			killer.sendMessage(ColorHelper.addColor("&cInventory is full!"));
 		} else {
 			killer.getInventory().addItem(reward);
 		}

@@ -27,7 +27,7 @@ public class CommandSetBan implements CommandExecutor {
 		NBTItem n = new NBTItem(item);
 		
 		if (n.hasKey("banned")) {
-			sender.sendMessage(ColorHelper.setColors("&cItem was already banned!"));
+			sender.sendMessage(ColorHelper.addColor("&cItem was already banned!"));
 			return false;
 		}
 		

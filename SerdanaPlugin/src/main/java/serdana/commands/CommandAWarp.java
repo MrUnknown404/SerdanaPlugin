@@ -20,11 +20,11 @@ public class CommandAWarp implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 1) {
 			if (!main.getAWarpHandler().getAllNames().contains(args[0])) {
-				sender.sendMessage(ColorHelper.setColors("&cThat warp does not exist!"));
+				sender.sendMessage(ColorHelper.addColor("&cThat warp does not exist!"));
 				return false;
 			}
 			
-			sender.sendMessage(ColorHelper.setColors("&cYou have teleported to " + args[0] + "!"));
+			sender.sendMessage(ColorHelper.addColor("&cYou have teleported to " + args[0] + "!"));
 			((Player) sender).teleport(main.getAWarpHandler().getWarp(args[0]));
 			return true;
 		}

@@ -5,7 +5,7 @@ public class ColorHelper {
 	 * @param str String to modify
 	 * @return The given String with colors
 	 */
-	public static String setColors(String str) {
+	public static String addColor(String str) {
 		char[] b = str.toCharArray();
 		for (int i = 0; i < b.length - 1; i++) {
 			if (b[i] == '&' && getAllCodes().indexOf(b[i + 1]) > -1) {

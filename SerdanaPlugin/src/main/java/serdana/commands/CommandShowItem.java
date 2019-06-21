@@ -1,13 +1,18 @@
 package main.java.serdana.commands;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_13_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_13_R2.inventory.CraftItemStack;
 import org.bukkit.entity.Player;
 
-import main.java.serdana.util.ShowItem;
+import net.minecraft.server.v1_13_R2.ChatMessage;
+import net.minecraft.server.v1_13_R2.IChatBaseComponent;
+import net.minecraft.server.v1_13_R2.PacketPlayOutChat;
 
 public class CommandShowItem implements CommandExecutor {
 
@@ -19,7 +24,12 @@ public class CommandShowItem implements CommandExecutor {
 		}
 		
 		if (((Player) sender).getInventory().getItemInMainHand().getType() != Material.AIR) {
-			new ShowItem((Player) sender);
+			IChatBaseComponent c = new ChatMessage(((Player) sender).getDisplayName() + " has shared ");
+			c.a().add(CraftItemStack.asNMSCopy(((Player) sender).getInventory().getItemInMainHand()).A());
+			
+			for (Player p : Bukkit.getOnlinePlayers()) {
+				((CraftPlayer) p).getHandle().playerConnection.sendPacket(new PacketPlayOutChat(c));
+			}
 			return true;
 		}
 		

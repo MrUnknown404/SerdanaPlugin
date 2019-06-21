@@ -2,8 +2,6 @@ package main.java.serdana.quests;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -116,7 +114,7 @@ public class QuestHandler extends Reloadable {
 				QuestTaskTalk t = (QuestTaskTalk) tempTask;
 				
 				if (q.check(p, shop)) {
-					p.sendMessage(ColorHelper.setColors(shopName + ": " + t.getCurrentMessage()));
+					p.sendMessage(ColorHelper.addColor(shopName + ": " + t.getCurrentMessage()));
 					
 					q.getCurrentTask().increaseAmmount();
 					q.checkFinishedTask(p);
@@ -271,7 +269,7 @@ public class QuestHandler extends Reloadable {
 				setupQuestChestGUI(p);
 				
 				for (String s : q.getStartMessages()) {
-					p.sendMessage(ColorHelper.setColors(s));
+					p.sendMessage(ColorHelper.addColor(s));
 				}
 				
 				return true;
@@ -301,7 +299,7 @@ public class QuestHandler extends Reloadable {
 				setupQuestChestGUI(p);
 				
 				for (String s : q.getFinishMessages()) {
-					p.sendMessage(ColorHelper.setColors(s));
+					p.sendMessage(ColorHelper.addColor(s));
 				}
 				
 				return true;
@@ -325,19 +323,19 @@ public class QuestHandler extends Reloadable {
 		
 		for (int i = 0; i < unknownQuests.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				invUnknown.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&6Unknown quests [" + (int) Math.ceil(i / 54) + "]")));
+				invUnknown.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&6Unknown quests [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
 		for (int i = 0; i < acceptedQuests.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				invAccepted.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&6Accepted quests [" + (int) Math.ceil(i / 54) + "]")));
+				invAccepted.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&6Accepted quests [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
 		for (int i = 0; i < FinishedQuests.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				invFinished.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&6Finished quests [" + (int) Math.ceil(i / 54) + "]")));
+				invFinished.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&6Finished quests [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
@@ -346,10 +344,10 @@ public class QuestHandler extends Reloadable {
 				Quest q = unknownQuests.get(i);
 				ItemStack item = new ItemStack(Material.PAPER);
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(ColorHelper.setColors("&4" + q.getName()));
+				meta.setDisplayName(ColorHelper.addColor("&4" + q.getName()));
 				
 				List<String> newLore = new ArrayList<String>();
-				newLore.add(ColorHelper.setColors("&c???"));
+				newLore.add(ColorHelper.addColor("&c???"));
 				
 				meta.setLore(newLore);
 				item.setItemMeta(meta);
@@ -363,24 +361,24 @@ public class QuestHandler extends Reloadable {
 				Quest q = acceptedQuests.get(i);
 				ItemStack item = new ItemStack(Material.PAPER);
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(ColorHelper.setColors("&2" + q.getName()));
+				meta.setDisplayName(ColorHelper.addColor("&2" + q.getName()));
 				
 				List<String> newLore = new ArrayList<String>();
 				for (String s : q.getDescription()) {
-					newLore.add(ColorHelper.setColors("&a" + s));
+					newLore.add(ColorHelper.addColor("&a" + s));
 				}
 				
-				newLore.add(ColorHelper.setColors("&a---"));
+				newLore.add(ColorHelper.addColor("&a---"));
 				if (!q.isReadyToTurnIn()) {
 					for (String s : q.getCurrentTask().getDescription()) {
-						newLore.add(ColorHelper.setColors("&a" + s));
+						newLore.add(ColorHelper.addColor("&a" + s));
 					}
 					
-					newLore.add(ColorHelper.setColors("&a---"));
-					newLore.add(ColorHelper.setColors("&a" + q.getCurrentTask().getAmount() + "/" + q.getCurrentTask().getAmountNeeded()));
+					newLore.add(ColorHelper.addColor("&a---"));
+					newLore.add(ColorHelper.addColor("&a" + q.getCurrentTask().getAmount() + "/" + q.getCurrentTask().getAmountNeeded()));
 				} else {
 					for (String s : q.getTurnInMessages()) {
-						newLore.add(ColorHelper.setColors("&a" + s));
+						newLore.add(ColorHelper.addColor("&a" + s));
 					}
 				}
 				
@@ -396,15 +394,15 @@ public class QuestHandler extends Reloadable {
 				Quest q = FinishedQuests.get(i);
 				ItemStack item = new ItemStack(Material.PAPER);
 				ItemMeta meta = item.getItemMeta();
-				meta.setDisplayName(ColorHelper.setColors("&3" + q.getName()));
+				meta.setDisplayName(ColorHelper.addColor("&3" + q.getName()));
 				
 				List<String> newLore = new ArrayList<String>();
 				for (String s : q.getDescription()) {
-					newLore.add(ColorHelper.setColors("&b" + s));
+					newLore.add(ColorHelper.addColor("&b" + s));
 				}
 				
-				newLore.add(ColorHelper.setColors("&b---"));
-				newLore.add(ColorHelper.setColors("&bCOMPLETED"));
+				newLore.add(ColorHelper.addColor("&b---"));
+				newLore.add(ColorHelper.addColor("&bCOMPLETED"));
 				
 				meta.setLore(newLore);
 				item.setItemMeta(meta);
@@ -477,11 +475,11 @@ public class QuestHandler extends Reloadable {
 			}, new String[] {
 					"Description Fetch"
 			}, new String[] {
-					"Complete Quest Message 1",
-					"Complete Quest Message 2"
-			}, new String[] {
 					"Turn in Message 1",
-					"Turn in Message 2"
+					"Turn in Message 1"
+			}, new String[] {
+					"Ready to turn in Message 1",
+					"Ready to turn in Message 2"
 			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.DIAMOND, 2)
 			}, new int[] {});
@@ -512,11 +510,11 @@ public class QuestHandler extends Reloadable {
 			}, new String[] {
 					"Description Kill"
 			}, new String[] {
-					"Complete Quest Message 1",
-					"Complete Quest Message 2"
-			}, new String[] {
 					"Turn in Message 1",
-					"Turn in Message 2"
+					"Turn in Message 1"
+			}, new String[] {
+					"Ready to turn in Message 1",
+					"Ready to turn in Message 2"
 			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.BONE, 5)
 			}, new int[] {});
@@ -547,11 +545,11 @@ public class QuestHandler extends Reloadable {
 			}, new String[] {
 					"Description Walk"
 			}, new String[] {
-					"Complete Quest Message 1",
-					"Complete Quest Message 2"
-			}, new String[] {
 					"Turn in Message 1",
-					"Turn in Message 2"
+					"Turn in Message 1"
+			}, new String[] {
+					"Ready to turn in Message 1",
+					"Ready to turn in Message 2"
 			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.FEATHER, 2)
 			}, new int[] {});
@@ -590,11 +588,11 @@ public class QuestHandler extends Reloadable {
 			}, new String[] {
 					"Description Talk"
 			}, new String[] {
-					"Complete Quest Message 1",
-					"Complete Quest Message 2"
-			}, new String[] {
 					"Turn in Message 1",
-					"Turn in Message 2"
+					"Turn in Message 1"
+			}, new String[] {
+					"Ready to turn in Message 1",
+					"Ready to turn in Message 2"
 			}, tasks, -1, -1, new ItemStack[] {
 					new ItemStack(Material.CLAY, 23)
 			}, new int[] {});
@@ -611,11 +609,11 @@ public class QuestHandler extends Reloadable {
 					"Unfinished description 1",
 					"Unfinished description 2"
 			}, new String[] {
-					"Complete Quest Message 1",
-					"Complete Quest Message 2"
-			}, new String[] {
 					"Turn in Message 1",
-					"Turn in Message 2"
+					"Turn in Message 1"
+			}, new String[] {
+					"Ready to turn in Message 1",
+					"Ready to turn in Message 2"
 			}, new ArrayList<QuestTask>(), -1, -1, new ItemStack[] {}, new int[] {});
 			
 			write.set("Quest", q);
@@ -635,21 +633,18 @@ public class QuestHandler extends Reloadable {
 	 * @return A Quest found from the given String
 	 */
 	public Quest getQuestFile(String questFileName) {
-		if (getClass().getResourceAsStream(Main.BASE_LOCATION_QUESTS + questFileName + ".yml") == null) {
-			System.out.println("Could not find file inside jar: " + questFileName + ".yml!");
-			
-			File f = new File(path + "/Quests/" + questFileName + ".yml");
+		File f = new File(path + "/Quests/" + questFileName + ".yml");
+		if (f.exists()) {
 			Quest q = YamlConfiguration.loadConfiguration(f).getObject("Quest", Quest.class);
 			
 			if (q == null) {
-				System.out.println("Could not find file in config: " + questFileName + ".yml! (Will be created)");
-				return writeDefaultQuest(questFileName);
+				System.out.println("Quest: " + questFileName + ".yml was written incorrectly!");
 			}
 			
 			return q;
 		} else {
-			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION_QUESTS + questFileName + ".yml");
-			return YamlConfiguration.loadConfiguration(new InputStreamReader(s)).getObject("Quest", Quest.class);
+			System.out.println("Could not find file in config: " + questFileName + ".yml! (Will be created)");
+			return writeDefaultQuest(questFileName);
 		}
 	}
 	

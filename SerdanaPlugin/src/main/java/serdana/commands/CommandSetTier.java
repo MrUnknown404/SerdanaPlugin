@@ -27,21 +27,21 @@ public class CommandSetTier implements CommandExecutor {
 			try {
 				tier = Integer.parseInt(args[0]); 
 			} catch (NumberFormatException e) {
-				sender.sendMessage(ColorHelper.setColors("&cUnknown number : " + args[0] + "!"));
+				sender.sendMessage(ColorHelper.addColor("&cUnknown number : " + args[0] + "!"));
 				return false;
 			}
 			
 			if (tier < 0) {
-				sender.sendMessage(ColorHelper.setColors("&cTier \"" + tier + "\" is too low!"));
+				sender.sendMessage(ColorHelper.addColor("&cTier \"" + tier + "\" is too low!"));
 				return false;
 			} else if (tier > 32) {
-				sender.sendMessage(ColorHelper.setColors("&cTier \"" + tier + "\" is too high!"));
+				sender.sendMessage(ColorHelper.addColor("&cTier \"" + tier + "\" is too high!"));
 				return false;
 			} else if (item.getType() == Material.AIR) {
-				sender.sendMessage(ColorHelper.setColors("&cMust hold an item!"));
+				sender.sendMessage(ColorHelper.addColor("&cMust hold an item!"));
 				return false;
 			} else if (main.getTierHandler().isItemTiered(item)) {
-				sender.sendMessage(ColorHelper.setColors("&cThis item already has a tier!"));
+				sender.sendMessage(ColorHelper.addColor("&cThis item already has a tier!"));
 				return true;
 			}
 			

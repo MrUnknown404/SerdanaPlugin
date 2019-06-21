@@ -16,10 +16,10 @@ public class CommandTestScript implements CommandExecutor {
 		if (args.length == 1) {
 			if (InitScripts.doesScriptExist(args[0])) {
 				ScriptHandler.read(InitScripts.getScript(args[0]), (Player) sender);
-				sender.sendMessage(ColorHelper.setColors("&cSuccessfully ran : " + args[0]));
+				sender.sendMessage(ColorHelper.addColor("&cSuccessfully ran : " + args[0]));
 				return true;
 			} else {
-				sender.sendMessage(ColorHelper.setColors("&cUnknown script : " + args[0]));
+				sender.sendMessage(ColorHelper.addColor("&cUnknown script : " + args[0]));
 			}
 		}
 		

@@ -30,13 +30,13 @@ public class CommandBounty implements CommandExecutor {
 		
 		if (args[0].equalsIgnoreCase("create")) {
 			if (item.getType() == Material.AIR) {
-				sender.sendMessage(ColorHelper.setColors("&cMust hold an item!"));
+				sender.sendMessage(ColorHelper.addColor("&cMust hold an item!"));
 				return false;
 			}
 			
 			NBTItem n = new NBTItem(item);
 			if (!n.hasKey("bountyToken")) {
-				sender.sendMessage(ColorHelper.setColors("&cMust hold a bounty token!"));
+				sender.sendMessage(ColorHelper.addColor("&cMust hold a bounty token!"));
 				return false;
 			}
 			
@@ -44,7 +44,7 @@ public class CommandBounty implements CommandExecutor {
 			if (Bukkit.getPlayer(args[1]) != null) {
 				toKill = Bukkit.getPlayer(args[1]);
 			} else {
-				sender.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				sender.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			}
 			
@@ -58,13 +58,13 @@ public class CommandBounty implements CommandExecutor {
 				}
 			}
 			
-			((Player) sender).sendMessage(ColorHelper.setColors("&cA bounty already exists on that player!"));
+			((Player) sender).sendMessage(ColorHelper.addColor("&cA bounty already exists on that player!"));
 		} else if (args[0].equalsIgnoreCase("cancel")) {
 			Player p = null;
 			if (Bukkit.getPlayer(args[1]) != null) {
 				p = Bukkit.getPlayer(args[1]);
 			} else {
-				sender.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				sender.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			}
 			

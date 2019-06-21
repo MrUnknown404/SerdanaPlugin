@@ -30,7 +30,7 @@ public class CommandParasite implements CommandExecutor {
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("give")) {
 				if (Bukkit.getPlayer(args[1]) == null) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1]));
+					sender.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1]));
 					return false;
 				}
 				
@@ -38,7 +38,7 @@ public class CommandParasite implements CommandExecutor {
 				return true;
 			} else if (args[0].equalsIgnoreCase("stop")) {
 				if (Bukkit.getPlayer(args[1]) == null) {
-					sender.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1]));
+					sender.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1]));
 					return false;
 				}
 				

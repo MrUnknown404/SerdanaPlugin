@@ -38,7 +38,7 @@ public class CommandSerdana implements CommandExecutor {
 						code = "&a";
 					}
 					
-					sender.sendMessage(ColorHelper.setColors(pair.getKey() + ":" + code + pair.getValue()));
+					sender.sendMessage(ColorHelper.addColor(pair.getKey() + ":" + code + pair.getValue()));
 				}
 				
 				return true;

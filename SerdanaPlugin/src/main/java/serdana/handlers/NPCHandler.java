@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +40,14 @@ public class NPCHandler extends Reloadable {
 		NPCInfos = read();
 	}
 	
+	/** Adds dialogue for the given {@link Shopkeeper}
+	 * @param shop The shopkeeper to base the info around
+	 */
+	public void addNPCDialogue(Shopkeeper shop) {
+		NPCInfos.add(new NPCInfo(shop.getId()));
+		write();
+	}
+	
 	/** Makes given {@link Shopkeeper} talk to the specified {@link Player}
 	 * @param shop The Shopkeeper that will talk
 	 * @param p The Player the Shopkeeper that will talk to
@@ -53,7 +59,7 @@ public class NPCHandler extends Reloadable {
 			if (info.getNPCID() == shop.getId()) {
 				boolean b = info.talk(p, type);
 				
-				if (b && type == EnumTalkType.banned && !info.isIgnoresBannedItems()) {
+				if (b && type == EnumTalkType.banned && !info.ignoresBannedItems()) {
 					main.getBannedItemHandler().performBannedAction(p, main.getBannedItemHandler().getPlayersBannedItems(p).size());
 				}
 				
@@ -88,7 +94,7 @@ public class NPCHandler extends Reloadable {
 	/** Writes a new {@link List} for the given {@link File}
 	 * @param f The File that will be written to
 	 */
-	private void write() {
+	public void write() {
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
 		
@@ -108,36 +114,39 @@ public class NPCHandler extends Reloadable {
 	 * @return A List containing the contents of the read File
 	 */
 	private List<NPCInfo> read() {
-		if (getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + Main.TYPE) == null) {
-			System.out.println("Could not find file inside jar: " + file_NPCInfos + Main.TYPE + "!");
+		if (!new File(path + "/" + file_NPCInfos + Main.TYPE).exists()) {
+			System.out.println("Could not find file: " + file_NPCInfos + Main.TYPE + "! (Will be created)");
 			
-			if (!new File(path + "/" + file_NPCInfos + Main.TYPE).exists()) {
-				System.out.println("Could not find file in config: " + file_NPCInfos + Main.TYPE + "! (Will be created)");
-				
-				NPCInfos = new ArrayList<NPCInfo>();
-				NPCInfos.add(new NPCInfo(1, true, true, "Steve",
-						new String[] {"Test 1", "Test 2"},
-						new String[] {"Banned 1", "Banned 2"},
-						new String[] {"Trade 1", "Trade 2"}));
-				
-				write();
-			}
+			NPCInfos = new ArrayList<NPCInfo>();
+			NPCInfos.add(new NPCInfo(1));
 			
-			Gson g = new GsonBuilder().setPrettyPrinting().create();
-			FileReader fr = null;
-			
-			try {
-				fr = new FileReader(path + "/" + file_NPCInfos + Main.TYPE);
-				
-				return g.fromJson(fr, new TypeToken<List<NPCInfo>>(){}.getType());
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-				return null;
-			}
-		} else {
-			InputStream s = getClass().getResourceAsStream(Main.BASE_LOCATION + file_NPCInfos + Main.TYPE);
-			
-			return new GsonBuilder().setPrettyPrinting().create().fromJson(new InputStreamReader(s), new TypeToken<List<NPCInfo>>(){}.getType());
+			write();
 		}
+		
+		Gson g = new GsonBuilder().setPrettyPrinting().create();
+		FileReader fr = null;
+		
+		try {
+			fr = new FileReader(path + "/" + file_NPCInfos + Main.TYPE);
+			
+			return g.fromJson(fr, new TypeToken<List<NPCInfo>>(){}.getType());
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	/** Returns a NPCInfo using the given ID
+	 * @param id ID to search for
+	 * @return An NPCInfo using the given ID
+	 */
+	public NPCInfo getNPCInfoFromID(int id) {
+		for (NPCInfo info : NPCInfos) {
+			if (info.getNPCID() == id) {
+				return info;
+			}
+		}
+		
+		return null;
 	}
 }

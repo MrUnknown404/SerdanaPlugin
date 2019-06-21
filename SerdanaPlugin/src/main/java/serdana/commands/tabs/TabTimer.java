@@ -12,7 +12,7 @@ import org.bukkit.entity.Player;
 public class TabTimer implements TabCompleter {
 
 	@Override
-	public List<String> onTabComplete(CommandSender sebder, Command cmd, String label, String[] args) {
+	public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
 		List<String> r = new ArrayList<String>();
 		
 		if (args.length == 1) {

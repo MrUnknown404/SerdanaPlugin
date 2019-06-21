@@ -2,21 +2,13 @@ package main.java.serdana.entities.util;
 
 import java.util.function.Function;
 
-import main.java.serdana.entities.EntityDraglet;
-import main.java.serdana.entities.EntityGrunt;
-import main.java.serdana.entities.EntitySwamper;
 import main.java.serdana.entities.EntityTestZombie;
-import main.java.serdana.entities.EntityUndead;
 import net.minecraft.server.v1_13_R2.Entity;
 import net.minecraft.server.v1_13_R2.EntityTypes;
 import net.minecraft.server.v1_13_R2.World;
 
 public enum EnumCustomEntities {
-	TEST_ZOMBIE(EntityTypes.ZOMBIE, "Test Zombie", EntityTestZombie.class, EntityTestZombie::new),
-	GRUNT(EntityTypes.ZOMBIE_PIGMAN, "Grunt", EntityGrunt.class, EntityGrunt::new),
-	DRAGLET(EntityTypes.PHANTOM, "Draglet", EntityDraglet.class, EntityDraglet::new),
-	SWAMPER(EntityTypes.DROWNED, "Swamper", EntitySwamper.class, EntitySwamper::new),
-	UNDEAD(EntityTypes.ZOMBIE, "Undead", EntityUndead.class, EntityUndead::new);
+	TEST_ZOMBIE(EntityTypes.ZOMBIE, "Test Zombie", EntityTestZombie.class, EntityTestZombie::new);
 	
 	private EntityTypes<?> type, vanillaType;
 	private Class<? extends EntityMonsterBase> clazz;

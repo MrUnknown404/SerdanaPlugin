@@ -93,9 +93,7 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	 * @param quest Quest to add
 	 */
 	public void addQuest(Quest quest) {
-		quests.add(new Quest(quest.getQuestID(), quest.getName(), quest.getStartMessages(), quest.getFinishMessages(), quest.getDescription(),
-				quest.getCompletionMessages(), quest.getTurnInMessages(), quest.getTasks(), quest.getStartID(), quest.getFinishID(), quest.getRewards(),
-				quest.getRequirements()));
+		quests.add(new Quest(quest));
 	}
 	
 	/** Removes the given {@link Quest}
@@ -161,7 +159,7 @@ public class QuestPlayerData implements ConfigurationSerializable {
 		for (Quest oldQ : quests) {
 			if (oldQ.getQuestID() == q.getQuestID()) {
 				return oldQ.getName().equals(q.getName()) && areEqual(oldQ.getDescription(), q.getDescription()) &&
-						areEqual(oldQ.getCompletionMessages(), q.getCompletionMessages()) && areEqual(oldQ.getTurnInMessages(), q.getTurnInMessages()) &&
+						areEqual(oldQ.getReadyToTurnInMessages(), q.getReadyToTurnInMessages()) && areEqual(oldQ.getTurnInMessages(), q.getTurnInMessages()) &&
 						areEqual(oldQ.getStartMessages(), q.getStartMessages()) && areEqual(oldQ.getFinishMessages(), q.getFinishMessages()) &&
 						oldQ.getStartID() == q.getStartID() && oldQ.getFinishID() == q.getFinishID() && areEqual(oldQ.getRewards(), q.getRewards()) &&
 						areEqual(ArrayUtils.toObject(oldQ.getRequirements()), ArrayUtils.toObject(q.getRequirements())) && oldQ.getTasks().equals(q.getTasks())

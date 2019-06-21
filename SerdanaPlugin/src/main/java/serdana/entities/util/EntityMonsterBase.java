@@ -19,7 +19,7 @@ public abstract class EntityMonsterBase extends EntityMonster {
 	protected final int tier, abilityChance, abilityMinTime, abilityMaxTime;
 	protected int abilityTime = 0;
 	
-	protected RandomCollection<Ability> abilities = new RandomCollection<Ability>();
+	protected final RandomCollection<Ability> abilities = new RandomCollection<Ability>();
 	
 	/**
 	 * @param world

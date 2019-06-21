@@ -60,7 +60,7 @@ public class PartyHandler {
 	 */
 	public void createParty(UUID creator) {
 		Player p = Bukkit.getPlayer(creator);
-		Playerboard board = new Playerboard(p, ColorHelper.setColors("&6Party's Health"));
+		Playerboard board = new Playerboard(p, ColorHelper.addColor("&6Party's Health"));
 		board.set(p.getUniqueId(), (int) p.getHealth(), false);
 		
 		parties.add(new PartyInfo(creator, board));
@@ -71,9 +71,9 @@ public class PartyHandler {
 	 */
 	public void notifyDeath(UUID death) {
 		for (PartyInfo p : parties) {
-			Bukkit.getPlayer(p.getLeader()).sendMessage(ColorHelper.setColors("&c" + Bukkit.getPlayer(death).getDisplayName() + " has died!"));
+			Bukkit.getPlayer(p.getLeader()).sendMessage(ColorHelper.addColor("&c" + Bukkit.getPlayer(death).getDisplayName() + " has died!"));
 			for (UUID id : p.getMembers()) {
-				Bukkit.getPlayer(id).sendMessage(ColorHelper.setColors("&c" + Bukkit.getPlayer(death).getDisplayName() + " has died!"));
+				Bukkit.getPlayer(id).sendMessage(ColorHelper.addColor("&c" + Bukkit.getPlayer(death).getDisplayName() + " has died!"));
 			}
 		}
 	}

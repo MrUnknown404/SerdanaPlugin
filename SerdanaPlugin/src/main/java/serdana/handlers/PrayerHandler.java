@@ -42,19 +42,19 @@ public class PrayerHandler extends Reloadable {
 		
 		for (int i = 0; i < unsetPrayers.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				unsetPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&cUnsorted Prayers [" + (int) Math.ceil(i / 54) + "]")));
+				unsetPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&cUnsorted Prayers [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
 		for (int i = 0; i < goodPrayers.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				goodPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&cGood Prayers [" + (int) Math.ceil(i / 54) + "]")));
+				goodPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&cGood Prayers [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 		
 		for (int i = 0; i < badPrayers.size(); i++) {
 			if (i % 54 == 0 || i == 0) {
-				badPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.setColors("&cBad Prayers [" + (int) Math.ceil(i / 54) + "]")));
+				badPrayersInventory.add(Bukkit.createInventory(null, 54, ColorHelper.addColor("&cBad Prayers [" + (int) Math.ceil(i / 54) + "]")));
 			}
 		}
 	}

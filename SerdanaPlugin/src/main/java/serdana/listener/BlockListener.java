@@ -23,7 +23,7 @@ public class BlockListener implements Listener {
 			if (e.getItemInHand().hasItemMeta() && e.getItemInHand().getItemMeta().hasDisplayName()) {
 				if (e.getBlock().getType() != Material.CHEST && e.getBlock().getType() != Material.TRAPPED_CHEST) {
 					if (!e.getBlock().getType().toString().contains("SHULKER_BOX")) {
-						e.getPlayer().sendMessage(ColorHelper.setColors("&cYou cannot place named blocks!"));
+						e.getPlayer().sendMessage(ColorHelper.addColor("&cYou cannot place named blocks!"));
 						e.setCancelled(true);
 					}
 				}

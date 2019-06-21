@@ -29,9 +29,9 @@ public class TierHandler {
 		List<String> lore = new ArrayList<String>();
 		if (item.getItemMeta().hasLore()) {
 			lore = item.getItemMeta().getLore();
-			lore.set(lore.size() - 1, lore.get(lore.size() - 1) + ColorHelper.setColors(" " + COLOR_CODE + "[Tier " + tier + "]"));
+			lore.set(lore.size() - 1, lore.get(lore.size() - 1) + ColorHelper.addColor(" " + COLOR_CODE + "[Tier " + tier + "]"));
 		} else {
-			lore.add(ColorHelper.setColors(COLOR_CODE + "[Tier " + tier + "]"));
+			lore.add(ColorHelper.addColor(COLOR_CODE + "[Tier " + tier + "]"));
 		}
 		
 		ItemMeta meta = item.getItemMeta();

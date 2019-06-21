@@ -19,11 +19,11 @@ public class CommandRemoveAWarp implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 1) {
 			if (!main.getAWarpHandler().getAllNames().contains(args[0])) {
-				sender.sendMessage(ColorHelper.setColors("&cThat warp does not exist!"));
+				sender.sendMessage(ColorHelper.addColor("&cThat warp does not exist!"));
 				return false;
 			}
 			
-			sender.sendMessage(ColorHelper.setColors("&cYou have removed " + args[0] + "!"));
+			sender.sendMessage(ColorHelper.addColor("&cYou have removed " + args[0] + "!"));
 			main.getAWarpHandler().removeWarp(args[0]);
 			return true;
 		}

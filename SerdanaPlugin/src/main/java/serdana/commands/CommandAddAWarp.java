@@ -19,7 +19,7 @@ public class CommandAddAWarp implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 1) {
-			sender.sendMessage(ColorHelper.setColors("&cYou have set " + args[0] + "!"));
+			sender.sendMessage(ColorHelper.addColor("&cYou have set " + args[0] + "!"));
 			main.getAWarpHandler().setWarp(((Player) sender).getLocation(), args[0]);
 			return true;
 		}

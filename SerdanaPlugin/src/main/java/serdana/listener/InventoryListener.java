@@ -32,7 +32,7 @@ public class InventoryListener implements Listener {
 			if (main.isComponentEnabled(Main.Components.StopNamedItemUse) && main.isComponentEnabled(Main.Components.Tiers)) {
 				if (e.getInventory() instanceof AnvilInventory || e.getInventory() instanceof EnchantingInventory) {
 					if (main.getTierHandler().isItemTiered(e.getCurrentItem())) {
-						e.getWhoClicked().sendMessage(ColorHelper.setColors("&cYou cannot put that in an anvil!"));
+						e.getWhoClicked().sendMessage(ColorHelper.addColor("&cYou cannot put that in an anvil!"));
 						e.setCancelled(true);
 						e.setResult(Event.Result.DENY);
 					}

@@ -91,11 +91,11 @@ public class HealthBarHandler {
 			
 			@Override
 			public void run() {
-				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.setColors(message)));
+				player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.addColor(message)));
 			}
 			
 		}.runTaskLater(main, 30);
 		
-		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.setColors(message)));
+		player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(ColorHelper.addColor(message)));
 	}
 }

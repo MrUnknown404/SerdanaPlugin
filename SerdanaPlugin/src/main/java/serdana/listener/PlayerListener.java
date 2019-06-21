@@ -34,11 +34,11 @@ public class PlayerListener implements Listener {
 		if (main.isComponentEnabled(Main.Components.AChat)) {
 			if (main.getAChatHandler().isPlayerEnabled(e.getPlayer().getUniqueId())) {
 				e.setCancelled(true);
-				Bukkit.getConsoleSender().sendMessage(ColorHelper.setColors("&4[AC] " + e.getPlayer().getDisplayName() + "&f: " + e.getMessage()));
+				Bukkit.getConsoleSender().sendMessage(ColorHelper.addColor("&4[AC] " + e.getPlayer().getDisplayName() + "&f: " + e.getMessage()));
 				
 				for (Player p : Bukkit.getOnlinePlayers()) {
 					if (p.hasPermission("serdana.adminChat")) {
-						p.sendMessage(ColorHelper.setColors("&4[AC] " + e.getPlayer().getDisplayName() + "&f: " + e.getMessage()));
+						p.sendMessage(ColorHelper.addColor("&4[AC] " + e.getPlayer().getDisplayName() + "&f: " + e.getMessage()));
 					}
 				}
 			}
@@ -64,7 +64,7 @@ public class PlayerListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		if (main.isComponentEnabled(Main.Components.Misc)) {
 			if (!e.getPlayer().hasPlayedBefore()) {
-				e.getPlayer().setDisplayName(ColorHelper.setColors("&7" + e.getPlayer().getName()));
+				e.getPlayer().setDisplayName(ColorHelper.addColor("&7" + e.getPlayer().getName()));
 			}
 		}
 		

@@ -18,7 +18,7 @@ public class CommandAChatToggle implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		sender.sendMessage(ColorHelper.setColors("&cAdmin chat toggled!"));
+		sender.sendMessage(ColorHelper.addColor("&cAdmin chat toggled!"));
 		main.getAChatHandler().togglePlayer(((Player) sender).getUniqueId());
 		return true;
 	}

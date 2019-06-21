@@ -51,37 +51,37 @@ public class CommandQuest implements CommandExecutor {
 					}
 					
 					if (!InitQuests.doesQuestExist(quest)) {
-						sender.sendMessage(ColorHelper.setColors("&cUnknown quest " + args[2] + "!"));
+						sender.sendMessage(ColorHelper.addColor("&cUnknown quest " + args[2] + "!"));
 						return false;
 					} else if (Bukkit.getPlayer(args[1]) == null) {
-						sender.sendMessage(ColorHelper.setColors("&cUnknown player " + args[1] + "!"));
+						sender.sendMessage(ColorHelper.addColor("&cUnknown player " + args[1] + "!"));
 						return false;
 					}
 					
 					if (args[0].equalsIgnoreCase("give")) {
 						if (!main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasAcceptedQuest(InitQuests.getQuest(quest))) {
-							sender.sendMessage(ColorHelper.setColors("&cYou have given " + args[1] + " the quest " + quest + "!"));
+							sender.sendMessage(ColorHelper.addColor("&cYou have given " + args[1] + " the quest " + quest + "!"));
 							main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.accepted);
 							return true;
 						} else {
-							sender.sendMessage(ColorHelper.setColors("&cPlayer already has that quest!"));
+							sender.sendMessage(ColorHelper.addColor("&cPlayer already has that quest!"));
 						}
 					} else if (args[0].equalsIgnoreCase("remove")) {
 						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasAcceptedQuest(InitQuests.getQuest(quest)) ||
 								main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasFinishedQuest(InitQuests.getQuest(quest))) {
-							sender.sendMessage(ColorHelper.setColors("&cYou have removed " + quest + " from " + args[1] + "!"));
+							sender.sendMessage(ColorHelper.addColor("&cYou have removed " + quest + " from " + args[1] + "!"));
 							main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.unknown);
 							return true;
 						} else {
-							sender.sendMessage(ColorHelper.setColors("&cPlayer does not have that quest!"));
+							sender.sendMessage(ColorHelper.addColor("&cPlayer does not have that quest!"));
 						}
 					} else if (args[0].equalsIgnoreCase("finish")) {
 						if (main.getQuestHandler().getQuestPlayersData(Bukkit.getPlayer(args[1])).hasFinishedQuest(InitQuests.getQuest(quest))) {
-							sender.sendMessage(ColorHelper.setColors("&cPlayer has already finished that quest!"));
+							sender.sendMessage(ColorHelper.addColor("&cPlayer has already finished that quest!"));
 							return false;
 						}
 						
-						sender.sendMessage(ColorHelper.setColors("&cYou have finished " + quest + " for " + args[1] + "!"));
+						sender.sendMessage(ColorHelper.addColor("&cYou have finished " + quest + " for " + args[1] + "!"));
 						main.getQuestHandler().setPlayersQuestState(Bukkit.getPlayer(args[1]), InitQuests.getQuest(quest), EnumQuestState.finished);
 						return true;
 					}
@@ -94,17 +94,17 @@ public class CommandQuest implements CommandExecutor {
 	
 	private boolean show(CommandSender sender, String questState, int page) {
 		if (!EnumQuestState.contains(questState)) {
-			sender.sendMessage(ColorHelper.setColors("&cUnknown quest type " + questState + "!"));
+			sender.sendMessage(ColorHelper.addColor("&cUnknown quest type " + questState + "!"));
 			return false;
 		}
 		
 		List<Inventory> invs = main.getQuestHandler().getPlayersQuestGUIs((Player) sender, EnumQuestState.valueOf(questState));
 		
 		if (invs.size() == 0) {
-			sender.sendMessage(ColorHelper.setColors("&cYou don't have any quests in that category!"));
+			sender.sendMessage(ColorHelper.addColor("&cYou don't have any quests in that category!"));
 			return false;
 		} else if (page >= invs.size()) {
-			sender.sendMessage(ColorHelper.setColors("&cUnknown page!"));
+			sender.sendMessage(ColorHelper.addColor("&cUnknown page!"));
 			return false;
 		}
 		

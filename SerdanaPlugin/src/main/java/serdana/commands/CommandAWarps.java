@@ -21,7 +21,7 @@ public class CommandAWarps implements CommandExecutor {
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (args.length == 0) {
 			if (main.getAWarpHandler().getAmountOfWarps() == 0) {
-				sender.sendMessage(ColorHelper.setColors("&cThere are no warps!"));
+				sender.sendMessage(ColorHelper.addColor("&cThere are no warps!"));
 				return false;
 			}
 			

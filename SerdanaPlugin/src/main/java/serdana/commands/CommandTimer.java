@@ -42,7 +42,7 @@ public class CommandTimer implements CommandExecutor {
 			}
 		} else if (args.length == 2) {
 			if (Bukkit.getPlayer(args[1]) == null) {
-				sender.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				sender.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			}
 			
@@ -53,10 +53,10 @@ public class CommandTimer implements CommandExecutor {
 			if (args[0].equalsIgnoreCase("start")) {
 				if (!players.containsKey(pl.getUniqueId())) {
 					players.put(pl.getUniqueId(), 0);
-					pl.sendMessage(ColorHelper.setColors("&cTimer started!"));
+					pl.sendMessage(ColorHelper.addColor("&cTimer started!"));
 					return true;
 				} else {
-					pl.sendMessage(ColorHelper.setColors("&cTimer already started!"));
+					pl.sendMessage(ColorHelper.addColor("&cTimer already started!"));
 				}
 			} else if (args[0].equalsIgnoreCase("stop")) {
 				Iterator<Entry<UUID, Integer>> it = players.entrySet().iterator();
@@ -65,13 +65,13 @@ public class CommandTimer implements CommandExecutor {
 					Entry<UUID, Integer> pair = it.next();
 					
 					if (pair.getKey() == pl.getUniqueId()) {
-						pl.sendMessage(ColorHelper.setColors("&cTimer stopped at : " + pair.getValue() + "!"));
+						pl.sendMessage(ColorHelper.addColor("&cTimer stopped at : " + pair.getValue() + "!"));
 						players.remove(pl.getUniqueId());
 						return true;
 					}
 				}
 				
-				pl.sendMessage(ColorHelper.setColors("&cThat player doesn't have a timer!"));
+				pl.sendMessage(ColorHelper.addColor("&cThat player doesn't have a timer!"));
 			}
 		}
 		
@@ -89,7 +89,7 @@ public class CommandTimer implements CommandExecutor {
 						Entry<UUID, Integer> pair = it.next();
 						pair.setValue(pair.getValue() + 1);
 						Bukkit.getPlayer(pair.getKey()).spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(
-								ColorHelper.setColors("&cVolcano Timer : &f" + pair.getValue())));
+								ColorHelper.addColor("&cVolcano Timer : &f" + pair.getValue())));
 					}
 				}
 			}

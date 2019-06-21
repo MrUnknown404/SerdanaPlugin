@@ -5,6 +5,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
 import main.java.serdana.Main;
+import main.java.serdana.handlers.SpecialPlayerHandler.SpecialPlayers;
 import main.java.serdana.util.ColorHelper;
 
 public class CommandToggleSpecial implements CommandExecutor {
@@ -17,13 +18,15 @@ public class CommandToggleSpecial implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (sender.getName().equalsIgnoreCase("MrUnknown404")) {
-			main.getSpecialPlayerHandler().togglePlayer("MrUnknown404");
-			sender.sendMessage(ColorHelper.setColors("&cSpecial effect toggled!"));
-			return true;
-		} else {
-			sender.sendMessage(ColorHelper.setColors("&cYou aren't special!"));
-			return false;
+		for (SpecialPlayers player : SpecialPlayers.values()) {
+			if (sender.getName().equalsIgnoreCase(player.getName())) {
+				main.getSpecialPlayerHandler().togglePlayer(player);
+				sender.sendMessage(ColorHelper.addColor("&cSpecial effect toggled!"));
+				return true;
+			}
 		}
+		
+		sender.sendMessage(ColorHelper.addColor("&cYou aren't special!"));
+		return false;
 	}
 }

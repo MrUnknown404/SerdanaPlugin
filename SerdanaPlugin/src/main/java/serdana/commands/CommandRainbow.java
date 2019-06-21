@@ -33,7 +33,7 @@ public class CommandRainbow implements CommandExecutor {
 		}
 		
 		for (Player player : Bukkit.getOnlinePlayers()) {
-			player.sendMessage(ColorHelper.setColors("<" + ((Player) sender).getDisplayName() + "&f> " + sb.toString()));
+			player.sendMessage(ColorHelper.addColor("<" + ((Player) sender).getDisplayName() + "&f> " + sb.toString()));
 		}
 		
 		return true;

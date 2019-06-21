@@ -27,77 +27,77 @@ public class CommandParty implements CommandExecutor {
 		
 		if (args[0].equalsIgnoreCase("create") && args.length == 1) {
 			if (main.getPartyHandler().isPlayerInAnyParty(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are already in a party!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are already in a party!"));
 				return false;
 			}
 			
-			pl.sendMessage(ColorHelper.setColors("&cParty created!"));
+			pl.sendMessage(ColorHelper.addColor("&cParty created!"));
 			main.getPartyHandler().createParty(pl.getUniqueId());
 			return true;
 		} else if (args[0].equalsIgnoreCase("invite") && args.length == 2) {
 			if (!main.getPartyHandler().isPlayerInAnyParty(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are not in a party!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are not in a party!"));
 				return false;
 			} else if (!main.getPartyHandler().isPartyLeader(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are not the party leader!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are not the party leader!"));
 				return false;
 			} else if (Bukkit.getPlayer(args[1]) == null) {
-				pl.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				pl.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			} else if (main.getPartyHandler().doesPlayerHaveInvite(pl.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cPlayer already has an invite!"));
+				pl.sendMessage(ColorHelper.addColor("&cPlayer already has an invite!"));
 				return false;
 			} else if (Bukkit.getPlayer(args[1]).getUniqueId() == ((Player) sender).getUniqueId()) {
-				pl.sendMessage(ColorHelper.setColors("&cYou cannot invite yourself!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou cannot invite yourself!"));
 				return false;
 			}
 			
-			pl.sendMessage(ColorHelper.setColors("&cInvite sent!"));
-			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.setColors("&cYou have received an invite from " + ((Player) sender).getDisplayName() + "!"));
+			pl.sendMessage(ColorHelper.addColor("&cInvite sent!"));
+			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.addColor("&cYou have received an invite from " + ((Player) sender).getDisplayName() + "!"));
 			main.getPartyHandler().invitePlayer(pl.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId());
 			return true;
 		} else if (args[0].equalsIgnoreCase("join") && args.length == 2) {
 			if (main.getPartyHandler().isPlayerInAnyParty(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are already in a party!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are already in a party!"));
 				return false;
 			} else if (Bukkit.getPlayer(args[1]) == null) {
-				pl.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				pl.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			} else if (!main.getPartyHandler().doesPlayerHaveInvite(Bukkit.getPlayer(args[1]).getUniqueId(), pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou do not have an invite from that player!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou do not have an invite from that player!"));
 				return false;
 			}
 			
-			pl.sendMessage(ColorHelper.setColors("&cYou joined the party!"));
-			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.setColors("&c" + pl.getDisplayName() + " has joined the party!"));
+			pl.sendMessage(ColorHelper.addColor("&cYou joined the party!"));
+			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.addColor("&c" + pl.getDisplayName() + " has joined the party!"));
 			main.getPartyHandler().joinParty(Bukkit.getPlayer(args[1]).getUniqueId(), pl.getUniqueId());
 			return true;
 		} else if (args[0].equalsIgnoreCase("leave") && args.length == 1) {
 			if (!main.getPartyHandler().isPlayerInAnyParty(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are not in a party!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are not in a party!"));
 				return false;
 			}
 			
-			pl.sendMessage(ColorHelper.setColors("&cYou left the party!"));
+			pl.sendMessage(ColorHelper.addColor("&cYou left the party!"));
 			main.getPartyHandler().leaveParty(pl.getUniqueId());
 			return true;
 		} else if (args[0].equalsIgnoreCase("kick") && args.length == 2) {
 			if (!main.getPartyHandler().isPlayerInAnyParty(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are not in a party!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are not in a party!"));
 				return false;
 			} else if (!main.getPartyHandler().isPartyLeader(pl.getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cYou are not the party leader!"));
+				pl.sendMessage(ColorHelper.addColor("&cYou are not the party leader!"));
 				return false;
 			} else if (Bukkit.getPlayer(args[1]) == null) {
-				pl.sendMessage(ColorHelper.setColors("&cUnknown player : " + args[1] + "!"));
+				pl.sendMessage(ColorHelper.addColor("&cUnknown player : " + args[1] + "!"));
 				return false;
 			} else if (!main.getPartyHandler().isPlayerInCertainParty(pl.getUniqueId(), Bukkit.getPlayer(args[1]).getUniqueId())) {
-				pl.sendMessage(ColorHelper.setColors("&cThat player is not in your party!"));
+				pl.sendMessage(ColorHelper.addColor("&cThat player is not in your party!"));
 				return false;
 			}
 			
-			pl.sendMessage(ColorHelper.setColors("&cYou have kicked " + args[1]+ " from the party!"));
-			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.setColors("&cYou have been kicked from the party!"));
+			pl.sendMessage(ColorHelper.addColor("&cYou have kicked " + args[1]+ " from the party!"));
+			Bukkit.getPlayer(args[1]).sendMessage(ColorHelper.addColor("&cYou have been kicked from the party!"));
 			main.getPartyHandler().leaveParty(Bukkit.getPlayer(args[1]).getUniqueId());
 			return true;
 		}
