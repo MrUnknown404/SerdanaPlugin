@@ -113,7 +113,9 @@ public class SpecialPlayerHandler extends Reloadable {
 							}
 						}
 					}
-				} else if (Bukkit.getPlayer(SpecialPlayers.Hoodie.getName()) != null && isPlayerEnabled(SpecialPlayers.Hoodie)) {
+				}
+				
+				if (Bukkit.getPlayer(SpecialPlayers.Hoodie.getName()) != null && isPlayerEnabled(SpecialPlayers.Hoodie)) {
 					doHoodie();
 				}
 			}

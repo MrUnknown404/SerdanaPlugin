@@ -36,8 +36,8 @@ public class NPCInfo {
 			list = openMessages;
 		}
 		
-		if (list == null || list.isEmpty()) {
-			return false;
+		if (list.isEmpty()) {
+			return !isShop;
 		}
 		
 		String msg = list.get(new Random().nextInt(list.size()));
