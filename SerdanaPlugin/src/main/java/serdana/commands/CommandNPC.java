@@ -6,6 +6,8 @@ import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import com.nisovin.shopkeepers.api.ShopkeepersAPI;
@@ -26,7 +28,7 @@ public class CommandNPC implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-		if (args[0].equalsIgnoreCase("set")) {
+		if (args[0].equalsIgnoreCase("set") && args.length >= 4) {
 			try {
 				Integer.parseInt(args[1]);
 			} catch (NumberFormatException e) {
@@ -198,6 +200,27 @@ public class CommandNPC implements CommandExecutor {
 				hand.write();
 				return true;
 			}
+		} else if (args.length == 1) {
+			if (args[0].equalsIgnoreCase("getCursor")) {
+				for (Entity e : ((Player) sender).getNearbyEntities(10, 10, 10)) {
+					if (e instanceof LivingEntity && e.hasMetadata("shopkeeper")) {
+						if (getLookingAt((Player) sender, (LivingEntity) e)) {
+							List<? extends Shopkeeper> shops = ShopkeepersAPI.getShopkeeperRegistry().getShopkeepersAtLocation(e.getLocation());
+							
+							if (shops.isEmpty()) {
+								sender.sendMessage(ColorHelper.addColor("&cCould not find any shops!"));
+								return false;
+							} else if (shops.size() >= 2) {
+								sender.sendMessage(ColorHelper.addColor("&cFound too many shops! (Maybe one day i'll add support for this... i probably won't)"));
+								return false;
+							}
+							
+							sender.sendMessage(ColorHelper.addColor("&eFound shop with the ID: " + shops.get(0).getId()));
+							return true;
+						}
+					}
+				}
+			}
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("tp")) {
 				try {
@@ -284,6 +307,10 @@ public class CommandNPC implements CommandExecutor {
 		}
 		
 		return false;
+	}
+	
+	private boolean getLookingAt(Player p, LivingEntity e){
+		return e.getEyeLocation().toVector().subtract(p.getEyeLocation().toVector()).normalize().dot(p.getEyeLocation().getDirection()) > 0.99D;
 	}
 	
 	private void sendInfoToPlayer(Shopkeeper shop, Player p) {

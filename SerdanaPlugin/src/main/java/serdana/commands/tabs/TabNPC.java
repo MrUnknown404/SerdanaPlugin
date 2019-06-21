@@ -19,6 +19,7 @@ public class TabNPC implements TabCompleter {
 			r.add("set");
 			r.add("show");
 			r.add("getAt");
+			r.add("getCursor");
 			r.add("tp");
 		} else if (args.length == 2) {
 			if (args[0].equalsIgnoreCase("dialogue")) {
@@ -27,11 +28,11 @@ public class TabNPC implements TabCompleter {
 			} else if (args[0].equalsIgnoreCase("getAt")) {
 				r.add("" + ((Player) sender).getLocation().getBlockX());
 			} else if (args[0].equalsIgnoreCase("tp") || args[0].equalsIgnoreCase("show") || args[0].equalsIgnoreCase("set")) {
-				r.add("#");
+				r.add("npcID");
 			}
 		} else if (args.length == 3) {
-			if (args[0].equalsIgnoreCase("dialogue") && (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove") || args[1].equalsIgnoreCase("show"))) {
-				r.add("#");
+			if (args[0].equalsIgnoreCase("dialogue") && (args[1].equalsIgnoreCase("add") || args[1].equalsIgnoreCase("remove"))) {
+				r.add("npcID");
 			} else if (args[0].equalsIgnoreCase("set")) {
 				r.add("ignoresBannedItems");
 				r.add("isShop");
