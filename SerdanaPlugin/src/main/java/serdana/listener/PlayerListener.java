@@ -18,6 +18,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.serdana.Main;
+import main.java.serdana.handlers.SpecialPlayerHandler.SpecialPlayerEffect;
 import main.java.serdana.util.ColorHelper;
 import main.java.serdana.util.infos.BountyInfo;
 
@@ -65,6 +66,10 @@ public class PlayerListener implements Listener {
 		if (main.isComponentEnabled(Main.Components.Misc)) {
 			if (!e.getPlayer().hasPlayedBefore()) {
 				e.getPlayer().setDisplayName(ColorHelper.addColor("&7" + e.getPlayer().getName()));
+			}
+			
+			if (main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()) != null) {
+				main.getSpecialPlayerHandler().setupPlayer(e.getPlayer().getUniqueId());
 			}
 		}
 		
@@ -128,8 +133,10 @@ public class PlayerListener implements Listener {
 	public void onPlayerMove(PlayerMoveEvent e) {
 		if (main.isComponentEnabled(Main.Components.Misc)) {
 			if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ()) {
-				if (e.getPlayer().getName().equalsIgnoreCase("MrUnknown404") && e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
-					main.getSpecialPlayerHandler().doUnknown();
+				if (main.getSpecialPlayerHandler().isPlayerEnabled(e.getPlayer().getUniqueId()) && e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
+					if (main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()).getEffect() == SpecialPlayerEffect.antenna) {
+						main.getSpecialPlayerHandler().doAntenna(main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()));
+					}
 				}
 			}
 		}

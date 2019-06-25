@@ -5,10 +5,16 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
+import org.apache.commons.lang3.text.WordUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -22,39 +28,40 @@ import com.google.gson.reflect.TypeToken;
 import main.java.serdana.Main;
 import main.java.serdana.util.ColorHelper;
 import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.infos.SpecialPlayerInfo;
 
 public class SpecialPlayerHandler extends Reloadable {
 
+	private final Main main;
 	private final File path;
 	private final File file_special = new File("SpecialPlayers");
 	
-	private Map<String, Boolean> enabledPlayers = new HashMap<String, Boolean>();
+	private List<SpecialPlayerInfo> infos = new ArrayList<SpecialPlayerInfo>();
 	
-	/* -Unknown- */
-	private final ItemStack u_disabled, u_enabled, u_blinking;
-	private boolean u_hasWalked, u_isBlinking;
-	private final int u_maxStartBlink = 30, u_maxBlink = 10;
-	private int u_startBlink = u_maxStartBlink, u_blink = u_maxBlink;
+	private final ItemStack antenna_disabled, antenna_enabled, antenna_blinking;
+	private final ItemStack seizureHelmet_red, seizureHelmet_blue;
 	
-	/* Hoodie */
-	private final ItemStack h_red, h_blue;
+	private final int antenna_maxStartBlink = 30, antenna_maxBlink = 10;
+	private Map<UUID, Boolean> antenna_hasWalked = new HashMap<UUID, Boolean>(), antenna_isBlinking = new HashMap<UUID, Boolean>();
+	private Map<UUID, Integer> antenna_startBlink = new HashMap<UUID, Integer>(), antenna_blink = new HashMap<UUID, Integer>();
 	
 	public SpecialPlayerHandler(Main main) {
-		path = main.getDataFolder();
+		this.main = main;
+		this.path = main.getDataFolder();
 		
-		u_disabled= new ItemStack(Material.LEVER);
-		u_enabled = new ItemStack(Material.REDSTONE_TORCH);
-		u_blinking = new ItemStack(Material.TORCH);
+		antenna_disabled= new ItemStack(Material.LEVER);
+		antenna_enabled = new ItemStack(Material.REDSTONE_TORCH);
+		antenna_blinking = new ItemStack(Material.TORCH);
 		
-		h_red = new ItemStack(Material.RED_STAINED_GLASS);
-		h_blue = new ItemStack(Material.BLUE_STAINED_GLASS);
+		seizureHelmet_red = new ItemStack(Material.RED_STAINED_GLASS);
+		seizureHelmet_blue = new ItemStack(Material.BLUE_STAINED_GLASS);
 		
-		ItemMeta metaDisabled = u_disabled.getItemMeta();
-		ItemMeta metaEnabled= u_enabled.getItemMeta();
-		ItemMeta metaBlinking = u_blinking.getItemMeta();
+		ItemMeta metaDisabled = antenna_disabled.getItemMeta();
+		ItemMeta metaEnabled= antenna_enabled.getItemMeta();
+		ItemMeta metaBlinking = antenna_blinking.getItemMeta();
 		
-		ItemMeta metaRed= h_red.getItemMeta();
-		ItemMeta metaBlue = h_blue.getItemMeta();
+		ItemMeta metaRed= seizureHelmet_red.getItemMeta();
+		ItemMeta metaBlue = seizureHelmet_blue.getItemMeta();
 		
 		metaDisabled.setDisplayName(ColorHelper.addColor("&8Disabled Antenna"));
 		metaEnabled.setDisplayName(ColorHelper.addColor("&cEnabled Antenna"));
@@ -66,57 +73,28 @@ public class SpecialPlayerHandler extends Reloadable {
 		metaRed.setDisplayName(ColorHelper.addColor("&cRed Seizure Helmet"));
 		metaBlue.setDisplayName(ColorHelper.addColor("&bBlue Seizure Helmet"));
 		
-		u_disabled.setItemMeta(metaDisabled);
-		u_enabled.setItemMeta(metaEnabled);
-		u_blinking.setItemMeta(metaBlinking);
+		antenna_disabled.setItemMeta(metaDisabled);
+		antenna_enabled.setItemMeta(metaEnabled);
+		antenna_blinking.setItemMeta(metaBlinking);
 		
-		h_red.setItemMeta(metaRed);
-		h_blue.setItemMeta(metaBlue);
+		seizureHelmet_red.setItemMeta(metaRed);
+		seizureHelmet_blue.setItemMeta(metaBlue);
 		
 		Bukkit.getServer().getScheduler().scheduleSyncRepeatingTask(main, new Runnable() {
 			@Override
 			public void run() {
-				if (Bukkit.getPlayer(SpecialPlayers.Unknown.getName()) != null && isPlayerEnabled(SpecialPlayers.Unknown)) {
-					if (u_hasWalked) {
-						u_hasWalked = false;
-					} else {
-						Player p = Bukkit.getPlayer(SpecialPlayers.Unknown.getName());
-						
-						if (!p.getInventory().getHelmet().equals(u_disabled)) {
-							if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(u_enabled) && !p.getInventory().getHelmet().equals(u_disabled) &&
-									!p.getInventory().getHelmet().equals(u_blinking)) {
-								p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
-							}
-							
-							p.getInventory().setHelmet(u_disabled);
-						}
-						
-						if (!u_isBlinking) {
-							if (u_startBlink == 0) {
-								u_startBlink = u_maxStartBlink;
-								u_isBlinking = true;
-							} else {
-								u_startBlink--;
-							}
-						} else {
-							if (u_blink == 0) {
-								u_blink = u_maxBlink;
-								
-								if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(u_enabled) && !p.getInventory().getHelmet().equals(u_disabled) &&
-										!p.getInventory().getHelmet().equals(u_blinking)) {
-									p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
-								}
-								
-								p.getInventory().setHelmet(u_blinking);
-							} else {
-								u_blink--;
-							}
+				for (SpecialPlayerInfo info : infos) {
+					Player p = Bukkit.getPlayer(info.getID());
+					
+					if (p != null && isPlayerEnabled(info)) {
+						try {
+							Method method = SpecialPlayerHandler.class.getDeclaredMethod("tick" + WordUtils.capitalize(info.getEffect().toString()), SpecialPlayerInfo.class);
+							method.setAccessible(true);
+							method.invoke(main.getSpecialPlayerHandler(), info);
+						} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+							e.printStackTrace();
 						}
 					}
-				}
-				
-				if (Bukkit.getPlayer(SpecialPlayers.Hoodie.getName()) != null && isPlayerEnabled(SpecialPlayers.Hoodie)) {
-					doHoodie();
 				}
 			}
 		}, 0L, 2L);
@@ -139,7 +117,7 @@ public class SpecialPlayerHandler extends Reloadable {
 		try {
 			fw = new FileWriter(path + "/" + file_special +  Main.TYPE);
 			
-			g.toJson(enabledPlayers, fw);
+			g.toJson(infos, fw);
 			
 			fw.flush();
 			fw.close();
@@ -155,95 +133,181 @@ public class SpecialPlayerHandler extends Reloadable {
 		try {
 			fr = new FileReader(path + "/" + file_special + Main.TYPE);
 			
-			enabledPlayers = g.fromJson(fr, new TypeToken<Map<String, Boolean>>(){}.getType());
+			infos = g.fromJson(fr, new TypeToken<List<SpecialPlayerInfo>>(){}.getType());
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	public void doUnknown() {
-		if (!isPlayerEnabled(SpecialPlayers.Unknown)) {
-			return;
-		}
-		
-		Player p = Bukkit.getPlayer(SpecialPlayers.Unknown.getName());
-		
-		if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(u_enabled) && !p.getInventory().getHelmet().equals(u_disabled) &&
-				!p.getInventory().getHelmet().equals(u_blinking)) {
-			p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
-		}
-		
-		p.getInventory().setHelmet(u_enabled);
-		
-		u_hasWalked = true;
-		u_isBlinking = false;
-		u_blink = u_maxBlink;
-		u_startBlink = u_maxStartBlink;
+	public SpecialPlayerInfo setupNewPlayer(UUID id, boolean enabled) {
+		SpecialPlayerInfo info = new SpecialPlayerInfo(id, enabled, SpecialPlayerEffect.seizureHelmet);
+		infos.add(info);
+		return info;
 	}
 	
-	private void doHoodie() {
-		if (!isPlayerEnabled(SpecialPlayers.Hoodie)) {
-			return;
-		}
+	public void setupPlayer(UUID id) {
+		SpecialPlayerInfo info = getSpecialInfo(id);
 		
-		Player p = Bukkit.getPlayer(SpecialPlayers.Hoodie.getName());
-		
-		if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(h_blue) && !p.getInventory().getHelmet().equals(h_red)) {
-			p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
-		} else if (p.getInventory().getHelmet() == null) {
-			p.getInventory().setHelmet(h_red);
-		}
-		
-		if (p.getInventory().getHelmet().equals(h_red)) {
-			p.getInventory().setHelmet(h_blue);
-		} else if (p.getInventory().getHelmet().equals(h_blue)) {
-			p.getInventory().setHelmet(h_red);
-		} else {
-			p.getInventory().setHelmet(h_red);
-		}
-	}
-	
-	public void togglePlayer(SpecialPlayers player) {
-		if (enabledPlayers.containsKey(player.getName())) {
-			enabledPlayers.put(player.getName(), !enabledPlayers.get(player.getName()));
-		} else {
-			enabledPlayers.put(player.getName(), true);
-		}
-		
-		if (player == SpecialPlayers.Unknown) {
-			Player p = Bukkit.getPlayer(player.getName());
-			
-			if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(u_enabled) && !p.getInventory().getHelmet().equals(u_disabled) &&
-					!p.getInventory().getHelmet().equals(u_blinking)) {
-				p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
+		if (info.isEnabled()) {
+			try {
+				Method method = getClass().getDeclaredMethod("start" + WordUtils.capitalize(info.getEffect().toString()), SpecialPlayerInfo.class);
+				method.setAccessible(true);
+				method.invoke(main.getSpecialPlayerHandler(), info);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
 			}
-			
-			p.getInventory().setHelmet(u_disabled);
 		}
+	}
+	
+	public void setEffect(UUID id, SpecialPlayerEffect effect) {
+		SpecialPlayerInfo info = getSpecialInfo(id);
+		info.setEffect(effect);
+		write();
+		
+		try {
+			Method method = getClass().getDeclaredMethod("start" + WordUtils.capitalize(info.getEffect().toString()), SpecialPlayerInfo.class);
+			method.setAccessible(true);
+			method.invoke(main.getSpecialPlayerHandler(), info);
+		} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void togglePlayer(UUID id) {
+		SpecialPlayerInfo info = getSpecialInfo(id);
+		info.toggle();
 		
 		write();
+		
+		if (info.isEnabled()) {
+			try {
+				Method method = getClass().getDeclaredMethod("start" + WordUtils.capitalize(info.getEffect().toString()), SpecialPlayerInfo.class);
+				method.setAccessible(true);
+				method.invoke(main.getSpecialPlayerHandler(), info);
+			} catch (NoSuchMethodException | SecurityException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 	
-	private boolean isPlayerEnabled(SpecialPlayers player) {
-		if (!enabledPlayers.containsKey(player.getName())) {
-			return false;
+	public void startAntenna(SpecialPlayerInfo info) {
+		Player p = Bukkit.getPlayer(info.getID());
+		if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(antenna_enabled) && !p.getInventory().getHelmet().equals(antenna_disabled) &&
+				!p.getInventory().getHelmet().equals(antenna_blinking)) {
+			p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
 		}
 		
-		return enabledPlayers.get(player.getName());
+		p.getInventory().setHelmet(antenna_disabled);
+		
+		antenna_hasWalked.put(info.getID(), false);
+		antenna_isBlinking.put(info.getID(), false);
+		antenna_startBlink.put(info.getID(), antenna_maxStartBlink);
+		antenna_blink.put(info.getID(), antenna_maxBlink);
 	}
 	
-	public enum SpecialPlayers {
-		Unknown("MrUnknown404"),
-		Hoodie ("Hoodsworth");
+	public void tickAntenna(SpecialPlayerInfo info) {
+		if (antenna_hasWalked.get(info.getID())) {
+			antenna_hasWalked.put(info.getID(), false);
+		} else {
+			Player p = Bukkit.getPlayer(info.getID());
+			
+			if (!p.getInventory().getHelmet().equals(antenna_disabled)) {
+				if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(antenna_enabled) && !p.getInventory().getHelmet().equals(antenna_disabled) &&
+						!p.getInventory().getHelmet().equals(antenna_blinking)) {
+					p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
+				}
+				
+				p.getInventory().setHelmet(antenna_disabled);
+			}
+			
+			if (!antenna_isBlinking.get(info.getID())) {
+				if (antenna_startBlink.get(info.getID()) == 0) {
+					antenna_startBlink.put(info.getID(), antenna_maxStartBlink);
+					antenna_isBlinking.put(info.getID(), true);
+				} else {
+					antenna_startBlink.put(info.getID(), antenna_startBlink.get(info.getID()) - 1);
+				}
+			} else {
+				if (antenna_blink.get(info.getID()) == 0) {
+					antenna_blink.put(info.getID(), antenna_maxBlink);
+					
+					if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(antenna_enabled) && !p.getInventory().getHelmet().equals(antenna_disabled) &&
+							!p.getInventory().getHelmet().equals(antenna_blinking)) {
+						p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
+					}
+					
+					p.getInventory().setHelmet(antenna_blinking);
+				} else {
+					antenna_blink.put(info.getID(), antenna_blink.get(info.getID()) - 1);
+				}
+			}
+		}
+	}
+	
+	public void doAntenna(SpecialPlayerInfo info) {
+		Player p = Bukkit.getPlayer(info.getID());
 		
-		private final String name;
-		
-		private SpecialPlayers(String name) {
-			this.name = name;
+		if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(antenna_enabled) && !p.getInventory().getHelmet().equals(antenna_disabled) &&
+				!p.getInventory().getHelmet().equals(antenna_blinking)) {
+			p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
 		}
 		
-		public String getName() {
-			return name;
+		p.getInventory().setHelmet(antenna_enabled);
+		
+		antenna_hasWalked.put(info.getID(), true);
+		antenna_isBlinking.put(info.getID(), false);
+		antenna_startBlink.put(info.getID(), antenna_maxStartBlink);
+		antenna_blink.put(info.getID(), antenna_maxBlink);
+	}
+	
+	public void startSeizureHelmet(SpecialPlayerInfo info) {
+		Player p = Bukkit.getPlayer(info.getID());
+		
+		if (p.getInventory().getHelmet() != null && !p.getInventory().getHelmet().equals(seizureHelmet_blue) && !p.getInventory().getHelmet().equals(seizureHelmet_red)) {
+			p.getWorld().dropItemNaturally(p.getLocation(), p.getInventory().getHelmet());
+		} else if (p.getInventory().getHelmet() == null) {
+			p.getInventory().setHelmet(seizureHelmet_red);
 		}
+	}
+	
+	public void tickSeizureHelmet(SpecialPlayerInfo info) {
+		doSeizureHelmet(info);
+	}
+	
+	public void doSeizureHelmet(SpecialPlayerInfo info) {
+		Player p = Bukkit.getPlayer(info.getID());
+		
+		if (p.getInventory().getHelmet() == null) {
+			p.getInventory().setHelmet(seizureHelmet_red);
+		} else if (p.getInventory().getHelmet().equals(seizureHelmet_red)) {
+			p.getInventory().setHelmet(seizureHelmet_blue);
+		} else if (p.getInventory().getHelmet().equals(seizureHelmet_blue)) {
+			p.getInventory().setHelmet(seizureHelmet_red);
+		} else {
+			p.getInventory().setHelmet(seizureHelmet_red);
+		}
+	}
+	
+	public boolean isPlayerEnabled(UUID id) {
+		return isPlayerEnabled(getSpecialInfo(id));
+	}
+	
+	public boolean isPlayerEnabled(SpecialPlayerInfo info) {
+		return !infos.contains(info) ? false : info.isEnabled();
+	}
+	
+	public SpecialPlayerInfo getSpecialInfo(UUID id) {
+		for (SpecialPlayerInfo info : infos) {
+			if (info.getID().equals(id)) {
+				return info;
+			}
+		}
+		
+		return null;
+	}
+	
+	public enum SpecialPlayerEffect {
+		antenna,
+		seizureHelmet;
 	}
 }

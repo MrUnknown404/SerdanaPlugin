@@ -41,9 +41,9 @@ public class EntityListener implements Listener {
 		if (main.isComponentEnabled(Main.Components.Parties)) {
 			if (e.getDamager() instanceof Projectile && e.getEntity() instanceof Player) {
 				if (((Projectile) e.getDamager()).getShooter() instanceof Player) {
-					if (main.getPartyHandler().arePlayersInSameParty(((Player) ((Projectile) e.getDamager()).getShooter()).getUniqueId(), e.getDamager().getUniqueId())) {
+					if (main.getPartyHandler().arePlayersInSameParty(((Player) ((Projectile) e.getDamager()).getShooter()).getUniqueId(), e.getEntity().getUniqueId())) {
 						e.setCancelled(true);
-						e.getDamager().sendMessage(ColorHelper.addColor("&cYou cannot hurt that person!"));
+						((Player) ((Projectile) e.getDamager()).getShooter()).sendMessage(ColorHelper.addColor("&cYou cannot hurt that person!"));
 						return;
 					}
 				}

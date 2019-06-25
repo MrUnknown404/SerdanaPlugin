@@ -61,7 +61,7 @@ public class PartyHandler {
 	public void createParty(UUID creator) {
 		Player p = Bukkit.getPlayer(creator);
 		Playerboard board = new Playerboard(p, ColorHelper.addColor("&6Party's Health"));
-		board.set(p.getUniqueId(), (int) p.getHealth(), false);
+		board.addPlayer(p);
 		
 		parties.add(new PartyInfo(creator, board));
 	}

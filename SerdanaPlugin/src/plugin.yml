@@ -1,7 +1,7 @@
 main: main.java.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.6.5.0-Beta
+version: 0.6.6.0-Beta
 authors: [-Unknown-, RetroSpaceMan123, LittleJDude]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -111,10 +111,10 @@ commands:
     description: Tests the given Script
     usage: "Usage: '/testScript' [name]"
     permission: serdana.testScript
-  toggleSpecial:
-    description: Toggles your special effect
-    usage: "Usage: '/toggleSpecial'"
-    permission: serdana.toggleSpecial
+  specialEffect:
+    description: Edits your special effect
+    usage: "Usage: '/specialEffect' [arguments]"
+    permission: serdana.specialEffect
   npc:
     description: Edits the given NPC's dialogue
     usage: "Usage: '/npc' [arguments]"
@@ -173,7 +173,7 @@ permissions:
     default: op
   serdana.testScript:
     default: op
-  serdana.toggleSpecial:
+  serdana.specialEffect:
     default: op
   serdana.npc:
     default: op
