@@ -21,6 +21,7 @@ import main.java.serdana.Main;
 import main.java.serdana.handlers.SpecialPlayerHandler.SpecialPlayerEffect;
 import main.java.serdana.util.ColorHelper;
 import main.java.serdana.util.infos.BountyInfo;
+import main.java.serdana.util.specials.SpecialEffectAntenna;
 
 public class PlayerListener implements Listener {
 	
@@ -135,7 +136,8 @@ public class PlayerListener implements Listener {
 			if (e.getFrom().getX() != e.getTo().getX() || e.getFrom().getY() != e.getTo().getY() || e.getFrom().getZ() != e.getTo().getZ()) {
 				if (main.getSpecialPlayerHandler().isPlayerEnabled(e.getPlayer().getUniqueId()) && e.getPlayer().getGameMode() != GameMode.SPECTATOR) {
 					if (main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()).getEffect() == SpecialPlayerEffect.antenna) {
-						main.getSpecialPlayerHandler().doAntenna(main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()));
+						((SpecialEffectAntenna) main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()).getEffect().getEffectBase()).doEffect(
+								main.getSpecialPlayerHandler().getSpecialInfo(e.getPlayer().getUniqueId()));
 					}
 				}
 			}
