@@ -34,14 +34,15 @@ public class BountyInfo {
 	@Override
 	public boolean equals(Object obj) {
 		if (obj instanceof BountyInfo) {
-			if (((BountyInfo) obj).ownerUUID.equals(ownerUUID)) {
-				if (((BountyInfo) obj).toKillUUID.equals(toKillUUID)) {
-					if (((BountyInfo) obj).amountOfTokens == amountOfTokens) {
-						return true;
-					}
+			BountyInfo info = (BountyInfo) obj;
+			
+			if (info.ownerUUID.equals(ownerUUID)) {
+				if (info.toKillUUID.equals(toKillUUID)) {
+					return true;
 				}
 			}
 		}
+		
 		return false;
 	}
 }

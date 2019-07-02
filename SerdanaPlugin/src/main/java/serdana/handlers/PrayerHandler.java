@@ -11,11 +11,11 @@ import org.bukkit.inventory.Inventory;
 
 import main.java.serdana.Main;
 import main.java.serdana.util.ColorHelper;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 import main.java.serdana.util.enums.EnumPrayerType;
 import main.java.serdana.util.infos.PrayInfo;
 
-public class PrayerHandler extends Reloadable {
+public class PrayerHandler implements IReloadable {
 	
 	private final File path;
 	private final File file_unsetPrayers = new File("UnsetPrayers");
@@ -81,7 +81,7 @@ public class PrayerHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		writeAllPrayers();
 		readAllPrayers();
 		createInventories();

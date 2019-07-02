@@ -5,7 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +12,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -42,9 +43,11 @@ import main.java.serdana.commands.CommandRepeat;
 import main.java.serdana.commands.CommandSayAs;
 import main.java.serdana.commands.CommandSerdana;
 import main.java.serdana.commands.CommandSetBan;
+import main.java.serdana.commands.CommandMagic;
 import main.java.serdana.commands.CommandSetTier;
 import main.java.serdana.commands.CommandShowItem;
 import main.java.serdana.commands.CommandSpecialEffect;
+import main.java.serdana.commands.CommandTPWorld;
 import main.java.serdana.commands.CommandTestScript;
 import main.java.serdana.commands.CommandTimer;
 import main.java.serdana.commands.CommandUnbreakable;
@@ -58,7 +61,9 @@ import main.java.serdana.commands.tabs.TabQuest;
 import main.java.serdana.commands.tabs.TabRemoveAWarp;
 import main.java.serdana.commands.tabs.TabRepeat;
 import main.java.serdana.commands.tabs.TabSerdana;
+import main.java.serdana.commands.tabs.TabMagic;
 import main.java.serdana.commands.tabs.TabSpecialEffect;
+import main.java.serdana.commands.tabs.TabTPWorld;
 import main.java.serdana.commands.tabs.TabTestScript;
 import main.java.serdana.commands.tabs.TabTimer;
 import main.java.serdana.entities.util.EntityHandler;
@@ -82,6 +87,8 @@ import main.java.serdana.listener.InventoryListener;
 import main.java.serdana.listener.NPCListener;
 import main.java.serdana.listener.PlayerListener;
 import main.java.serdana.listener.WorldListener;
+import main.java.serdana.magic.util.MagicItemHandler;
+import main.java.serdana.magic.util.MagicShrineInfo;
 import main.java.serdana.quests.InitQuests;
 import main.java.serdana.quests.Quest;
 import main.java.serdana.quests.QuestHandler;
@@ -121,6 +128,7 @@ public final class Main extends JavaPlugin {
 	private NPCHandler NPCHandler;
 	private EntityHandler entityHandler;
 	private SpecialPlayerHandler specialPlayerHandler;
+	private MagicItemHandler magicItemHandler;
 	
 	private CommandTimer commandTimer;
 	
@@ -150,6 +158,8 @@ public final class Main extends JavaPlugin {
 		ConfigurationSerialization.registerClass(QuestTaskWalk.class, "QuestTaskWalk");
 		ConfigurationSerialization.registerClass(QuestTaskTalk.class, "QuestTaskTalk");
 		ConfigurationSerialization.registerClass(ScriptInfo.class, "ScriptInfo");
+		ConfigurationSerialization.registerClass(RandomConfig.class, "RandomConfig");
+		ConfigurationSerialization.registerClass(MagicShrineInfo.class, "MagicShrineInfo");
 		
 		setupComponents();
 	}
@@ -166,6 +176,7 @@ public final class Main extends JavaPlugin {
 		getServer().getPluginManager().registerEvents(new NPCListener(this), this);
 		getServer().getPluginManager().registerEvents(new WorldListener(), this);
 		
+		setupRandomConfig();
 		setupEnabledComponents();
 		reload(Bukkit.getConsoleSender());
 	}
@@ -177,38 +188,7 @@ public final class Main extends JavaPlugin {
 			sender.sendMessage(ColorHelper.addColor("&cReloading Serdana's Configs!"));
 		}
 		
-		Gson g = new GsonBuilder().setPrettyPrinting().create();
-		FileWriter fw = null;
-		FileReader fr = null;
-		
-		if (!new File(getDataFolder() + "/" + file_randomConfig + TYPE).exists()) {
-			System.out.println("Could not find file: " + file_randomConfig + TYPE + "! (Will be created)");
-			
-			ArrayList<String> jails = new ArrayList<String>();
-			jails.add("jail1");
-			jails.add("jail2");
-			
-			randomConfig = new RandomConfig(jails, 2, Arrays.asList("Max"), 16d, 5);
-			
-			try {
-				fw = new FileWriter(getDataFolder() + "/" + file_randomConfig + TYPE);
-				
-				g.toJson(randomConfig, fw);
-				
-				fw.flush();
-				fw.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-		
-		try {
-			fr = new FileReader(getDataFolder() + "/" + file_randomConfig + TYPE);
-			
-			randomConfig = g.fromJson(fr, RandomConfig.class);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
+		setupRandomConfig();
 		
 		Iterator<Entry<Components, Boolean>> it = components.entrySet().iterator();
 		while (it.hasNext()) {
@@ -238,6 +218,9 @@ public final class Main extends JavaPlugin {
 						break;
 					case AChat:
 						aChatHandler.reloadAll();
+						break;
+					case MagicItems:
+						magicItemHandler.reloadAll();
 						break;
 					case Misc:
 						specialPlayerHandler.reloadAll();
@@ -361,6 +344,12 @@ public final class Main extends JavaPlugin {
 						
 						getCommand("npc").setTabCompleter(new TabNPC());
 						break;
+					case MagicItems:
+						magicItemHandler = new MagicItemHandler(this);
+						
+						getCommand("magic").setExecutor(new CommandMagic(this));
+						getCommand("magic").setTabCompleter(new TabMagic());
+						break;
 					case Misc:
 						specialPlayerHandler = new SpecialPlayerHandler(this);
 						
@@ -380,11 +369,13 @@ public final class Main extends JavaPlugin {
 						getCommand("timer").setExecutor(commandTimer);
 						getCommand("repeat").setExecutor(new CommandRepeat());
 						getCommand("specialEffect").setExecutor(new CommandSpecialEffect(this));
+						getCommand("tpWorld").setExecutor(new CommandTPWorld());
 						
 						getCommand("serdana").setTabCompleter(new TabSerdana());
 						getCommand("timer").setTabCompleter(new TabTimer());
 						getCommand("repeat").setTabCompleter(new TabRepeat());
 						getCommand("specialEffect").setTabCompleter(new TabSpecialEffect());
+						getCommand("tpWorld").setTabCompleter(new TabTPWorld());
 						break;
 					default:
 						break;
@@ -392,7 +383,28 @@ public final class Main extends JavaPlugin {
 			}
 		}
 	}
-
+	
+	private void setupRandomConfig() {
+		File f = new File(getDataFolder() + "/" + file_randomConfig + ".yml");
+		if (!f.exists()) {
+			System.out.println("Could not find file: " + file_randomConfig + TYPE + "! (Will be created)");
+			
+			randomConfig = new RandomConfig(Arrays.asList("jail1", "jail2"), 2, Arrays.asList("Max"), 16d, 5, Arrays.asList(
+					new MagicShrineInfo("redmurk", new Location(Bukkit.getWorld("Max"), 0, 0, 0), Arrays.asList(new Location(Bukkit.getWorld("Max"), 0, 0, 0)))));
+			
+			YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
+			write.set("Config", randomConfig);
+			
+			try {
+				write.save(f);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		randomConfig = (RandomConfig) YamlConfiguration.loadConfiguration(f).get("Config");
+	}
+	
 	/** Checks if the given {@link Components} is enabled or disabled
 	 * @param comp The Component to check
 	 * @return returns true if the given component is enabled, returns false if disabled
@@ -469,6 +481,10 @@ public final class Main extends JavaPlugin {
 		return specialPlayerHandler;
 	}
 	
+	public MagicItemHandler getMagicItemHandler() {
+		return magicItemHandler;
+	}
+	
 	public enum Components {
 		AChat           (true),
 		AWarp           (true),
@@ -482,6 +498,7 @@ public final class Main extends JavaPlugin {
 		Quests          (false),
 		CustomNPCs      (false),
 		CustomEntities  (false),
+		MagicItems      (true),
 		Misc            (true),
 		
 		StopNamedItemUse(true),

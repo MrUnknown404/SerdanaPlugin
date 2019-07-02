@@ -9,9 +9,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -29,6 +31,17 @@ public class PlayerListener implements Listener {
 	
 	public PlayerListener(Main main) {
 		this.main = main;
+	}
+	
+	@EventHandler
+	public void onRightClick(PlayerInteractEvent e) {
+		if (main.isComponentEnabled(Main.Components.MagicItems)) {
+			if (e.getAction() == Action.RIGHT_CLICK_AIR) {
+				if (e.getItem() != null && main.getMagicItemHandler().getItemsMagic(e.getItem()) != null) {
+					e.getPlayer().getInventory().setItemInMainHand(main.getMagicItemHandler().useMagicItem(e.getPlayer(), e.getItem()));
+				}
+			}
+		}
 	}
 	
 	@EventHandler

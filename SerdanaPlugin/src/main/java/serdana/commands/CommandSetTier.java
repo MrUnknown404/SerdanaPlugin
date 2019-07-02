@@ -40,9 +40,6 @@ public class CommandSetTier implements CommandExecutor {
 			} else if (item.getType() == Material.AIR) {
 				sender.sendMessage(ColorHelper.addColor("&cMust hold an item!"));
 				return false;
-			} else if (main.getTierHandler().isItemTiered(item)) {
-				sender.sendMessage(ColorHelper.addColor("&cThis item already has a tier!"));
-				return true;
 			}
 			
 			((Player) sender).getInventory().setItemInMainHand(main.getTierHandler().addTierToItem(item, tier));

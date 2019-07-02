@@ -20,10 +20,10 @@ import com.google.gson.reflect.TypeToken;
 
 import main.java.serdana.Main;
 import main.java.serdana.util.ColorHelper;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 import main.java.serdana.util.infos.BountyInfo;
 
-public class BountyHandler extends Reloadable {
+public class BountyHandler implements IReloadable {
 	
 	private final File path;
 	private final File file_bounties = new File("Bounties");
@@ -69,7 +69,7 @@ public class BountyHandler extends Reloadable {
 	 */
 	public void rewardPlayer(BountyInfo info, Player killer) {
 		for (Player p : Bukkit.getOnlinePlayers()) {
-			p.sendMessage(ColorHelper.addColor("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " was claimed!"));
+			p.sendMessage(ColorHelper.addColor("&cThe bounty on " + Bukkit.getPlayer(info.getToKillUUID()).getDisplayName() + " &cwas claimed!"));
 		}
 		
 		ItemStack reward = new ItemStack(Material.FLINT, 1);
@@ -80,12 +80,14 @@ public class BountyHandler extends Reloadable {
 		if (killer.getInventory().firstEmpty() == -1) {
 			killer.sendMessage(ColorHelper.addColor("&cInventory is full!"));
 		} else {
-			killer.getInventory().addItem(reward);
+			for (int i = 0; i < info.getAmountOfTokens(); i++) {
+				killer.getInventory().addItem(reward);
+			}
 		}
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		if (!new File(path + "/" + file_bounties + Main.TYPE).exists()) {
 			System.out.println("Could not find file: " + file_bounties + Main.TYPE + "! (Will be created)");
 			bounties = new ArrayList<BountyInfo>();

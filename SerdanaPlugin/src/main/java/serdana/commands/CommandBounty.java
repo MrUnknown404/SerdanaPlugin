@@ -49,13 +49,18 @@ public class CommandBounty implements CommandExecutor {
 			}
 			
 			BountyInfo b = new BountyInfo(((Player) sender).getUniqueId(), toKill.getUniqueId(), item.getAmount());
-			for (int i = 0; i < main.getBountyHandler().getBounties().size(); i++) {
-				if (!main.getBountyHandler().getBounties().get(i).getToKillUUID().equals(b.getToKillUUID())) {
-					main.getBountyHandler().addBounty(b);
-					((Player) sender).getInventory().setItemInMainHand(null);
-					
-					return true;
+			boolean found = false;
+			for (BountyInfo info : main.getBountyHandler().getBounties()) {
+				if (info.getToKillUUID().equals(b.getToKillUUID())) {
+					found = true;
+					break;
 				}
+			}
+			
+			if (!found) {
+				main.getBountyHandler().addBounty(b);
+				((Player) sender).getInventory().setItemInMainHand(null);
+				return true;
 			}
 			
 			((Player) sender).sendMessage(ColorHelper.addColor("&cA bounty already exists on that player!"));

@@ -46,7 +46,7 @@ public class NPCInfo {
 			msg = msg.replaceAll("\\$player\\$", p.getDisplayName());
 		}
 		
-		p.sendMessage(ColorHelper.addColor("[" + name + "&f] " + msg));
+		p.sendMessage(ColorHelper.addColor("[" + name + "&f] &7" + msg));
 		
 		if (!isShop || (!ignoresBannedItems && type == EnumTalkType.banned)) {
 			return true;

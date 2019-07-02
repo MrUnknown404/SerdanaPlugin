@@ -16,12 +16,12 @@ import com.google.gson.reflect.TypeToken;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import main.java.serdana.Main;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 import main.java.serdana.util.enums.EnumQuestTalkType;
 import main.java.serdana.util.enums.EnumTalkType;
 import main.java.serdana.util.infos.NPCInfo;
 
-public class NPCHandler extends Reloadable {
+public class NPCHandler implements IReloadable {
 
 	private final Main main;
 	private final File path;
@@ -36,7 +36,7 @@ public class NPCHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		NPCInfos = read();
 	}
 	

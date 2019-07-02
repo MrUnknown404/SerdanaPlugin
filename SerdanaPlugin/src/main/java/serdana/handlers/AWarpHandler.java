@@ -14,9 +14,9 @@ import org.bukkit.Location;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import main.java.serdana.Main;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 
-public class AWarpHandler extends Reloadable {
+public class AWarpHandler implements IReloadable {
 	
 	private final File path;
 	private final File file_warps = new File("AdminWarps");
@@ -28,7 +28,7 @@ public class AWarpHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		if (!new File(path + "/" + file_warps + ".yml").exists()) {
 			System.out.println("Could not find file: " + file_warps + ".yml" + "! (Will be created)");
 			warps = new HashMap<String, Location>();

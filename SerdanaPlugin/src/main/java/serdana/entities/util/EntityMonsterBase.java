@@ -16,6 +16,7 @@ import net.minecraft.server.v1_13_R2.World;
 
 public abstract class EntityMonsterBase extends EntityMonster {
 
+	protected final EnumCustomEntities customEntityType;
 	protected final int tier, abilityChance, abilityMinTime, abilityMaxTime;
 	protected int abilityTime = 0;
 	
@@ -31,6 +32,7 @@ public abstract class EntityMonsterBase extends EntityMonster {
 	 */
 	public EntityMonsterBase(World world, EnumCustomEntities customEntityType, int tier, int abilityChance, int abilityMinTime, int abilityMaxTime) {
 		super(customEntityType.getVanillaType(), world);
+		this.customEntityType = customEntityType;
 		this.tier = tier;
 		this.abilityChance = abilityChance;
 		this.abilityMinTime = abilityMinTime;
@@ -183,6 +185,10 @@ public abstract class EntityMonsterBase extends EntityMonster {
 	protected void setLuck(double value) {
 		getAttributeMap().b(GenericAttributes.j);
 		getAttributeInstance(GenericAttributes.j).setValue(value);
+	}
+	
+	public EnumCustomEntities getCustomEntityType() {
+		return customEntityType;
 	}
 	
 	public int getTier() {

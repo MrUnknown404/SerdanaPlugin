@@ -1,7 +1,7 @@
 main: main.java.serdana.Main
 name: Serdana
 # Release.Major.Minor.Hotfix (Release < 1 = Beta || Major < 1 = Alpha)
-version: 0.6.7.0-Beta
+version: 0.6.8.0-Beta
 authors: [-Unknown-, RetroSpaceMan123, LittleJDude]
 depend: [Essentials, ItemNBTAPI, Shopkeepers]
 website: https://github.com/Serdana/SerdanaPlugin
@@ -119,6 +119,15 @@ commands:
     description: Edits the given NPC's dialogue
     usage: "Usage: '/npc' [arguments]"
     permission: serdana.npc
+  tpWorld:
+    aliases: tpw
+    description: Teleports you to the coords and world
+    usage: "Usage: '/tpworld' [x] [y] [z] [world]"
+    permission: serdana.tpWorld
+  magic:
+    description: Gives the held item magic
+    usage: "Usage: '/magic' [argument] [argument]"
+    permission: serdana.magic
 
 permissions:
   serdana.setTier:
@@ -176,4 +185,8 @@ permissions:
   serdana.specialEffect:
     default: op
   serdana.npc:
+    default: op
+  serdana.tpWorld:
+    default: op
+  serdana.magic:
     default: op

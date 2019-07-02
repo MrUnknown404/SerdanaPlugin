@@ -17,14 +17,15 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 
 import main.java.serdana.Main;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 import main.java.serdana.util.infos.SpecialPlayerInfo;
 import main.java.serdana.util.specials.ISpecialEffectBase;
 import main.java.serdana.util.specials.SpecialEffectAntenna;
+import main.java.serdana.util.specials.SpecialEffectCirclingStars;
 import main.java.serdana.util.specials.SpecialEffectParticleBridge;
 import main.java.serdana.util.specials.SpecialEffectSeizureHelmet;
 
-public class SpecialPlayerHandler extends Reloadable {
+public class SpecialPlayerHandler implements IReloadable {
 
 	private final File path;
 	private final File file_special = new File("SpecialPlayers");
@@ -49,7 +50,7 @@ public class SpecialPlayerHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		if (!new File(path + "/" + file_special + Main.TYPE).exists()) {
 			System.out.println("Could not find file: " + file_special + Main.TYPE + " (Will be created)");
 			write();
@@ -143,7 +144,8 @@ public class SpecialPlayerHandler extends Reloadable {
 	public enum SpecialPlayerEffect {
 		antenna       (new SpecialEffectAntenna()),
 		seizureHelmet (new SpecialEffectSeizureHelmet()),
-		particleBridge(new SpecialEffectParticleBridge());
+		particleBridge(new SpecialEffectParticleBridge()),
+		circlingStars (new SpecialEffectCirclingStars());
 		
 		private final ISpecialEffectBase effectBase;
 		

@@ -21,9 +21,9 @@ import com.google.gson.reflect.TypeToken;
 
 import de.tr7zw.itemnbtapi.NBTItem;
 import main.java.serdana.Main;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 
-public class BannedItemHandler extends Reloadable {
+public class BannedItemHandler implements IReloadable {
 	
 	private final Main main;
 	private final File path;
@@ -91,7 +91,7 @@ public class BannedItemHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		Gson g = new GsonBuilder().setPrettyPrinting().create();
 		FileWriter fw = null;
 		FileReader fr = null;

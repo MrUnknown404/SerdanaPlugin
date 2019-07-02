@@ -22,8 +22,16 @@ public class TierHandler {
 	 */
 	public ItemStack addTierToItem(ItemStack item, int tier) {
 		if (new NBTItem(item).hasKey("tier")) {
-			System.out.println("Item already has a tier!");
-			return null;
+			List<String> lore = new ArrayList<String>();
+			
+			for (String str : item.getItemMeta().getLore()) {
+				lore.add(str);
+			}
+			
+			lore.set(lore.size() - 1, lore.get(lore.size() - 1).substring(0, lore.get(lore.size() - 1).length() - 8 - String.valueOf(tier).length()));
+			ItemMeta meta = item.getItemMeta();
+			meta.setLore(lore);
+			item.setItemMeta(meta);
 		}
 		
 		List<String> lore = new ArrayList<String>();

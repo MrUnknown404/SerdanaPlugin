@@ -12,9 +12,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
 import main.java.serdana.Main;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 
-public class AChatHandler extends Reloadable {
+public class AChatHandler implements IReloadable {
 
 	private final File path;
 	private final File file_chatStates = new File("AdminChatStates");
@@ -26,7 +26,7 @@ public class AChatHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		if (!new File(path + "/" + file_chatStates + ".yml").exists()) {
 			System.out.println("Could not find file: " + file_chatStates + ".yml" + "! (Will be created)");
 			chatStates = new HashMap<UUID, Boolean>();

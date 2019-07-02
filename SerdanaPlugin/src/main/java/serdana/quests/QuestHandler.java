@@ -25,18 +25,19 @@ import org.bukkit.scheduler.BukkitScheduler;
 import com.nisovin.shopkeepers.api.shopkeeper.Shopkeeper;
 
 import main.java.serdana.Main;
+import main.java.serdana.entities.util.EnumCustomEntities;
 import main.java.serdana.quests.tasks.QuestTask;
 import main.java.serdana.quests.tasks.QuestTaskFetch;
 import main.java.serdana.quests.tasks.QuestTaskKill;
 import main.java.serdana.quests.tasks.QuestTaskTalk;
 import main.java.serdana.quests.tasks.QuestTaskWalk;
 import main.java.serdana.util.ColorHelper;
-import main.java.serdana.util.Reloadable;
+import main.java.serdana.util.IReloadable;
 import main.java.serdana.util.enums.EnumQuestState;
 import main.java.serdana.util.enums.EnumQuestTalkType;
 import main.java.serdana.util.enums.EnumTaskCheckType;
 
-public class QuestHandler extends Reloadable {
+public class QuestHandler implements IReloadable {
 
 	private final Main main;
 	private final File path;
@@ -63,7 +64,7 @@ public class QuestHandler extends Reloadable {
 	}
 	
 	@Override
-	protected void reload() {
+	public void reload() {
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			setupPlayer(p);
 		}
@@ -488,8 +489,8 @@ public class QuestHandler extends Reloadable {
 		} else if (questFileName == "DebugKill") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
-			tasks.add(new QuestTaskKill(EntityType.ZOMBIE, 3, new String[] {
-					"Kill 3 Zombies"
+			tasks.add(new QuestTaskKill(EnumCustomEntities.TEST_ZOMBIE, 3, new String[] {
+					"Kill 3 Test Zombies"
 			}, new String[] {
 					"Complete Task Message 1",
 					"Complete Task Message 2"
