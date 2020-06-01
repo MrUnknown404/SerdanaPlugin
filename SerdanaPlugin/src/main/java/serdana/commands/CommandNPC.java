@@ -28,6 +28,10 @@ public class CommandNPC implements CommandExecutor {
 	
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (args.length == 0) {
+			return false;
+		}
+		
 		if (args[0].equalsIgnoreCase("set") && args.length >= 4) {
 			try {
 				Integer.parseInt(args[1]);
@@ -76,7 +80,7 @@ public class CommandNPC implements CommandExecutor {
 			} else if (args[2].equalsIgnoreCase("ignoresBannedItems")) {
 				value = value.toLowerCase();
 				if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
-					info.setShop(Boolean.parseBoolean(value));
+					info.setIgnoresBannedItems(Boolean.parseBoolean(value));
 				}
 			} else {
 				sender.sendMessage(ColorHelper.addColor("&cUnknown value: " + args[2]));
@@ -86,60 +90,62 @@ public class CommandNPC implements CommandExecutor {
 			sender.sendMessage(ColorHelper.addColor("&cSuccessfully added \"" + value + "\" to \"" + args[2] + "\"!"));
 			hand.write();
 			return true;
-		} else if (args[0].equalsIgnoreCase("dialogue")) {
+		} else if (args[0].equalsIgnoreCase("dialogue") && args.length >= 5) {
 			if (args[1].equalsIgnoreCase("add")) {
-				if (args.length >= 5) {
-					try {
-						Integer.parseInt(args[2]);
-					} catch (NumberFormatException e) {
-						sender.sendMessage(ColorHelper.addColor("&c" + args[2] + " is not a number!"));
-						return false;
-					}
-					
-					String value = "";
-					for (int i = 4; i < args.length; i++) {
-						value += args[i];
-						
-						if (i != args.length - 1) {
-							value += " ";
-						}
-					}
-					
-					if (!value.startsWith("\"") || !value.endsWith("\"")) {
-						sender.sendMessage(ColorHelper.addColor("&cValue doesn't start/end with \"!"));
-						return false;
-					}
-					value = value.substring(1, value.length() - 1);
-					
-					NPCHandler hand = main.getNPCHandler();
-					NPCInfo info = hand.getNPCInfoFromID(Integer.parseInt(args[2]));
-					if (info == null) {
-						Shopkeeper shop = ShopkeepersAPI.getShopkeeperRegistry().getShopkeeperById(Integer.parseInt(args[2]));
-						if (shop != null) {
-							sender.sendMessage(ColorHelper.addColor("&cCould not find any dialogue for that NPC! (creating now)"));
-							main.getNPCHandler().addNPCDialogue(shop);
-							info = main.getNPCHandler().getNPCInfoFromID(shop.getId());
-						} else {
-							sender.sendMessage(ColorHelper.addColor("&cCould not find a shop with that ID!"));
-							return false;
-						}
-					}
-					
-					if (args[3].equalsIgnoreCase("openMessages")) {
-						info.addOpenMessages(value);
-					} else if (args[3].equalsIgnoreCase("bannedItemMessages")) {
-						info.addBannedItemMessages(value);
-					} else if (args[3].equalsIgnoreCase("tradeMessages")) {
-						info.addTradeMessages(value);
-					} else {
-						sender.sendMessage(ColorHelper.addColor("&cUnknown value: " + args[3]));
-						return false;
-					}
-					
-					sender.sendMessage(ColorHelper.addColor("&cSuccessfully set \"" + args[3] + "\" as \"" + value + "\"!"));
-					hand.write();
-					return true;
+				try {
+					Integer.parseInt(args[2]);
+				} catch (NumberFormatException e) {
+					sender.sendMessage(ColorHelper.addColor("&c" + args[2] + " is not a number!"));
+					return false;
 				}
+				
+				String value = "";
+				for (int i = 4; i < args.length; i++) {
+					value += args[i];
+					
+					if (i != args.length - 1) {
+						value += " ";
+					}
+				}
+				
+				if (!value.startsWith("\"") || !value.endsWith("\"")) {
+					sender.sendMessage(ColorHelper.addColor("&cValue doesn't start/end with \"!"));
+					return false;
+				} else if (value.length() == 1) {
+					sender.sendMessage(ColorHelper.addColor("&cValue doesn't start/end with \"!"));
+					return false;
+				}
+				
+				value = value.substring(1, value.length() - 1);
+				
+				NPCHandler hand = main.getNPCHandler();
+				NPCInfo info = hand.getNPCInfoFromID(Integer.parseInt(args[2]));
+				if (info == null) {
+					Shopkeeper shop = ShopkeepersAPI.getShopkeeperRegistry().getShopkeeperById(Integer.parseInt(args[2]));
+					if (shop != null) {
+						sender.sendMessage(ColorHelper.addColor("&cCould not find any dialogue for that NPC! (creating now)"));
+						main.getNPCHandler().addNPCDialogue(shop);
+						info = main.getNPCHandler().getNPCInfoFromID(shop.getId());
+					} else {
+						sender.sendMessage(ColorHelper.addColor("&cCould not find a shop with that ID!"));
+						return false;
+					}
+				}
+				
+				if (args[3].equalsIgnoreCase("openMessages")) {
+					info.addOpenMessages(value);
+				} else if (args[3].equalsIgnoreCase("bannedItemMessages")) {
+					info.addBannedItemMessages(value);
+				} else if (args[3].equalsIgnoreCase("tradeMessages")) {
+					info.addTradeMessages(value);
+				} else {
+					sender.sendMessage(ColorHelper.addColor("&cUnknown value: " + args[3]));
+					return false;
+				}
+				
+				sender.sendMessage(ColorHelper.addColor("&cSuccessfully set \"" + args[3] + "\" as \"" + value + "\"!"));
+				hand.write();
+				return true;
 			} else if (args[1].equalsIgnoreCase("remove") && args.length == 5) {
 				try {
 					Integer.parseInt(args[2]);

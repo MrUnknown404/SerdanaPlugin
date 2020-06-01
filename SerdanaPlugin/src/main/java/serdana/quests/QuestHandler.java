@@ -3,6 +3,7 @@ package main.java.serdana.quests;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -163,6 +164,15 @@ public class QuestHandler implements IReloadable {
 			playersQuests.add(readQuestPlayerData(p));
 		}
 		
+		if (getQuestPlayersData(p).getQuests() != null) {
+			for (Quest q : getQuestPlayersData(p).getQuests()) {
+				if (!InitQuests.doesQuestExist(q.getName())) {
+					System.out.println(p.getDisplayName() + " has a removed (inactive) quest " + q.getName() + "! (removing now)");
+					removeQuestFromPlayer(p, q);
+				}
+			}
+		}
+		
 		Iterator<Entry<Boolean, List<Quest>>> it = InitQuests.getAllQuests().entrySet().iterator();
 		while (it.hasNext()) {
 			Entry<Boolean, List<Quest>> pair = it.next();
@@ -177,7 +187,12 @@ public class QuestHandler implements IReloadable {
 					if (getQuestPlayersData(p).isOldQuest(q)) {
 						System.out.println(p.getDisplayName() + " has an out of date quest " + q.getName() + "! (fixing now)");
 						removeQuestFromPlayer(p, q);
-						addQuestToPlayer(p, q);
+						
+						if (q.isActive()) {
+							addQuestToPlayer(p, q);
+						} else {
+							System.out.println(p.getDisplayName() + " has a removed (inactive) quest " + q.getName() + "! (removing now)");
+						}
 					}
 				}
 			} else {
@@ -447,11 +462,11 @@ public class QuestHandler implements IReloadable {
 	 * @return A default Quest
 	 */
 	private Quest writeDefaultQuest(String questFileName) {
-		File f = new File(path + "/Quests/" + questFileName + ".yml");
+		File f = new File(path + "/Quests/" + questFileName);
 		YamlConfiguration write = YamlConfiguration.loadConfiguration(f);
 		Quest q = null;
 		
-		if (questFileName == "DebugFetch") {
+		if (questFileName == "Debug Fetch!.yml") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskFetch(new ItemStack(Material.ROTTEN_FLESH), 3, new String[] {
@@ -467,26 +482,23 @@ public class QuestHandler implements IReloadable {
 					"Complete Task Message 2"
 			}, new String[] {}));
 			
-			q = new Quest(0, "Debug Fetch!", new String[] {
-					"Start Message 1",
-					"Start Message 2"
-			}, new String[] {
-					"Finish Message 1",
-					"Finish Message 2"
-			}, new String[] {
-					"Description Fetch"
-			}, new String[] {
-					"Turn in Message 1",
-					"Turn in Message 1"
-			}, new String[] {
-					"Ready to turn in Message 1",
-					"Ready to turn in Message 2"
-			}, tasks, -1, -1, new ItemStack[] {
-					new ItemStack(Material.DIAMOND, 2)
-			}, new int[] {});
+			q = new Quest(0, false, "Debug Fetch!", Arrays.asList("Start Message 1", "Start Message 2"),
+					Arrays.asList(
+						"Finish Message 1",
+						"Finish Message 2"
+					), Arrays.asList(
+						"Description Fetch"
+					), Arrays.asList(
+						"Turn in Message 1",
+						"Turn in Message 1"
+					), Arrays.asList(
+						"Ready to turn in Message 1",
+						"Ready to turn in Message 2"
+					), tasks, -1, -1, Arrays.asList(new ItemStack(Material.DIAMOND, 2)),
+					new ArrayList<Integer>());
 			
 			write.set("Quest", q);
-		} else if (questFileName == "DebugKill") {
+		} else if (questFileName == "Debug Kill!.yml") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskKill(EnumCustomEntities.TEST_ZOMBIE, 3, new String[] {
@@ -502,26 +514,26 @@ public class QuestHandler implements IReloadable {
 					"Complete Task Message 2"
 			}, new String[] {}));
 			
-			q = new Quest(1, "Debug Kill!", new String[] {
-					"Start Message 1",
-					"Start Message 2"
-			}, new String[] {
-					"Finish Message 1",
-					"Finish Message 2"
-			}, new String[] {
-					"Description Kill"
-			}, new String[] {
-					"Turn in Message 1",
-					"Turn in Message 1"
-			}, new String[] {
-					"Ready to turn in Message 1",
-					"Ready to turn in Message 2"
-			}, tasks, -1, -1, new ItemStack[] {
-					new ItemStack(Material.BONE, 5)
-			}, new int[] {});
+			q = new Quest(1, false, "Debug Kill!", Arrays.asList(
+						"Start Message 1",
+						"Start Message 2"
+					), Arrays.asList(
+						"Finish Message 1",
+						"Finish Message 2"
+					), Arrays.asList(
+						"Description Kill"
+					), Arrays.asList(
+						"Turn in Message 1",
+						"Turn in Message 1"
+					), Arrays.asList(
+						"Ready to turn in Message 1",
+						"Ready to turn in Message 2"
+					), tasks, -1, -1,
+					Arrays.asList(new ItemStack(Material.BONE, 5)),
+					new ArrayList<Integer>());
 			
 			write.set("Quest", q);
-		} else if (questFileName == "DebugWalk") {
+		} else if (questFileName == "Debug Walk!.yml") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskWalk(new Location(Bukkit.getServer().getWorld(main.getRandomConfig().getWorlds().get(0)), 0, 0, 0), new String[] {
@@ -537,26 +549,26 @@ public class QuestHandler implements IReloadable {
 					"Complete Task Message 2"
 			}, new String[] {}));
 			
-			q = new Quest(2, "Debug Walk!", new String[] {
-					"Start Message 1",
-					"Start Message 2"
-			}, new String[] {
-					"Finish Message 1",
-					"Finish Message 2"
-			}, new String[] {
-					"Description Walk"
-			}, new String[] {
-					"Turn in Message 1",
-					"Turn in Message 1"
-			}, new String[] {
-					"Ready to turn in Message 1",
-					"Ready to turn in Message 2"
-			}, tasks, -1, -1, new ItemStack[] {
-					new ItemStack(Material.FEATHER, 2)
-			}, new int[] {});
+			q = new Quest(2, false, "Debug Walk!", Arrays.asList(
+						"Start Message 1",
+						"Start Message 2"
+					), Arrays.asList(
+						"Finish Message 1",
+						"Finish Message 2"
+					), Arrays.asList(
+						"Description Walk"
+					), Arrays.asList(
+						"Turn in Message 1",
+						"Turn in Message 1"
+					),Arrays.asList(
+						"Ready to turn in Message 1",
+						"Ready to turn in Message 2"
+					), tasks, -1, -1,
+					Arrays.asList(new ItemStack(Material.FEATHER, 2)),
+					new ArrayList<Integer>());
 			
 			write.set("Quest", q);
-		} else if (questFileName == "DebugTalk") {
+		} else if (questFileName == "Debug Talk!.yml") {
 			List<QuestTask> tasks = new ArrayList<QuestTask>();
 			
 			tasks.add(new QuestTaskTalk(new String[] {
@@ -580,42 +592,42 @@ public class QuestHandler implements IReloadable {
 					"Message 2-3"
 			}, new String[] {}));
 			
-			q = new Quest(3, "Debug Talk!", new String[] {
-					"Start Message 1",
-					"Start Message 2"
-			}, new String[] {
-					"Finish Message 1",
-					"Finish Message 2"
-			}, new String[] {
-					"Description Talk"
-			}, new String[] {
-					"Turn in Message 1",
-					"Turn in Message 1"
-			}, new String[] {
-					"Ready to turn in Message 1",
-					"Ready to turn in Message 2"
-			}, tasks, -1, -1, new ItemStack[] {
-					new ItemStack(Material.CLAY, 23)
-			}, new int[] {});
+			q = new Quest(3, false, "Debug Talk!", Arrays.asList(
+						"Start Message 1",
+						"Start Message 2"
+					), Arrays.asList(
+						"Finish Message 1",
+						"Finish Message 2"
+					), Arrays.asList(
+						"Description Talk"
+					), Arrays.asList(
+						"Turn in Message 1",
+						"Turn in Message 1"
+					), Arrays.asList(
+						"Ready to turn in Message 1",
+						"Ready to turn in Message 2"
+					), tasks, -1, -1, Arrays.asList(new ItemStack(Material.CLAY_BALL, 1)),
+					new ArrayList<Integer>());
 			
 			write.set("Quest", q);
 		} else {
-			q = new Quest(3, "Unfinished Quest!", new String[] {
-					"Start Message 1",
-					"Start Message 2"
-			}, new String[] {
-					"Finish Message 1",
-					"Finish Message 2"
-			}, new String[] {
-					"Unfinished description 1",
-					"Unfinished description 2"
-			}, new String[] {
-					"Turn in Message 1",
-					"Turn in Message 1"
-			}, new String[] {
-					"Ready to turn in Message 1",
-					"Ready to turn in Message 2"
-			}, new ArrayList<QuestTask>(), -1, -1, new ItemStack[] {}, new int[] {});
+			q = new Quest(3, false, "Unfinished Quest!", Arrays.asList(
+						"Start Message 1",
+						"Start Message 2"
+					), Arrays.asList(
+						"Finish Message 1",
+						"Finish Message 2"
+					), Arrays.asList(
+						"Unfinished description 1",
+						"Unfinished description 2"
+					), Arrays.asList(
+						"Turn in Message 1",
+						"Turn in Message 1"
+					), Arrays.asList(
+						"Ready to turn in Message 1",
+						"Ready to turn in Message 2"
+					), new ArrayList<QuestTask>(), -1, -1, new ArrayList<ItemStack>(),
+					new ArrayList<Integer>());
 			
 			write.set("Quest", q);
 		}
@@ -634,17 +646,18 @@ public class QuestHandler implements IReloadable {
 	 * @return A Quest found from the given String
 	 */
 	public Quest getQuestFile(String questFileName) {
-		File f = new File(path + "/Quests/" + questFileName + ".yml");
+		File f = new File(path + "/Quests/" + questFileName);
+		
 		if (f.exists()) {
 			Quest q = YamlConfiguration.loadConfiguration(f).getObject("Quest", Quest.class);
 			
 			if (q == null) {
-				System.out.println("Quest: " + questFileName + ".yml was written incorrectly!");
+				System.out.println("Quest: " + questFileName + " was written incorrectly!");
 			}
 			
 			return q;
 		} else {
-			System.out.println("Could not find file in config: " + questFileName + ".yml! (Will be created)");
+			System.out.println("Could not find file in config: " + questFileName + "! (Will be created)");
 			return writeDefaultQuest(questFileName);
 		}
 	}
@@ -712,7 +725,7 @@ public class QuestHandler implements IReloadable {
 	 * @return true if the given Player can accept the given Quest
 	 */
 	private boolean checkRequirements(Player p, Quest q) {
-		if (q.getRequirements().length == 0) {
+		if (q.getRequirements().size() == 0) {
 			return true;
 		}
 		

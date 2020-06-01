@@ -20,12 +20,12 @@ import main.java.serdana.util.enums.EnumScriptStartType;
 public class Quest implements ConfigurationSerializable {
 
 	private String name;
-	private String[] description, startMessages, finishMessages, turnInMessages, readyToTurnInMessages;
+	private List<String> description, startMessages, finishMessages, turnInMessages, readyToTurnInMessages;
 	private int questID, startID = -1, finishID = -1, currentTaskID = 0;
-	private boolean readyToTurnIn = false;
+	private boolean readyToTurnIn = false, isActive = true;
 	private EnumQuestState state = EnumQuestState.unknown;
-	private ItemStack[] rewards;
-	private int[] requirements;
+	private List<ItemStack> rewards;
+	private List<Integer> requirements;
 	
 	private List<QuestTask> tasks = new ArrayList<QuestTask>();
 	
@@ -43,8 +43,8 @@ public class Quest implements ConfigurationSerializable {
 	 * @param rewards
 	 * @param requirements
 	 */
-	Quest(int questID, String name, String[] startMessages, String finishMessages[], String[] description, String[] turnInMessages, String[] readyToTurnInMessages,
-			List<QuestTask> tasks, int startID, int finishID, ItemStack[] rewards, int[] requirements) {
+	Quest(int questID, boolean isActive, String name, List<String> startMessages, List<String> finishMessages, List<String> description, List<String> turnInMessages,
+			List<String> readyToTurnInMessages, List<QuestTask> tasks, int startID, int finishID, List<ItemStack> rewards, List<Integer> requirements) {
 		this.questID = questID;
 		this.name = name;
 		this.startMessages = startMessages;
@@ -57,10 +57,16 @@ public class Quest implements ConfigurationSerializable {
 		this.turnInMessages = turnInMessages;
 		this.readyToTurnInMessages = readyToTurnInMessages;
 		this.requirements = requirements;
+		this.isActive = isActive;
+	}
+	
+	public Quest(String name, int startID, int finishID) {
+		this(InitQuests.getNewQuestID(), true, name, new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(), new ArrayList<String>(),
+				new ArrayList<QuestTask>(), startID, finishID, new ArrayList<ItemStack>(), new ArrayList<Integer>());
 	}
 	
 	public Quest(Quest quest) {
-		this(quest.questID, quest.name, quest.startMessages, quest.finishMessages, quest.description, quest.turnInMessages, quest.readyToTurnInMessages,
+		this(quest.questID, quest.isActive, quest.name, quest.startMessages, quest.finishMessages, quest.description, quest.turnInMessages, quest.readyToTurnInMessages,
 				quest.tasks, quest.startID, quest.finishID, quest.rewards, quest.requirements);
 	}
 	
@@ -74,20 +80,22 @@ public class Quest implements ConfigurationSerializable {
 		currentTaskID = (int) map.get("currentTaskID");
 		state = EnumQuestState.valueOf((String) map.get("state"));
 		tasks = (List<QuestTask>) map.get("tasks");
-		description = ((List<String>) map.get("description")).toArray(new String[0]);
-		startMessages = ((List<String>) map.get("startMessages")).toArray(new String[0]);
-		finishMessages = ((List<String>) map.get("finishMessages")).toArray(new String[0]);
-		readyToTurnInMessages = ((List<String>) map.get("readyToTurnInMessages")).toArray(new String[0]);
-		turnInMessages = ((List<String>) map.get("turnInMessages")).toArray(new String[0]);
-		rewards = ((List<ItemStack>) map.get("rewards")).toArray(new ItemStack[0]);
+		description = (List<String>) map.get("description");
+		startMessages = (List<String>) map.get("startMessages");
+		finishMessages = (List<String>) map.get("finishMessages");
+		readyToTurnInMessages = (List<String>) map.get("readyToTurnInMessages");
+		turnInMessages = (List<String>) map.get("turnInMessages");
+		rewards = (List<ItemStack>) map.get("rewards");
 		readyToTurnIn = (boolean) map.get("readyToTurnIn");
-		requirements = ((List<Integer>) map.get("requirements")).stream().mapToInt(i -> i).toArray();
+		requirements = (List<Integer>) map.get("requirements");
+		isActive = (boolean) map.get("isActive");
 	}
 
 	@Override
 	public Map<String, Object> serialize() {
 		LinkedHashMap<String, Object> result = new LinkedHashMap<String, Object>();
 		result.put("questID", questID);
+		result.put("isActive", isActive);
 		result.put("name", name);
 		result.put("description", description);
 		result.put("startMessages", startMessages);
@@ -188,6 +196,70 @@ public class Quest implements ConfigurationSerializable {
 		this.state = state;
 	}
 	
+	public void addReward(ItemStack item) {
+		rewards.add(item);
+	}
+	
+	public void setActive(boolean active) {
+		this.isActive = active;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+	
+	public void setStartID(int startID) {
+		this.startID = startID;
+	}
+	
+	public void setFinishID(int finishID) {
+		this.finishID = finishID;
+	}
+	
+	public void removeDescription(int where) {
+		description.remove(where);
+	}
+	
+	public void removeStartMessages(int where) {
+		startMessages.remove(where);
+	}
+	
+	public void removeFinishedMessages(int where) {
+		finishMessages.remove(where);
+	}
+	
+	public void removeTurnInMessages(int where) {
+		turnInMessages.remove(where);
+	}
+	
+	public void removeReadyToTurnInMessages(int where) {
+		readyToTurnInMessages.remove(where);
+	}
+	
+	public void addDescription(String value) {
+		description.add(value);
+	}
+	
+	public void addStartMessages(String value) {
+		startMessages.add(value);
+	}
+	
+	public void addFinishedMessages(String value) {
+		finishMessages.add(value);
+	}
+	
+	public void addTurnInMessages(String value) {
+		turnInMessages.add(value);
+	}
+	
+	public void addReadyToTurnInMessages(String value) {
+		readyToTurnInMessages.add(value);
+	}
+	
+	public void addRequirements(int requirement) {
+		requirements.add(requirement);
+	}
+	
 	public QuestTask getCurrentTask() {
 		return tasks.get(currentTaskID);
 	}
@@ -196,27 +268,31 @@ public class Quest implements ConfigurationSerializable {
 		return questID;
 	}
 	
+	public boolean isActive() {
+		return isActive;
+	}
+	
 	public String getName() {
 		return name;
 	}
 	
-	public String[] getStartMessages() {
+	public List<String> getStartMessages() {
 		return startMessages;
 	}
 	
-	public String[] getFinishMessages() {
+	public List<String> getFinishMessages() {
 		return finishMessages;
 	}
 	
-	public String[] getDescription() {
+	public List<String> getDescription() {
 		return description;
 	}
 	
-	public String[] getTurnInMessages() {
+	public List<String> getTurnInMessages() {
 		return turnInMessages;
 	}
 	
-	public String[] getReadyToTurnInMessages() {
+	public List<String> getReadyToTurnInMessages() {
 		return readyToTurnInMessages;
 	}
 	
@@ -240,11 +316,11 @@ public class Quest implements ConfigurationSerializable {
 		return state;
 	}
 	
-	public ItemStack[] getRewards() {
+	public List<ItemStack> getRewards() {
 		return rewards;
 	}
 	
-	public int[] getRequirements() {
+	public List<Integer> getRequirements() {
 		return requirements;
 	}
 	

@@ -50,6 +50,20 @@ public class MagicItemHandler implements IReloadable {
 			@Override
 			public void run() {
 				for (MagicShrineInfo info : main.getRandomConfig().getMagicShrines()) {
+					World w = info.getMainPillar().getWorld();
+					/*
+					for (Location loc : info.getPillars()) {
+						Arrow ar = (Arrow) w.spawnEntity(new Location(loc.getWorld(), loc.getX(), loc.getY() + 1, loc.getZ()), EntityType.ARROW);
+						
+						Vector pillarVec = new Vector(loc.getX(), loc.getY(), loc.getZ());
+						Vector mainVec = new Vector(info.getMainPillar().getX(), info.getMainPillar().getY(), info.getMainPillar().getZ());
+						
+						//ar.setGravity(false);
+						ar.setDamage(0);
+						ar.setPickupStatus(PickupStatus.DISALLOWED);
+						ar.setSilent(true);
+					}*/
+					
 					if (charging.get(info.getName()) == null) {
 						Iterator<Entry<Location, BoundingBox>> it = mainBoxes.get(info.getName()).entrySet().iterator();
 						
@@ -124,7 +138,7 @@ public class MagicItemHandler implements IReloadable {
 							
 							for (Entity e : pair.getKey().getWorld().getNearbyEntities(pair.getValue())) {
 								if (e instanceof Item && charging.get(info.getName()).getItems().contains(((Item) e).getItemStack().getType())) {
-									World w = e.getWorld();
+									//World w = e.getWorld();
 									w.playSound(e.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 1, 1);
 									w.spawnParticle(Particle.EXPLOSION_LARGE, e.getLocation(), 10, 2, 2, 2, 0);
 									w.spawnParticle(Particle.FLAME, e.getLocation(), 20, 1, 1, 1, 0);
@@ -139,7 +153,7 @@ public class MagicItemHandler implements IReloadable {
 						if (!ran) {
 							charging.put(info.getName(), null);
 							
-							World w = info.getMainPillar().getWorld();
+							//World w = info.getMainPillar().getWorld();
 							
 							w.playSound(info.getMainPillar(), Sound.ENTITY_GENERIC_EXPLODE, SoundCategory.MASTER, 1, 2);
 							w.spawnParticle(Particle.EXPLOSION_LARGE, info.getMainPillar(), 10, 2, 2, 2, 0);
@@ -289,7 +303,7 @@ public class MagicItemHandler implements IReloadable {
 	}
 	
 	public enum MagicItems {
-		fireball(MagicFireball.class, Arrays.asList(Material.BLAZE_ROD, Material.FIRE_CHARGE, Material.ENDER_PEARL, Material.LAVA_BUCKET), 32);
+		fireball(MagicFireball.class, Arrays.asList(Material.BLAZE_POWDER, Material.FIRE_CHARGE, Material.LAVA_BUCKET), 32);
 		
 		private Class<? extends IMagicBase> clazz;
 		private final List<Material> items;

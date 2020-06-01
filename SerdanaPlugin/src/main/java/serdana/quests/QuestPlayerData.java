@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 import main.java.serdana.util.enums.EnumQuestState;
 
@@ -158,16 +158,26 @@ public class QuestPlayerData implements ConfigurationSerializable {
 	public boolean isOldQuest(Quest q) {
 		for (Quest oldQ : quests) {
 			if (oldQ.getQuestID() == q.getQuestID()) {
-				return oldQ.getName().equals(q.getName()) && areEqual(oldQ.getDescription(), q.getDescription()) &&
-						areEqual(oldQ.getReadyToTurnInMessages(), q.getReadyToTurnInMessages()) && areEqual(oldQ.getTurnInMessages(), q.getTurnInMessages()) &&
-						areEqual(oldQ.getStartMessages(), q.getStartMessages()) && areEqual(oldQ.getFinishMessages(), q.getFinishMessages()) &&
-						oldQ.getStartID() == q.getStartID() && oldQ.getFinishID() == q.getFinishID() && areEqual(oldQ.getRewards(), q.getRewards()) &&
-						areEqual(ArrayUtils.toObject(oldQ.getRequirements()), ArrayUtils.toObject(q.getRequirements())) && oldQ.getTasks().equals(q.getTasks())
-						? false : true;
+				return oldQ.isActive() == q.isActive() &&
+						oldQ.getName().equals(q.getName()) &&
+						areEqual(oldQ.getDescription().toArray(), q.getDescription().toArray()) &&
+						areEqual(oldQ.getReadyToTurnInMessages().toArray(), q.getReadyToTurnInMessages().toArray()) &&
+						areEqual(oldQ.getTurnInMessages().toArray(), q.getTurnInMessages().toArray()) &&
+						areEqual(oldQ.getStartMessages().toArray(), q.getStartMessages().toArray()) &&
+						areEqual(oldQ.getFinishMessages().toArray(), q.getFinishMessages().toArray()) &&
+						areEqual(oldQ.getRewards(), q.getRewards()) &&
+						areEqual(oldQ.getRequirements().toArray(), q.getRequirements().toArray()) &&
+						oldQ.getStartID() == q.getStartID() &&
+						oldQ.getFinishID() == q.getFinishID() &&
+						oldQ.getTasks().equals(q.getTasks()) ? false : true;
 			}
 		}
 		
 		return true;
+	}
+	
+	private boolean areEqual(List<ItemStack> list, List<ItemStack> list2) {
+		return areEqual(list.toArray(), list2.toArray());
 	}
 	
 	private boolean areEqual(Object[] arr1, Object[] arr2) {
